@@ -111,7 +111,7 @@ export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
                 onClick={() => setActiveTab('working_tree')}
                 className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
                   activeTab === 'working_tree'
-                    ? 'border-slate-900 text-slate-900 font-bold'
+                    ? 'border-[#BD006E] text-[#BD006E] font-bold'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -128,7 +128,7 @@ export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
                 onClick={() => setActiveTab('divergence')}
                 className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
                   activeTab === 'divergence'
-                    ? 'border-slate-900 text-slate-900 font-bold'
+                    ? 'border-[#BD006E] text-[#BD006E] font-bold'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -140,7 +140,7 @@ export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
                 onClick={() => setActiveTab('stashes')}
                 className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
                   activeTab === 'stashes'
-                    ? 'border-slate-900 text-slate-900 font-bold'
+                    ? 'border-[#BD006E] text-[#BD006E] font-bold'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -157,7 +157,7 @@ export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
                 onClick={() => setActiveTab('audit')}
                 className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors cursor-pointer ${
                   activeTab === 'audit'
-                    ? 'border-slate-900 text-slate-900 font-bold'
+                    ? 'border-[#BD006E] text-[#BD006E] font-bold'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >

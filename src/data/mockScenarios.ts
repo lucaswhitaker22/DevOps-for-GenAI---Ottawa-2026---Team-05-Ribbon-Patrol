@@ -576,8 +576,244 @@ export const UNSAFE_LOSS_RISK_SCENARIO: ScenarioPreset = {
   },
 };
 
+export const FAILED_BUILD_SCENARIO: ScenarioPreset = {
+  id: 'cicd_failed_build',
+  title: 'CI/CD: Build Failure',
+  badge: 'CI Pipeline',
+  description: 'The automated CI build failed due to TypeScript compilation & test errors in job #1042.',
+  petExpression: 'Sick bot with fever thermometer, dizzy eyes, and toxic build error aura',
+  samplePrompt: 'Why did the build fail in CI?',
+  state: {
+    repoName: 'acme-corp/ecommerce-store',
+    currentBranch: {
+      name: 'feature/payment-v2',
+      upstream: 'origin/feature/payment-v2',
+      aheadCount: 1,
+      behindCount: 0,
+      isDetached: false,
+      isStale: false,
+      lastCommitMessage: 'feat(pay): add Stripe SDK v3 handler',
+      lastCommitHash: 'e92a411',
+      lastActivity: '10 minutes ago',
+    },
+    allBranches: ['main', 'feature/payment-v2'],
+    workingTree: [],
+    stashes: [],
+    localCommitsAhead: [],
+    remoteCommitsBehind: [],
+    commitHistory: [],
+    healthPercentage: 35,
+    healthLevel: 'Blocked',
+    primarySymptom: 'failed_build',
+    symptomTitle: 'CI Build Failed (Job #1042)',
+    symptomDescription: 'Compilation error: Type "string" is not assignable to type "PaymentAmount" in src/services/pay.ts.',
+    operatorMeaning: 'Inspect pipeline compilation logs and fix type errors before requesting review.',
+    pipelineState: {
+      pipelineId: 'job-1042',
+      buildStatus: 'failed',
+      testHealth: 'failing',
+      passRate: 42,
+      flakyTests: [],
+      vulnerabilities: [],
+      deployTarget: 'staging',
+      deployStatus: 'failed',
+      lastRunTime: '4 minutes ago',
+      pipelineSteps: [
+        { name: 'Lint & Format', status: 'success', duration: '12s' },
+        { name: 'TypeScript Compilation', status: 'failed', duration: '18s', logSummary: 'TS2322: Type "string" is not assignable to type "number" in src/services/pay.ts:42' },
+        { name: 'Unit Tests', status: 'failed', duration: '5s', logSummary: '1/12 suites passed' },
+        { name: 'Security Audit', status: 'pending', duration: '0s' },
+        { name: 'Deploy Staging', status: 'pending', duration: '0s' },
+      ],
+    },
+  },
+};
+
+export const FLAKY_TESTS_SCENARIO: ScenarioPreset = {
+  id: 'cicd_flaky_tests',
+  title: 'CI/CD: Flaky Test Suite',
+  badge: 'Test Health',
+  description: 'Integration test suite passed on 2nd retry, but 3 flaky tests were flagged in auth.spec.ts.',
+  petExpression: 'Nervous trembling companion with sweat drops and anxious wide eyes',
+  samplePrompt: 'Which tests are flaky and causing build instability?',
+  state: {
+    repoName: 'acme-corp/ecommerce-store',
+    currentBranch: {
+      name: 'refactor/auth-tokens',
+      upstream: 'origin/refactor/auth-tokens',
+      aheadCount: 0,
+      behindCount: 0,
+      isDetached: false,
+      isStale: false,
+      lastCommitMessage: 'refactor(auth): introduce JWT refresh rotation',
+      lastCommitHash: 'd71a829',
+      lastActivity: '30 minutes ago',
+    },
+    allBranches: ['main', 'refactor/auth-tokens'],
+    workingTree: [],
+    stashes: [],
+    localCommitsAhead: [],
+    remoteCommitsBehind: [],
+    commitHistory: [],
+    healthPercentage: 68,
+    healthLevel: 'Attention',
+    primarySymptom: 'flaky_tests',
+    symptomTitle: 'Flaky Tests Detected in Pipeline',
+    symptomDescription: '3 integration tests passed only after auto-retry due to race conditions in session storage.',
+    operatorMeaning: 'Quarantine intermittent test cases to restore deterministic CI confidence.',
+    pipelineState: {
+      pipelineId: 'job-1043',
+      buildStatus: 'passed',
+      testHealth: 'flaky',
+      passRate: 88,
+      flakyTests: [
+        { id: 'flaky-1', name: 'should refresh token concurrently', suite: 'auth.spec.ts', failureRate: 35, lastFailedCommit: 'd71a829' },
+        { id: 'flaky-2', name: 'should release lock on timeout', suite: 'redisLock.spec.ts', failureRate: 20, lastFailedCommit: 'c41a290' },
+      ],
+      vulnerabilities: [],
+      deployTarget: 'staging',
+      deployStatus: 'success',
+      lastRunTime: '12 minutes ago',
+      pipelineSteps: [
+        { name: 'Lint & Format', status: 'success', duration: '10s' },
+        { name: 'TypeScript Compilation', status: 'success', duration: '14s' },
+        { name: 'Unit & E2E Tests', status: 'warning', duration: '1m 45s', logSummary: 'Passed on Retry #2: 3 flaky tests detected' },
+        { name: 'Security Audit', status: 'success', duration: '22s' },
+        { name: 'Deploy Staging', status: 'success', duration: '40s' },
+      ],
+    },
+  },
+};
+
+export const VULNERABILITY_SCENARIO: ScenarioPreset = {
+  id: 'cicd_vulnerability',
+  title: 'CI/CD: Security Vulnerability',
+  badge: 'Security Scan',
+  description: 'Snyk & GitHub Dependabot flagged a High-Severity CVE vulnerability in an imported dependency.',
+  petExpression: 'Shielded bot wearing a heavy metallic security chestplate & energy barrier',
+  samplePrompt: 'What security vulnerabilities were found and how do I patch them?',
+  state: {
+    repoName: 'acme-corp/ecommerce-store',
+    currentBranch: {
+      name: 'main',
+      upstream: 'origin/main',
+      aheadCount: 0,
+      behindCount: 0,
+      isDetached: false,
+      isStale: false,
+      lastCommitMessage: 'chore: bump dependencies for Q3 audit',
+      lastCommitHash: 'a10b9c8',
+      lastActivity: '1 hour ago',
+    },
+    allBranches: ['main'],
+    workingTree: [],
+    stashes: [],
+    localCommitsAhead: [],
+    remoteCommitsBehind: [],
+    commitHistory: [],
+    healthPercentage: 55,
+    healthLevel: 'Attention',
+    primarySymptom: 'vulnerability_risk',
+    symptomTitle: 'High-Severity Vulnerability (CVE-2026-8819)',
+    symptomDescription: 'Arbitrary Code Execution in tar package v6.1.0 detected by static analysis scanner.',
+    operatorMeaning: 'Run npm audit fix or update package.json to tar ^6.2.1 immediately.',
+    pipelineState: {
+      pipelineId: 'job-1044',
+      buildStatus: 'passed',
+      testHealth: 'healthy',
+      passRate: 100,
+      flakyTests: [],
+      vulnerabilities: [
+        {
+          id: 'vuln-101',
+          cveId: 'CVE-2026-8819',
+          package: 'tar@6.1.0',
+          severity: 'high',
+          title: 'Arbitrary Path Traversal & Unsafe Extraction',
+          remediation: 'Upgrade to tar >= 6.2.1',
+        },
+        {
+          id: 'vuln-102',
+          cveId: 'CVE-2026-4102',
+          package: 'axios@0.21.1',
+          severity: 'medium',
+          title: 'SSRF in Redirect Handling',
+          remediation: 'Upgrade to axios >= 1.7.4',
+        },
+      ],
+      deployTarget: 'production',
+      deployStatus: 'idle',
+      lastRunTime: '25 minutes ago',
+      pipelineSteps: [
+        { name: 'Lint & Format', status: 'success', duration: '8s' },
+        { name: 'TypeScript Compilation', status: 'success', duration: '12s' },
+        { name: 'Unit Tests', status: 'success', duration: '45s' },
+        { name: 'Security Audit', status: 'warning', duration: '15s', logSummary: '2 Vulnerabilities (1 High, 1 Medium)' },
+        { name: 'Deploy Production', status: 'pending', duration: '0s' },
+      ],
+    },
+  },
+};
+
+export const DEPLOYMENT_SUCCESS_SCENARIO: ScenarioPreset = {
+  id: 'cicd_deploy_success',
+  title: 'CI/CD: Deployment Success',
+  badge: 'Production CD',
+  description: 'Continuous Deployment pipeline successfully deployed commit #9f81a2c to prod-us-east-1.',
+  petExpression: 'Celebratory bot wearing party hat, dancing with festive confetti & fireworks sparkles',
+  samplePrompt: 'Is the deployment live and healthy in production?',
+  state: {
+    repoName: 'acme-corp/ecommerce-store',
+    currentBranch: {
+      name: 'main',
+      upstream: 'origin/main',
+      aheadCount: 0,
+      behindCount: 0,
+      isDetached: false,
+      isStale: false,
+      lastCommitMessage: 'release: v2.4.0 checkout promotion system',
+      lastCommitHash: '9f81a2c',
+      lastActivity: '2 minutes ago',
+    },
+    allBranches: ['main', 'release/v2.4.0'],
+    workingTree: [],
+    stashes: [],
+    localCommitsAhead: [],
+    remoteCommitsBehind: [],
+    commitHistory: [],
+    healthPercentage: 100,
+    healthLevel: 'Healthy',
+    primarySymptom: 'deploy_success',
+    symptomTitle: 'Production Deployment Success! 🎉',
+    symptomDescription: 'All 48 microservices updated cleanly on Kubernetes prod-us-east-1 cluster with 0 errors.',
+    operatorMeaning: 'Release successfully live. Companion celebrating flawless pipeline run!',
+    pipelineState: {
+      pipelineId: 'job-1045',
+      buildStatus: 'passed',
+      testHealth: 'healthy',
+      passRate: 100,
+      flakyTests: [],
+      vulnerabilities: [],
+      deployTarget: 'production',
+      deployStatus: 'success',
+      lastRunTime: 'Just now',
+      pipelineSteps: [
+        { name: 'Lint & Format', status: 'success', duration: '9s' },
+        { name: 'TypeScript Compilation', status: 'success', duration: '14s' },
+        { name: 'Unit & Integration Tests', status: 'success', duration: '52s' },
+        { name: 'Security & Compliance Audit', status: 'success', duration: '18s' },
+        { name: 'Production Canary Rolling Deploy', status: 'success', duration: '1m 20s' },
+      ],
+    },
+  },
+};
+
 export const ALL_SCENARIOS: ScenarioPreset[] = [
   MVP_SCENARIO,
+  FAILED_BUILD_SCENARIO,
+  FLAKY_TESTS_SCENARIO,
+  VULNERABILITY_SCENARIO,
+  DEPLOYMENT_SUCCESS_SCENARIO,
   UNSAFE_LOSS_RISK_SCENARIO,
   CONFLICT_SCENARIO,
   UNPUSHED_WORK_SCENARIO,
@@ -595,6 +831,51 @@ export function computeRepositoryHealth(state: RepositoryState): {
   symptomDescription: string;
   operatorMeaning: string;
 } {
+  // CI/CD OVERRIDES & PRECEDENCE
+  if (state.primarySymptom === 'failed_build' || state.pipelineState?.buildStatus === 'failed') {
+    return {
+      healthPercentage: 35,
+      healthLevel: 'Blocked',
+      primarySymptom: 'failed_build',
+      symptomTitle: state.symptomTitle || 'CI Build Failure',
+      symptomDescription: state.symptomDescription || 'Compiler or build script error in CI pipeline.',
+      operatorMeaning: state.operatorMeaning || 'Fix compilation errors before re-triggering CI.',
+    };
+  }
+
+  if (state.primarySymptom === 'flaky_tests' || state.pipelineState?.testHealth === 'flaky') {
+    return {
+      healthPercentage: 68,
+      healthLevel: 'Attention',
+      primarySymptom: 'flaky_tests',
+      symptomTitle: state.symptomTitle || 'Flaky Tests Detected',
+      symptomDescription: state.symptomDescription || 'Intermittent test failures destabilizing pipeline.',
+      operatorMeaning: state.operatorMeaning || 'Quarantine or refactor flaky test specs.',
+    };
+  }
+
+  if (state.primarySymptom === 'vulnerability_risk' || (state.pipelineState?.vulnerabilities && state.pipelineState.vulnerabilities.length > 0)) {
+    return {
+      healthPercentage: 55,
+      healthLevel: 'Attention',
+      primarySymptom: 'vulnerability_risk',
+      symptomTitle: state.symptomTitle || 'Security Vulnerability Detected',
+      symptomDescription: state.symptomDescription || 'High severity CVE flagged in dependency audit.',
+      operatorMeaning: state.operatorMeaning || 'Upgrade vulnerable dependencies to patch CVE.',
+    };
+  }
+
+  if (state.primarySymptom === 'deploy_success' || state.pipelineState?.deployStatus === 'success') {
+    return {
+      healthPercentage: 100,
+      healthLevel: 'Healthy',
+      primarySymptom: 'deploy_success',
+      symptomTitle: state.symptomTitle || 'Deployment Success',
+      symptomDescription: state.symptomDescription || 'Pipeline green and deployed to production.',
+      operatorMeaning: state.operatorMeaning || 'Production deployment verified.',
+    };
+  }
+
   // PRECEDENCE 1: Immediate work-loss risk (Unsafe state strictly at 0% health)
   const isDestructive =
     state.healthLevel === 'Unsafe' ||
@@ -642,9 +923,7 @@ export function computeRepositoryHealth(state: RepositoryState): {
     };
   }
 
-  // PRECEDENCE 4: Stale branch (checked before ahead/behind — a branch fully
-  // merged into main should read as "safe to prune", not "needs pulling",
-  // even though behindCount > 0 once main has advanced past the merge point)
+  // PRECEDENCE 4: Stale branch
   if (state.currentBranch.isStale) {
     return {
       healthPercentage: 74,

@@ -5,11 +5,11 @@ services:
     container_name: gitpet
 
     ports:
-      - "3000:3000"
+      - "3004:3004"
 
     environment:
       GEMINI_API_KEY: ${GEMINI_API_KEY}
-      APP_URL: http://localhost:3000
+      APP_URL: http://localhost:3004
       NODE_ENV: production
 
     restart: unless-stopped

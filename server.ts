@@ -16,7 +16,7 @@ import { LIVE_REPO, LIVE_REPO_BRANCHES } from './src/data/liveRepoConfig';
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 3004;
 
 app.use(express.json({ limit: '25mb' }));
 
@@ -2278,7 +2278,7 @@ You help them check branch synchronization, warn them if they have uncommitted f
   }
 
   server.listen(PORT, '0.0.0.0', () => {
-    console.log(`GitPet server running on http://0.0.0.0:${PORT}`);
+    console.log(`GitPet server running on http://localhost:${PORT}`);
   });
 }
 

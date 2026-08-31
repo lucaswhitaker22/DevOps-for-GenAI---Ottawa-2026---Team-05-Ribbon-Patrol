@@ -3,7 +3,7 @@
 **Team Name:** Ribbon Patrol (Team 05)  
 **Track / Theme:** DevOps for Generative AI / Ambient Developer Ergonomics & DevSecOps  
 **Version:** 1.0.0-hackathon (August 2026)  
-**Live Demo Command:** `npm run dev` (Available on `http://localhost:3000`)
+**Live Demo Command:** `npm run dev` (Available on `http://localhost:3004`)
 
 ---
 

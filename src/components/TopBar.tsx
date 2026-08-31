@@ -21,8 +21,7 @@ interface TopBarProps {
   onSelectBranch: (branch: string) => void;
   onToggleDrawer: () => void;
   onOpenQuickPalette?: () => void;
-  onStartDemo?: () => void;
-  isDemoActive?: boolean;
+  onOpenPipelineDrawer?: () => void;
   isDrawerOpen: boolean;
   isLiveMode?: boolean;
   liveScanState?: LiveScanState;
@@ -37,8 +36,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSelectBranch,
   onToggleDrawer,
   onOpenQuickPalette,
-  onStartDemo,
-  isDemoActive = false,
+  onOpenPipelineDrawer,
   isDrawerOpen,
   isLiveMode = false,
   liveScanState,
@@ -57,30 +55,30 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header
       id="gitpet-header"
-      className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5 transition-all"
+      className="sticky top-0 z-40 bg-[#d0d7db]/95 backdrop-blur-md border-b border-[#A7B1C2]/50 px-4 sm:px-6 py-2.5 transition-all text-[#3F4349]"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         {/* Left Section: Brand Logo + Repo & Branch Selector + Status */}
         <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           {/* Brand Mark */}
           <div className="flex items-center gap-2.5">
-            <div className="relative w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-base shadow-xs ring-1 ring-slate-800/10">
+            <div className="relative w-8 h-8 rounded-xl bg-[#BD006E] text-white flex items-center justify-center text-base shadow-xs ring-1 ring-[#9E005B]/30">
               <span>🐕</span>
               <span
                 className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-white ${
                   isHealthy
-                    ? 'bg-emerald-500'
+                    ? 'bg-[#4F8A10]'
                     : isAttention
-                    ? 'bg-amber-500'
+                    ? 'bg-[#D1C101]'
                     : isBlocked
-                    ? 'bg-rose-500'
-                    : 'bg-rose-600 ring-2 ring-rose-300 animate-ping'
+                    ? 'bg-[#FE7F0E]'
+                    : 'bg-[#CA3F3F] ring-2 ring-red-300 animate-ping'
                 }`}
               />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-slate-900 tracking-tight text-sm">GitPet</span>
+                <span className="font-bold text-[#3F4349] tracking-tight text-sm">GitPet</span>
                 {isLiveMode ? (
                   <div className="flex items-center gap-1.5">
                     <span
@@ -102,20 +100,14 @@ export const TopBar: React.FC<TopBarProps> = ({
                           className={`w-2.5 h-2.5 ${liveScanState?.loading ? 'animate-spin text-emerald-600' : ''}`}
                         />
                         <span className="hidden sm:inline">
-                          {liveScanState?.loading ? 'Scanning...' : 'Scan Now'}
+                          {liveScanState?.loading ? 'Scanning...' : 'Scan'}
                         </span>
                       </button>
                     )}
                   </div>
                 ) : (
-                  <span
-                    className={`text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full ${
-                      isUnsafe
-                        ? 'bg-rose-100 text-rose-800 font-extrabold animate-pulse'
-                        : 'bg-slate-100 text-slate-600'
-                    }`}
-                  >
-                    {isUnsafe ? 'Hazard Alert' : 'Sandbox Preset'}
+                  <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                    CI/CD Companion Active
                   </span>
                 )}
               </div>
@@ -266,22 +258,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             </button>
           )}
 
-          {/* 90-Second Guided Demo Quick Launch */}
-          {onStartDemo && (
-            <button
-              id="topbar-launch-demo-btn"
-              onClick={onStartDemo}
-              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border transition-all shadow-2xs cursor-pointer ${
-                isDemoActive
-                  ? 'bg-indigo-600 text-white border-indigo-500 ring-2 ring-indigo-400/30'
-                  : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-indigo-200'
-              }`}
-              title="Launch 90-Second Guided Demo"
-            >
-              <span>🚀</span>
-              <span className="font-bold">90s Demo</span>
-            </button>
-          )}
+
+
 
           {/* Audio Sound Toggle */}
           {onToggleAudio && (

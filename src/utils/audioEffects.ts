@@ -57,20 +57,27 @@ function getAudioContext(): AudioContext | null {
 
 export function isAudioMuted(): boolean {
   if (typeof window === 'undefined') return true;
-  // Default to true (muted by default for ambient safety unless explicitly unmuted)
-  const stored = localStorage.getItem(AUDIO_MUTED_STORAGE_KEY);
-  if (stored === null) {
-    return false; // sound enabled by default if not set
+  try {
+    const stored = window.localStorage ? window.localStorage.getItem(AUDIO_MUTED_STORAGE_KEY) : null;
+    if (stored === null) {
+      return false; // sound enabled by default if not set
+    }
+    return stored === 'true';
+  } catch (_) {
+    return false;
   }
-  return stored === 'true';
 }
 
 export function setAudioMuted(muted: boolean): void {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(AUDIO_MUTED_STORAGE_KEY, muted ? 'true' : 'false');
+    if (window.localStorage) {
+      window.localStorage.setItem(AUDIO_MUTED_STORAGE_KEY, muted ? 'true' : 'false');
+    }
     notifyMuteListeners(muted);
-  } catch (_) {}
+  } catch (_) {
+    notifyMuteListeners(muted);
+  }
 }
 
 export function toggleAudioMuted(): boolean {

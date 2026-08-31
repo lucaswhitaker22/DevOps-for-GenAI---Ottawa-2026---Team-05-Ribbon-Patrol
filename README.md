@@ -87,7 +87,7 @@ Open `.env` and add your **Google Gemini API Key**:
 GEMINI_API_KEY="your_actual_gemini_api_key_here"
 
 # Optional: The host URL for live deployment or local endpoint
-APP_URL="http://localhost:3000"
+APP_URL="http://localhost:3004"
 ```
 
 > **Note:** If `GEMINI_API_KEY` is not provided, the application will fallback to robust rule-based responses so you can still demonstrate and navigate the interface.
@@ -102,7 +102,7 @@ Runs the Express server integrated with Vite middleware for live hot-reloading:
 ```bash
 npm run dev
 ```
-Open your browser and navigate to: **`http://localhost:3000`**
+Open your browser and navigate to: **`http://localhost:3004`**
 
 #### **Production Build & Server Run**
 To test the production CJS bundle output:
@@ -115,7 +115,7 @@ To test the production CJS bundle output:
    ```bash
    npm run start
    ```
-Navigate to: **`http://localhost:3000`**
+Navigate to: **`http://localhost:3004`**
 
 ---
 
@@ -123,7 +123,7 @@ Navigate to: **`http://localhost:3000`**
 
 | Script | Description |
 | :--- | :--- |
-| `npm run dev` | Starts the TypeScript development server with hot reloading on port 3000 |
+| `npm run dev` | Starts the TypeScript development server with hot reloading on port 3004 |
 | `npm run build` | Bundles frontend with Vite & builds server to `dist/server.cjs` via `esbuild` |
 | `npm run start` | Executes the built production server (`dist/server.cjs`) |
 | `npm run test` | Runs the automated unit and adversarial security test suite (Vitest) |

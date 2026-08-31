@@ -31,7 +31,7 @@ GITPET_ALLOW_WRITES=true
 Confirm both took effect:
 
 ```bash
-curl -s localhost:3000/api/health | jq '{writesEnabled, workspaceRoot}'
+curl -s localhost:3004/api/health | jq '{writesEnabled, workspaceRoot}'
 ```
 
 ```json

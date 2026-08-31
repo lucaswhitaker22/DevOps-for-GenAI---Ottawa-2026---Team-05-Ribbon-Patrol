@@ -2,7 +2,7 @@
 
 **Project:** GitPet – Ambient DevSecOps Repository Companion  
 **Team:** Ribbon Patrol (Team 05) – DevOps for GenAI Hackathon (Ottawa 2026)  
-**Live URL / Demo Command:** `http://localhost:3000` (`npm run dev` or `npm run start`)
+**Live URL / Demo Command:** `http://localhost:3004` (`npm run dev` or `npm run start`)
 
 ---
 
@@ -13,7 +13,7 @@
 | **P-01** | **Team size** (1–5 members per team) | **MET** | [README.md](../README.md#team-members), [docs/PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Team roster: Aliasgar Husain (Lead), Dilvir Singh Saini, Lucas Whitaker, David Castelli, Charisma Pulyala (5 members). |
 | **P-02** | **Single theme** (Select one official theme/track) | **MET** | [README.md](../README.md#project-overview), [docs/PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md#1-project-name--theme) | Theme: **DevOps for Generative AI / Agentic Automation, Developer Ergonomics & DevSecOps**. |
 | **P-03** | **Real problem** (Define concrete problem & measurable outcome) | **MET** | [docs/PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md#3-problem-statement--target-users), [docs/README.md](README.md#product-objectives) | Solves context fragmentation, fear of destructive Git commands, and cognitive overload during branch drift with ambient metrics & verifiable recovery. |
-| **P-04** | **Working system** (Deliver live working use case / reproducible demo) | **MET** | [README.md](../README.md#-getting-started--setup-guide), Live app at `http://localhost:3000` | Full-stack interactive web application with ambient pet stage, AI persona chat, live audio/vision streaming, and sandbox scenarios. |
+| **P-04** | **Working system** (Deliver live working use case / reproducible demo) | **MET** | [README.md](../README.md#-getting-started--setup-guide), Live app at `http://localhost:3004` | Full-stack interactive web application with ambient pet stage, AI persona chat, live audio/vision streaming, and sandbox scenarios. |
 | **P-05** | **Production path** (Architecture, deployment, security, runbook) | **MET** | [docs/RUNBOOK.md](RUNBOOK.md), [docs/architecture/ARCHITECTURE.md](architecture/ARCHITECTURE.md), [.github/workflows/ci.yml](../.github/workflows/ci.yml) | Production build pipeline (`npm run build`), health/audit endpoints (`/api/health`, `/api/audit-logs`), and disaster recovery runbook. |
 | **P-06** | **AI transparency** (Declare where GenAI/coding tools were used) | **MET** | [README.md](../README.md#-ai-usage--assisted-tooling-disclosure), [docs/AI_GOVERNANCE.md](AI_GOVERNANCE.md#1-system--model-overview) | Disclosed usage of Gemini 3.6 Flash, Gemini 3.6 Pro, Imagen 3, Gemini Live API, and AI-assisted pair programming during development. |
 | **P-07** | **Security by design** (Threat modeling, AI/cloud/supply-chain mitigations) | **MET** | [docs/SECURITY_THREAT_MODEL.md](SECURITY_THREAT_MODEL.md), [tests/security.test.ts](../tests/security.test.ts) | STRIDE threat model, OWASP LLM Top 10 defenses, secret regex sanitization, and automated adversarial test suite. |

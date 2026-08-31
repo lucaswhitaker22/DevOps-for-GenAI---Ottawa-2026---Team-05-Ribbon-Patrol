@@ -15,7 +15,7 @@
                                               | HTTP & WebSocket
                                               v
 +-----------------------------------------------------------------------------------+
-| Node.js / Express Server (Port 3000)                                              |
+| Node.js / Express Server (Port 3004)                                              |
 |                                                                                   |
 |  - GET /api/health        -> Returns uptime, memory usage, API key status        |
 |  - GET /api/audit-logs    -> Returns FIFO array of live audited API events        |
@@ -32,7 +32,7 @@
 ### Health Check Endpoint: `GET /api/health`
 Query the health check to inspect operational metrics:
 ```bash
-curl -s http://localhost:3000/api/health | jq .
+curl -s http://localhost:3004/api/health | jq .
 ```
 **Example Response:**
 ```json
@@ -55,7 +55,7 @@ curl -s http://localhost:3000/api/health | jq .
 ### Audit Logs Endpoint: `GET /api/audit-logs?limit=20`
 Inspect recent requests, latencies, model invocations, and approval flags:
 ```bash
-curl -s http://localhost:3000/api/audit-logs | jq .
+curl -s http://localhost:3004/api/audit-logs | jq .
 ```
 
 ---
@@ -75,7 +75,7 @@ curl -s http://localhost:3000/api/audit-logs | jq .
 ### Scenario C: WebSocket Connection Dropped
 - **Symptoms:** Live audio/vision modal shows reconnecting banner.
 - **System Behavior:** Exponential backoff retry on client side.
-- **Remediation:** Ensure port 3000 is unblocked and firewall permits WebSocket upgrades (`Upgrade: websocket`).
+- **Remediation:** Ensure port 3004 is unblocked and firewall permits WebSocket upgrades (`Upgrade: websocket`).
 
 ---
 

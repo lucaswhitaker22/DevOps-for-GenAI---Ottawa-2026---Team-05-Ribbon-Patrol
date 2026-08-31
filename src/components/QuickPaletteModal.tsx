@@ -7,7 +7,6 @@ import {
   Layers,
   Sparkles,
   Mic,
-  Presentation,
   Volume2,
   VolumeX,
   Heart,
@@ -25,7 +24,7 @@ export interface PaletteAction {
   id: string;
   title: string;
   description: string;
-  category: 'Scenarios' | 'Guided Demo' | 'Repository & Safety' | 'Live Workspace' | 'Companion & Studios' | 'Audio & Petting';
+  category: 'Scenarios' | 'Repository & Safety' | 'Live Workspace' | 'Companion & Studios' | 'Audio & Petting';
   icon: React.ComponentType<{ className?: string }>;
   shortcut?: string;
   badge?: string;
@@ -39,10 +38,6 @@ interface QuickPaletteModalProps {
   onClose: () => void;
   scenarios: ScenarioPreset[];
   onSelectScenario: (scenario: ScenarioPreset) => void;
-  onStartDemo: () => void;
-  onRestartDemo: () => void;
-  onNextDemoStep: () => void;
-  isDemoActive: boolean;
   onToggleDrawer: () => void;
   isDrawerOpen: boolean;
   onOpenPreviewAction?: () => void;
@@ -54,7 +49,6 @@ interface QuickPaletteModalProps {
   onRefreshLive?: () => void;
   onOpenVoiceModal?: () => void;
   onOpenImageStudio?: () => void;
-  onOpenPitchDeck?: () => void;
   isAudioMuted: boolean;
   onToggleAudio: () => void;
   onPetByte: () => void;
@@ -65,10 +59,6 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   onClose,
   scenarios,
   onSelectScenario,
-  onStartDemo,
-  onRestartDemo,
-  onNextDemoStep,
-  isDemoActive,
   onToggleDrawer,
   isDrawerOpen,
   onOpenPreviewAction,
@@ -80,7 +70,6 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   onRefreshLive,
   onOpenVoiceModal,
   onOpenImageStudio,
-  onOpenPitchDeck,
   isAudioMuted,
   onToggleAudio,
   onPetByte,
@@ -105,39 +94,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   const allActions = useMemo(() => {
     const actions: PaletteAction[] = [];
 
-    // 1. Guided Demo Actions
-    if (!isDemoActive) {
-      actions.push({
-        id: 'start_demo',
-        title: 'Start 90-Second Guided Demo',
-        description: 'Run the complete deterministic developer story from clean state to resolution',
-        category: 'Guided Demo',
-        icon: Play,
-        badge: '90s Story',
-        badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-        keywords: ['demo', 'start', 'presentation', 'run', 'story', 'guided'],
-        onSelect: onStartDemo,
-      });
-    } else {
-      actions.push({
-        id: 'next_demo_step',
-        title: 'Advance Demo to Next Step',
-        description: 'Move forward in the guided demo sequence',
-        category: 'Guided Demo',
-        icon: ArrowRight,
-        keywords: ['next', 'advance', 'step', 'continue'],
-        onSelect: onNextDemoStep,
-      });
-      actions.push({
-        id: 'restart_demo',
-        title: 'Restart 90-Second Demo',
-        description: 'Reset to step 1 (clean repository state)',
-        category: 'Guided Demo',
-        icon: RotateCcw,
-        keywords: ['restart', 'reset', 'again', 'redo'],
-        onSelect: onRestartDemo,
-      });
-    }
+
 
     // 2. Repository & Safety Actions
     actions.push({
@@ -262,17 +219,6 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
       });
     }
 
-    if (onOpenPitchDeck) {
-      actions.push({
-        id: 'modal_pitch',
-        title: 'Pitch Deck & Architecture Rehearsal',
-        description: 'View the 5-slide project overview and delivery roadmap',
-        category: 'Companion & Studios',
-        icon: Presentation,
-        keywords: ['pitch', 'deck', 'slides', 'roadmap', 'presentation'],
-        onSelect: onOpenPitchDeck,
-      });
-    }
 
     // 6. Audio & Petting
     actions.push({
@@ -303,15 +249,11 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
     return actions;
   }, [
     scenarios,
-    isDemoActive,
     isDrawerOpen,
     hasPendingAction,
     hasAuditHistory,
     isLiveMode,
     isAudioMuted,
-    onNextDemoStep,
-    onStartDemo,
-    onRestartDemo,
     onToggleDrawer,
     onOpenPreviewAction,
     onRollbackLastAction,
@@ -320,7 +262,6 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
     onSelectScenario,
     onOpenVoiceModal,
     onOpenImageStudio,
-    onOpenPitchDeck,
     onToggleAudio,
     onPetByte,
   ]);
@@ -405,7 +346,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
                 setSelectedIndex(0);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Type a command or search actions (e.g., conflict, demo, drawer, voice)..."
+              placeholder="Type a command or search actions (e.g., conflict, drawer, live workspace)..."
               className="flex-1 bg-transparent text-sm sm:text-base text-slate-900 placeholder-slate-400 outline-none font-medium"
               autoComplete="off"
               spellCheck="false"
@@ -437,7 +378,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-40 text-slate-400" />
                 <p className="text-sm font-medium text-slate-600">No actions matching "{query}"</p>
                 <p className="text-xs text-slate-400 mt-1">
-                  Try searching for "demo", "conflict", "drawer", "voice", or "clean"
+                  Try searching for "conflict", "drawer", "live workspace", or "clean"
                 </p>
               </div>
             ) : (

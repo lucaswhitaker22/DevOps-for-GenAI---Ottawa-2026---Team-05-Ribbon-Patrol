@@ -96,10 +96,10 @@ export const ScenarioSwitcher: React.FC<ScenarioSwitcherProps> = ({
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
                     isActive
                       ? isUnsafePreset
-                        ? 'bg-rose-600 text-white shadow-xs'
-                        : 'bg-white text-slate-900 shadow-xs border border-slate-200/60 font-bold'
+                        ? 'bg-[#CA3F3F] text-white shadow-xs'
+                        : 'bg-[#BD006E] text-white shadow-xs font-bold'
                       : isUnsafePreset
-                      ? 'text-rose-700 hover:bg-rose-50'
+                      ? 'text-[#CA3F3F] hover:bg-rose-50'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                   }`}
                 >
@@ -108,10 +108,10 @@ export const ScenarioSwitcher: React.FC<ScenarioSwitcherProps> = ({
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
                       isActive
                         ? isUnsafePreset
-                          ? 'bg-rose-800 text-white'
-                          : 'bg-slate-100 text-slate-700'
+                          ? 'bg-[#A32B2B] text-white'
+                          : 'bg-[#9E005B] text-white'
                         : isUnsafePreset
-                        ? 'bg-rose-100 text-rose-800'
+                        ? 'bg-rose-100 text-[#CA3F3F]'
                         : 'bg-slate-200/70 text-slate-600'
                     }`}
                   >

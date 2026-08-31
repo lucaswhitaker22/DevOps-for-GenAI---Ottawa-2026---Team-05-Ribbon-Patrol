@@ -31,6 +31,7 @@ interface PetStageProps {
   petTriggerTimestamp?: number;
   customAvatarUrl?: string;
   onOpenImageStudio?: () => void;
+  onOpenPipelineDrawer?: () => void;
 }
 
 interface FloatingParticle {
@@ -55,6 +56,7 @@ const MASCOT_QUIPS = [
   "Pro-tip: Atomic commits make rebasing painless.",
   "Remember to pull before pushing to keep history linear!",
   "Stashing your work first ensures zero overwrite risk.",
+  "CI Pipeline Pro-tip: Quarantine flaky tests early!",
   "You're doing great! Let's ship clean code today.",
   "Beep boop! Ready to help you ship flawless code.",
 ];
@@ -65,6 +67,7 @@ export const PetStage: React.FC<PetStageProps> = ({
   petTriggerTimestamp,
   customAvatarUrl,
   onOpenImageStudio,
+  onOpenPipelineDrawer,
 }) => {
   const [particles, setParticles] = useState<FloatingParticle[]>([]);
   const [isHovered, setIsHovered] = useState(false);
@@ -80,7 +83,15 @@ export const PetStage: React.FC<PetStageProps> = ({
 
   // Update contextual bubble message based on repo state and actions
   useEffect(() => {
-    if (state.healthLevel === 'Unsafe') {
+    if (state.primarySymptom === 'failed_build') {
+      setBubbleText('🤢 CI Build failed in job #1042! Fix compilation errors!');
+    } else if (state.primarySymptom === 'flaky_tests') {
+      setBubbleText('😰 Flaky tests in auth.spec.ts! 2/10 runs failed intermittently.');
+    } else if (state.primarySymptom === 'vulnerability_risk') {
+      setBubbleText('🛡️ Security Alert: CVE-2026-8819 detected! Shield activated!');
+    } else if (state.primarySymptom === 'deploy_success') {
+      setBubbleText('🎉 Production deployment successful! All 48 microservices green!');
+    } else if (state.healthLevel === 'Unsafe') {
       setBubbleText('🚨 Work-loss risk! Stash or commit before pulling!');
     } else if (state.healthLevel === 'Blocked') {
       setBubbleText('🧶 Conflict alert! Let me help you inspect the conflicting files.');
@@ -89,7 +100,7 @@ export const PetStage: React.FC<PetStageProps> = ({
     } else {
       setBubbleText('🌿 Pristine repository! All green and synchronized.');
     }
-  }, [state.healthLevel, state.currentBranch.behindCount]);
+  }, [state.healthLevel, state.primarySymptom, state.currentBranch.behindCount]);
 
   // Autonomous Natural Blinking Loop (every 3.2 - 5.2s)
   useEffect(() => {
@@ -249,58 +260,58 @@ export const PetStage: React.FC<PetStageProps> = ({
     setIsBubbleVisible(true);
   };
 
-  // Health theme colors
+  // Health theme colors matching theme.scss alarm palette
   const getHealthTheme = (level: HealthLevel) => {
     switch (level) {
       case 'Healthy':
         return {
-          glow: 'rgba(16, 185, 129, 0.16)',
-          pulseColor: 'border-emerald-400 bg-emerald-500/10 text-emerald-700',
-          barBg: 'bg-emerald-500',
-          badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
+          glow: 'rgba(79, 138, 16, 0.16)',
+          pulseColor: 'border-[#4F8A10] bg-[#E6FFCC] text-[#4F8A10]',
+          barBg: 'bg-[#4F8A10]',
+          badgeBg: 'bg-[#E6FFCC] text-[#4F8A10] border-[#4F8A10]/40 font-bold',
           icon: CheckCircle2,
           moodLabel: 'Relaxed & Playful',
-          auraShadow: '0 0 50px rgba(16, 185, 129, 0.22)',
+          auraShadow: '0 0 50px rgba(79, 138, 16, 0.22)',
         };
       case 'Attention':
         return {
-          glow: 'rgba(245, 158, 11, 0.16)',
-          pulseColor: 'border-amber-400 bg-amber-500/10 text-amber-700',
-          barBg: 'bg-amber-500',
-          badgeBg: 'bg-amber-50 text-amber-800 border-amber-200/80',
+          glow: 'rgba(209, 193, 1, 0.18)',
+          pulseColor: 'border-[#D1C101] bg-[#FFFBCC] text-[#857A00]',
+          barBg: 'bg-[#D1C101]',
+          badgeBg: 'bg-[#FFFBCC] text-[#857A00] border-[#D1C101]/60 font-bold',
           icon: AlertTriangle,
           moodLabel: 'Uneasy & Alert',
-          auraShadow: '0 0 50px rgba(245, 158, 11, 0.22)',
+          auraShadow: '0 0 50px rgba(209, 193, 1, 0.25)',
         };
       case 'Blocked':
         return {
-          glow: 'rgba(239, 68, 68, 0.16)',
-          pulseColor: 'border-rose-400 bg-rose-500/10 text-rose-700',
-          barBg: 'bg-rose-500',
-          badgeBg: 'bg-rose-50 text-rose-800 border-rose-200/80',
+          glow: 'rgba(254, 127, 14, 0.18)',
+          pulseColor: 'border-[#FE7F0E] bg-[#FFE0B3] text-[#FE7F0E]',
+          barBg: 'bg-[#FE7F0E]',
+          badgeBg: 'bg-[#FFE0B3] text-[#B85600] border-[#FE7F0E]/60 font-bold',
           icon: ShieldAlert,
           moodLabel: 'Distressed & Blocked',
-          auraShadow: '0 0 50px rgba(239, 68, 68, 0.28)',
+          auraShadow: '0 0 50px rgba(254, 127, 14, 0.28)',
         };
       case 'Unsafe':
         return {
-          glow: 'rgba(225, 29, 72, 0.2)',
-          pulseColor: 'border-rose-500 bg-rose-500/10 text-rose-800',
-          barBg: 'bg-rose-600',
-          badgeBg: 'bg-rose-50 text-rose-800 border-rose-300 ring-2 ring-rose-400/20',
+          glow: 'rgba(202, 63, 63, 0.22)',
+          pulseColor: 'border-[#CA3F3F] bg-[#FFCCCC] text-[#CA3F3F]',
+          barBg: 'bg-[#CA3F3F]',
+          badgeBg: 'bg-[#FFCCCC] text-[#912323] border-[#CA3F3F]/60 font-bold ring-2 ring-red-400/20',
           icon: ShieldAlert,
           moodLabel: 'Guarded & Alert (0%)',
-          auraShadow: '0 0 50px rgba(225, 29, 72, 0.35)',
+          auraShadow: '0 0 50px rgba(202, 63, 63, 0.35)',
         };
       default:
         return {
-          glow: 'rgba(100, 116, 139, 0.15)',
-          pulseColor: 'border-slate-400 bg-slate-500/10 text-slate-700',
-          barBg: 'bg-slate-500',
-          badgeBg: 'bg-slate-100 text-slate-700 border-slate-300',
+          glow: 'rgba(167, 177, 194, 0.15)',
+          pulseColor: 'border-[#A7B1C2] bg-slate-100 text-[#3F4349]',
+          barBg: 'bg-[#A7B1C2]',
+          badgeBg: 'bg-slate-100 text-[#3F4349] border-slate-300',
           icon: ShieldAlert,
           moodLabel: 'Still & Protected',
-          auraShadow: '0 0 35px rgba(100, 116, 139, 0.2)',
+          auraShadow: '0 0 35px rgba(167, 177, 194, 0.2)',
         };
     }
   };
@@ -539,6 +550,21 @@ export const PetStage: React.FC<PetStageProps> = ({
             >
               <span>🎨</span>
               <span>Studio</span>
+            </button>
+          )}
+
+          {onOpenPipelineDrawer && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenPipelineDrawer();
+              }}
+              title="Open CI/CD Pipeline Companion drawer"
+              className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 hover:text-indigo-700 text-indigo-600 border border-indigo-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
+            >
+              <span>⚡</span>
+              <span>Pipeline</span>
             </button>
           )}
         </div>

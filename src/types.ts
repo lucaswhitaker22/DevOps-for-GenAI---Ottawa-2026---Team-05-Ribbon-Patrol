@@ -7,7 +7,52 @@ export type SymptomType =
   | 'stale_branch'
   | 'detached_head'
   | 'clean_sync'
-  | 'destructive_hazard';
+  | 'destructive_hazard'
+  | 'failed_build'
+  | 'flaky_tests'
+  | 'vulnerability_risk'
+  | 'deploy_success';
+
+export type PipelineBuildStatus = 'passed' | 'failed' | 'running' | 'queued';
+export type TestSuiteHealth = 'healthy' | 'flaky' | 'failing';
+export type VulnerabilitySeverity = 'none' | 'low' | 'medium' | 'high' | 'critical';
+
+export interface PipelineStep {
+  name: string;
+  status: 'success' | 'failed' | 'running' | 'pending' | 'warning';
+  duration: string;
+  logSummary?: string;
+}
+
+export interface FlakyTestItem {
+  id: string;
+  name: string;
+  suite: string;
+  failureRate: number; // e.g. 30%
+  lastFailedCommit: string;
+}
+
+export interface SecurityVulnerability {
+  id: string;
+  cveId: string;
+  package: string;
+  severity: VulnerabilitySeverity;
+  title: string;
+  remediation: string;
+}
+
+export interface CICDPipelineState {
+  pipelineId: string;
+  buildStatus: PipelineBuildStatus;
+  testHealth: TestSuiteHealth;
+  passRate: number; // 0 - 100%
+  flakyTests: FlakyTestItem[];
+  vulnerabilities: SecurityVulnerability[];
+  deployTarget: 'staging' | 'production' | 'none';
+  deployStatus: 'success' | 'deploying' | 'failed' | 'idle';
+  lastRunTime: string;
+  pipelineSteps: PipelineStep[];
+}
 
 export interface FileChange {
   path: string;
@@ -154,6 +199,7 @@ export interface RepositoryState {
   upstreamUnavailable?: boolean;
   repositoryUnavailable?: boolean;
   scannedAt?: string;
+  pipelineState?: CICDPipelineState;
 }
 
 export interface RecommendedAction {

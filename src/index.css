@@ -1,8 +1,65 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ribbon-magenta: #BD006E;
+  --color-ribbon-magenta-dark: #9E005B;
+  --color-ribbon-magenta-light: #FDF0F7;
+  --color-ribbon-charcoal: #3F4349;
+  --color-ribbon-header: #d0d7db;
+  --color-ribbon-toolbar: #A7B1C2;
+  --color-ribbon-gold: #D1C101;
+
+  --color-alarm-red: #CA3F3F;
+  --color-alarm-red-bg: #FFCCCC;
+  --color-alarm-orange: #FE7F0E;
+  --color-alarm-orange-bg: #FFE0B3;
+  --color-alarm-yellow: #D1C101;
+  --color-alarm-yellow-bg: #FFFBCC;
+  --color-alarm-blue: #0082BB;
+  --color-alarm-blue-bg: #D5E5EC;
+  --color-alarm-green: #4F8A10;
+  --color-alarm-green-bg: #E6FFCC;
+  --color-alarm-purple: #BA5FEB;
+  --color-alarm-purple-bg: #EECCFF;
+}
+
+:root {
+  --font-family: 'Roboto', 'Plus Jakarta Sans', -apple-system, sans-serif;
+  
+  /* Header & Navigation */
+  --header-bg: #d0d7db;
+  --header-text: #3F4349;
+  --content-bg: #FFFFFF;
+  --content-text: #3F4349;
+  --toolbar-bg: #A7B1C2;
+  --nav-bg: #3F4349;
+  
+  /* Ribbon Brand Accents */
+  --brand-primary: #BD006E;
+  --brand-primary-hover: #9E005B;
+  --brand-primary-light: #FDF0F7;
+  --brand-active: #D1C101;
+  
+  /* Alarm System Colors from theme.scss */
+  --alarm-red: #CA3F3F;
+  --alarm-red-bg: #FFCCCC;
+  --alarm-orange: #FE7F0E;
+  --alarm-orange-bg: #FFE0B3;
+  --alarm-yellow: #D1C101;
+  --alarm-yellow-bg: #FFFBCC;
+  --alarm-blue: #0082BB;
+  --alarm-blue-bg: #D2EDF9;
+  --alarm-green: #4F8A10;
+  --alarm-green-bg: #E6FFCC;
+  --alarm-purple: #BA5FEB;
+  --alarm-purple-bg: #EECCFF;
+}
+
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Roboto', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--content-text);
+    background-color: #FAFAFB;
   }
   code, pre, kbd {
     font-family: 'JetBrains Mono', monospace;
@@ -18,11 +75,55 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #A7B1C2;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #3F4349;
+}
+
+/* Ribbon Theme Helper Classes */
+.bg-ribbon-magenta {
+  background-color: #BD006E;
+}
+.text-ribbon-magenta {
+  color: #BD006E;
+}
+.border-ribbon-magenta {
+  border-color: #BD006E;
+}
+
+.bg-ribbon-charcoal {
+  background-color: #3F4349;
+}
+.text-ribbon-charcoal {
+  color: #3F4349;
+}
+
+.bg-ribbon-header {
+  background-color: #d0d7db;
+}
+
+/* Alarm & Health Level Indicators matching theme.scss */
+.health-healthy {
+  color: #4F8A10;
+  background-color: #E6FFCC;
+  border-color: #4F8A10;
+}
+.health-attention {
+  color: #857A00;
+  background-color: #FFFBCC;
+  border-color: #D1C101;
+}
+.health-blocked {
+  color: #FE7F0E;
+  background-color: #FFE0B3;
+  border-color: #FE7F0E;
+}
+.health-unsafe {
+  color: #CA3F3F;
+  background-color: #FFCCCC;
+  border-color: #CA3F3F;
 }
 
 /* Pixel Art & Retro Tamagotchi LCD Rendering */
@@ -33,14 +134,13 @@
 }
 
 .tamagotchi-screen {
-  background: radial-gradient(circle at 50% 50%, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
-  box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.08), inset 0 -1px 3px rgba(255, 255, 255, 0.8);
+  background: radial-gradient(circle at 50% 50%, rgba(250, 250, 251, 0.98) 0%, rgba(208, 215, 219, 0.4) 100%);
+  box-shadow: inset 0 2px 6px rgba(63, 67, 73, 0.12), inset 0 -1px 3px rgba(255, 255, 255, 0.9);
 }
 
 .tamagotchi-lcd-grid {
   background-size: 8px 8px;
   background-image: 
-    linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, rgba(167, 177, 194, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(167, 177, 194, 0.08) 1px, transparent 1px);
 }
-

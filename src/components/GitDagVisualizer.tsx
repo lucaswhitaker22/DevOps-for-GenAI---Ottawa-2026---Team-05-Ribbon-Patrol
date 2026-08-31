@@ -153,7 +153,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
       {/* Header controls & View Switcher */}
       <div className="flex items-center justify-between px-1 text-xs">
         <div className="flex items-center gap-1.5 font-bold text-slate-700">
-          <GitBranch className="w-3.5 h-3.5 text-blue-600" />
+          <GitBranch className="w-3.5 h-3.5 text-[#BD006E]" />
           <span>Interactive Commit DAG</span>
           <span className="text-[10px] font-mono font-normal px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
             {graph.nodes.length} nodes
@@ -380,27 +380,27 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                 let nodeRadius = 7;
 
                 if (node.isHead) {
-                  nodeFill = '#2563eb';
-                  nodeStroke = '#93c5fd';
+                  nodeFill = '#BD006E';
+                  nodeStroke = '#FF99D6';
                   nodeRadius = 9;
                 } else if (node.isUpstreamHead) {
                   nodeFill = '#0f766e';
                   nodeStroke = '#2dd4bf';
                   nodeRadius = 8;
                 } else if (node.isConflicted) {
-                  nodeFill = '#e11d48';
-                  nodeStroke = '#fda4af';
+                  nodeFill = '#CA3F3F';
+                  nodeStroke = '#FFCCCC';
                   nodeRadius = 8;
                 } else if (node.isDetached) {
-                  nodeFill = '#d97706';
-                  nodeStroke = '#fde68a';
+                  nodeFill = '#FE7F0E';
+                  nodeStroke = '#FFE0B3';
                   nodeRadius = 8;
                 } else if (node.isLocalAhead) {
-                  nodeFill = '#3b82f6';
-                  nodeStroke = '#60a5fa';
+                  nodeFill = '#BD006E';
+                  nodeStroke = '#FF99D6';
                 } else if (node.isRemoteBehind) {
-                  nodeFill = '#d97706';
-                  nodeStroke = '#fcd34d';
+                  nodeFill = '#D1C101';
+                  nodeStroke = '#FFFBCC';
                 } else if (node.isMergeBase || node.isForkPoint) {
                   nodeFill = '#475569';
                   nodeStroke = '#cbd5e1';
@@ -552,7 +552,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                     {/* Role Tag Pill */}
                     {node.isHead && (
                       <g transform={`translate(${node.x + 68}, ${node.y - 10})`}>
-                        <rect x="0" y="0" width="38" height="13" rx="3" fill="#2563eb" />
+                        <rect x="0" y="0" width="38" height="13" rx="3" fill="#BD006E" />
                         <text x="19" y="9.5" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
                           HEAD
                         </text>
