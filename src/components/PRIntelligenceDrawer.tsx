@@ -409,6 +409,36 @@ export const PRIntelligenceDrawer: React.FC<PRIntelligenceDrawerProps> = ({
                           Generate
                         </span>
                       </button>
+
+                      {/* Action 4: Resolve Merge Conflicts */}
+                      <button
+                        type="button"
+                        onClick={() => onExecutePRAction && onExecutePRAction('resolve_conflicts')}
+                        className={`w-full p-3 border rounded-xl text-xs font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                          pr.mergeability === 'conflicted'
+                            ? 'bg-rose-50 hover:bg-rose-100 border-rose-300 text-rose-900'
+                            : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-900'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 text-left">
+                          <AlertTriangle className={`w-4 h-4 shrink-0 ${pr.mergeability === 'conflicted' ? 'text-rose-600' : 'text-slate-500'}`} />
+                          <div>
+                            <span className="block font-bold">Resolve Merge Conflicts</span>
+                            <span className="text-[11px] font-normal opacity-85">
+                              {pr.mergeability === 'conflicted'
+                                ? 'Conflicts detected with target base branch — step-by-step resolution'
+                                : 'Check and inspect potential conflict markers with upstream'}
+                            </span>
+                          </div>
+                        </div>
+                        <span className={`px-2.5 py-1 rounded-lg text-[11px] font-bold shadow-2xs border ${
+                          pr.mergeability === 'conflicted'
+                            ? 'bg-white text-rose-700 border-rose-300'
+                            : 'bg-white text-slate-700 border-slate-200'
+                        }`}>
+                          {pr.mergeability === 'conflicted' ? 'Fix Conflicts' : 'Inspect'}
+                        </span>
+                      </button>
                     </div>
 
                     {changelogGenerated && (

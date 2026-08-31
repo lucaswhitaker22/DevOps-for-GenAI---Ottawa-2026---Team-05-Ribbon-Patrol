@@ -1217,7 +1217,7 @@ export const ALL_SCENARIOS: ScenarioPreset[] = [
   CLEAN_HEALTHY_SCENARIO,
 ];
 
-// Helper to compute dynamic state and health
+// Helper to compute dynamic state, multi-factor risk breakdown, and health
 export function computeRepositoryHealth(state: RepositoryState): {
   healthPercentage: number;
   healthLevel: HealthLevel;
@@ -1225,212 +1225,311 @@ export function computeRepositoryHealth(state: RepositoryState): {
   symptomTitle: string;
   symptomDescription: string;
   operatorMeaning: string;
+  riskBreakdown?: import('../types').RiskScoreBreakdown;
 } {
-  // PR INTELLIGENCE OVERRIDES
-  if (state.primarySymptom === 'pr_changes_requested' || state.activePullRequest?.reviewStatus === 'changes_requested') {
-    return {
-      healthPercentage: 62,
-      healthLevel: 'Attention',
-      primarySymptom: 'pr_changes_requested',
-      symptomTitle: state.symptomTitle || `PR #${state.activePullRequest?.number || 214}: Changes Requested`,
-      symptomDescription: state.symptomDescription || 'Reviewer requested changes on your pull request.',
-      operatorMeaning: state.operatorMeaning || 'Resolve review comments and push an update.',
-    };
-  }
+  // 1. Calculate Factor Deductions (Base Score = 100)
+  const factors: import('../types').RiskFactorItem[] = [];
 
-  if (state.primarySymptom === 'pr_pending_review' || (state.activePullRequest && state.activePullRequest.waitingDays >= 3)) {
-    return {
-      healthPercentage: 70,
-      healthLevel: 'Attention',
-      primarySymptom: 'pr_pending_review',
-      symptomTitle: state.symptomTitle || `PR #${state.activePullRequest?.number || 305} Pending Review (${state.activePullRequest?.waitingDays || 3} Days)`,
-      symptomDescription: state.symptomDescription || 'PR has been waiting for review.',
-      operatorMeaning: state.operatorMeaning || 'Send review reminder to requested reviewers.',
-    };
-  }
+  // Factor 1: Branch Divergence
+  let divergenceDeduction = 0;
+  let divergenceStatus: 'good' | 'warning' | 'critical' = 'good';
+  let divergenceDetails = 'Branch is synchronized with upstream tracking branch.';
+  let divergenceRec = 'Keep pulling and pushing frequently.';
 
-  if (state.primarySymptom === 'pr_conflicted' || state.activePullRequest?.mergeability === 'conflicted') {
-    return {
-      healthPercentage: 40,
-      healthLevel: 'Blocked',
-      primarySymptom: 'pr_conflicted',
-      symptomTitle: state.symptomTitle || `PR #${state.activePullRequest?.number || 189}: Merge Conflict`,
-      symptomDescription: state.symptomDescription || 'Merge conflicts block automatic pull request merge.',
-      operatorMeaning: state.operatorMeaning || 'Rebase branch and resolve conflict markers.',
-    };
-  }
-
-  if (state.primarySymptom === 'pr_approved_ready' || state.activePullRequest?.reviewStatus === 'approved') {
-    return {
-      healthPercentage: 100,
-      healthLevel: 'Healthy',
-      primarySymptom: 'pr_approved_ready',
-      symptomTitle: state.symptomTitle || `PR #${state.activePullRequest?.number || 242}: Approved & Ready`,
-      symptomDescription: state.symptomDescription || 'PR approved and ready to merge into main.',
-      operatorMeaning: state.operatorMeaning || 'Squash and merge pull request.',
-    };
-  }
-
-  // CI/CD OVERRIDES & PRECEDENCE
-  if (state.primarySymptom === 'failed_build' || state.pipelineState?.buildStatus === 'failed') {
-    return {
-      healthPercentage: 35,
-      healthLevel: 'Blocked',
-      primarySymptom: 'failed_build',
-      symptomTitle: state.symptomTitle || 'CI Build Failure',
-      symptomDescription: state.symptomDescription || 'Compiler or build script error in CI pipeline.',
-      operatorMeaning: state.operatorMeaning || 'Fix compilation errors before re-triggering CI.',
-    };
-  }
-
-  if (state.primarySymptom === 'flaky_tests' || state.pipelineState?.testHealth === 'flaky') {
-    return {
-      healthPercentage: 68,
-      healthLevel: 'Attention',
-      primarySymptom: 'flaky_tests',
-      symptomTitle: state.symptomTitle || 'Flaky Tests Detected',
-      symptomDescription: state.symptomDescription || 'Intermittent test failures destabilizing pipeline.',
-      operatorMeaning: state.operatorMeaning || 'Quarantine or refactor flaky test specs.',
-    };
-  }
-
-  if (state.primarySymptom === 'vulnerability_risk' || (state.pipelineState?.vulnerabilities && state.pipelineState.vulnerabilities.length > 0)) {
-    return {
-      healthPercentage: 55,
-      healthLevel: 'Attention',
-      primarySymptom: 'vulnerability_risk',
-      symptomTitle: state.symptomTitle || 'Security Vulnerability Detected',
-      symptomDescription: state.symptomDescription || 'High severity CVE flagged in dependency audit.',
-      operatorMeaning: state.operatorMeaning || 'Upgrade vulnerable dependencies to patch CVE.',
-    };
-  }
-
-  if (state.primarySymptom === 'deploy_success' || state.pipelineState?.deployStatus === 'success') {
-    return {
-      healthPercentage: 100,
-      healthLevel: 'Healthy',
-      primarySymptom: 'deploy_success',
-      symptomTitle: state.symptomTitle || 'Deployment Success',
-      symptomDescription: state.symptomDescription || 'Pipeline green and deployed to production.',
-      operatorMeaning: state.operatorMeaning || 'Production deployment verified.',
-    };
-  }
-
-  // PRECEDENCE 1: Immediate work-loss risk (Unsafe state strictly at 0% health)
   const isDestructive =
     state.healthLevel === 'Unsafe' ||
     state.primarySymptom === 'destructive_hazard' ||
     (state.destructiveRiskWarning && state.destructiveRiskWarning.length > 0) ||
-    (state.currentBranch.name.includes('checkout-refactor') && state.workingTree.length > 0 && state.currentBranch.behindCount >= 4);
+    (state.currentBranch?.name?.includes('checkout-refactor') && (state.workingTree?.length || 0) > 0 && (state.currentBranch?.behindCount || 0) >= 4);
+
+  const hasConflict = state.workingTree?.some((f) => f.status === 'conflicted') || state.primarySymptom === 'merge_conflict' || state.primarySymptom === 'pr_conflicted' || state.activePullRequest?.mergeability === 'conflicted';
 
   if (isDestructive) {
-    return {
-      healthPercentage: 0,
-      healthLevel: 'Unsafe',
-      primarySymptom: 'destructive_hazard',
-      symptomTitle: state.symptomTitle || 'Destructive Work-Loss Hazard',
-      symptomDescription:
-        state.symptomDescription ||
-        `${state.workingTree.length} uncommitted files risk permanent loss due to upstream force-push divergence.`,
-      operatorMeaning:
-        state.operatorMeaning ||
-        'Halt all automatic writes. Preserve work with git stash before any upstream reconciliation.',
-    };
+    divergenceDeduction = 35;
+    divergenceStatus = 'critical';
+    divergenceDetails = `Upstream force-push with ${state.workingTree?.length || 0} dirty files. Immediate work-loss hazard!`;
+    divergenceRec = 'Stash in-flight work immediately before any upstream pull.';
+  } else if (hasConflict) {
+    divergenceDeduction = 25;
+    divergenceStatus = 'critical';
+    divergenceDetails = 'Merge conflict markers detected in active working tree.';
+    divergenceRec = 'Resolve file conflict markers and run git rebase --continue.';
+  } else if (state.currentBranch?.isDetached) {
+    divergenceDeduction = 18;
+    divergenceStatus = 'warning';
+    divergenceDetails = 'HEAD detached from named branch; floating commit anchor required.';
+    divergenceRec = 'Run git switch -c <branch-name> to anchor commit.';
+  } else if ((state.currentBranch?.behindCount || 0) > 0 && (state.workingTree?.length || 0) > 0) {
+    divergenceDeduction = Math.min(22, 10 + (state.currentBranch?.behindCount || 0) * 3);
+    divergenceStatus = 'warning';
+    divergenceDetails = `${state.currentBranch?.behindCount || 0} commits behind upstream with ${state.workingTree?.length || 0} uncommitted files.`;
+    divergenceRec = 'Stash local modifications before pulling upstream.';
+  } else if ((state.currentBranch?.behindCount || 0) > 0) {
+    divergenceDeduction = Math.min(15, (state.currentBranch?.behindCount || 0) * 3);
+    divergenceStatus = 'warning';
+    divergenceDetails = `${state.currentBranch?.behindCount || 0} commits behind upstream.`;
+    divergenceRec = 'Run git pull --ff-only to catch up.';
+  } else if ((state.currentBranch?.aheadCount || 0) > 0) {
+    divergenceDeduction = Math.min(10, (state.currentBranch?.aheadCount || 0) * 2);
+    divergenceStatus = 'warning';
+    divergenceDetails = `${state.currentBranch?.aheadCount || 0} unpushed local commits.`;
+    divergenceRec = 'Push commits to origin when ready for backup or review.';
+  } else if (state.currentBranch?.isStale) {
+    divergenceDeduction = 8;
+    divergenceStatus = 'warning';
+    divergenceDetails = `Branch inactive for ${state.currentBranch?.staleDays || 30} days since merge.`;
+    divergenceRec = 'Prune merged branch with git branch -d.';
   }
 
-  // PRECEDENCE 2: Merge Conflict
-  const hasConflict = state.workingTree.some((f) => f.status === 'conflicted');
-  if (hasConflict) {
-    return {
-      healthPercentage: 35,
-      healthLevel: 'Blocked',
-      primarySymptom: 'merge_conflict',
-      symptomTitle: 'Merge Conflict Detected',
-      symptomDescription: `${state.workingTree.filter((f) => f.status === 'conflicted').length} conflicting files block the merge.`,
-      operatorMeaning: 'Resolve file markers or abort rebase before continuing.',
-    };
+  factors.push({
+    id: 'branch_divergence',
+    name: 'Branch Divergence',
+    impact: -divergenceDeduction,
+    status: divergenceStatus,
+    details: divergenceDetails,
+    recommendation: divergenceRec,
+    metricLabel: divergenceDeduction > 0 ? `-${divergenceDeduction} pts` : '0 pts (Clean)',
+  });
+
+  // Factor 2: Failed Tests & Pipeline Health
+  let testDeduction = 0;
+  let testStatus: 'good' | 'warning' | 'critical' = 'good';
+  let testDetails = 'All CI/CD test suites and build checks passed cleanly.';
+  let testRec = 'Maintain high unit and integration test coverage.';
+
+  if (state.primarySymptom === 'failed_build' || state.pipelineState?.buildStatus === 'failed') {
+    testDeduction = 25;
+    testStatus = 'critical';
+    testDetails = 'CI Pipeline build failed due to compilation or syntax errors.';
+    testRec = 'Inspect failed build logs and fix broken test assertions.';
+  } else if (state.primarySymptom === 'flaky_tests' || state.pipelineState?.testHealth === 'flaky') {
+    testDeduction = 14;
+    testStatus = 'warning';
+    testDetails = `${state.pipelineState?.flakyTests?.length || 2} flaky test specs flagged with intermittent failures.`;
+    testRec = 'Quarantine or refactor asynchronous test suites.';
+  } else if (state.primarySymptom === 'smoke_cloud' || state.pipelineState?.deployStatus === 'failed') {
+    testDeduction = 28;
+    testStatus = 'critical';
+    testDetails = 'Deployment rollout failed: missing secrets or crash-looping pods.';
+    testRec = 'Check deployment manifests and inject missing environment variables.';
   }
 
-  // PRECEDENCE 3: Detached HEAD
-  if (state.currentBranch.isDetached) {
-    return {
-      healthPercentage: 50,
-      healthLevel: 'Attention',
-      primarySymptom: 'detached_head',
-      symptomTitle: 'Detached HEAD State',
-      symptomDescription: 'HEAD is not attached to a named branch; new commits risk loss if you checkout another ref.',
-      operatorMeaning: 'Create or checkout a named branch to anchor your work.',
-    };
+  factors.push({
+    id: 'failed_tests',
+    name: 'Failed & Flaky Tests',
+    impact: -testDeduction,
+    status: testStatus,
+    details: testDetails,
+    recommendation: testRec,
+    metricLabel: testDeduction > 0 ? `-${testDeduction} pts` : '0 pts (Passing)',
+  });
+
+  // Factor 3: Secrets & Security Deviations
+  let secretDeduction = 0;
+  let secretStatus: 'good' | 'warning' | 'critical' = 'good';
+  let secretDetails = 'No plaintext secrets, API keys, or security policy violations detected.';
+  let secretRec = 'Use environment secret stores or vault management.';
+
+  if (state.primarySymptom === 'shield_cracked') {
+    secretDeduction = 30;
+    secretStatus = 'critical';
+    secretDetails = 'Infrastructure security policy violation: Public S3 bucket / anonymous access enabled.';
+    secretRec = 'Enforce AWS002/003 block public access policy in Terraform.';
+  } else if (state.secretsDetectedCount && state.secretsDetectedCount > 0) {
+    secretDeduction = Math.min(30, state.secretsDetectedCount * 15);
+    secretStatus = 'critical';
+    secretDetails = `${state.secretsDetectedCount} exposed credentials/API keys in working tree.`;
+    secretRec = 'Revoke exposed token and remove from git history.';
   }
 
-  // PRECEDENCE 4: Stale branch
-  if (state.currentBranch.isStale) {
-    return {
-      healthPercentage: 74,
-      healthLevel: 'Attention',
-      primarySymptom: 'stale_branch',
-      symptomTitle: `Stale Branch (${state.currentBranch.staleDays || 30} days)`,
-      symptomDescription: 'Branch is merged into main and inactive.',
-      operatorMeaning: 'Prune merged local branch to keep workspace clean.',
-    };
+  factors.push({
+    id: 'secrets_detected',
+    name: 'Secrets & Security Policies',
+    impact: -secretDeduction,
+    status: secretStatus,
+    details: secretDetails,
+    recommendation: secretRec,
+    metricLabel: secretDeduction > 0 ? `-${secretDeduction} pts` : '0 pts (Secure)',
+  });
+
+  // Factor 4: Open Vulnerabilities
+  let vulnDeduction = 0;
+  let vulnStatus: 'good' | 'warning' | 'critical' = 'good';
+  let vulnDetails = 'Zero open critical or high vulnerability CVEs detected.';
+  let vulnRec = 'Keep dependencies updated with regular security audits.';
+
+  const vulns = state.pipelineState?.vulnerabilities || [];
+  if (state.primarySymptom === 'vulnerability_risk' || vulns.length > 0) {
+    vulnDeduction = vulns.some((v) => v.severity === 'critical' || v.severity === 'high') ? 22 : 12;
+    vulnStatus = vulnDeduction >= 20 ? 'critical' : 'warning';
+    vulnDetails = `${vulns.length || 1} dependency vulnerabilities flagged in package lock.`;
+    vulnRec = 'Run npm audit fix or bump patched package versions.';
   }
 
-  // PRECEDENCE 5: Behind remote with local edits
-  if (state.currentBranch.behindCount > 0 && state.workingTree.length > 0) {
-    const health = Math.max(55, 90 - state.currentBranch.behindCount * 6 - state.workingTree.length * 5);
-    return {
-      healthPercentage: health,
-      healthLevel: 'Attention',
-      primarySymptom: 'behind_remote',
-      symptomTitle: 'Behind Remote with Local Edits',
-      symptomDescription: `${state.currentBranch.name} is ${state.currentBranch.behindCount} commits behind upstream with ${state.workingTree.length} uncommitted files.`,
-      operatorMeaning: 'Stash local modifications before pulling upstream changes to prevent work contamination.',
-    };
+  factors.push({
+    id: 'vulnerabilities',
+    name: 'Open Vulnerabilities',
+    impact: -vulnDeduction,
+    status: vulnStatus,
+    details: vulnDetails,
+    recommendation: vulnRec,
+    metricLabel: vulnDeduction > 0 ? `-${vulnDeduction} pts` : '0 pts (0 CVEs)',
+  });
+
+  // Factor 5: Code Smells & Technical Debt
+  let smellDeduction = 0;
+  let smellStatus: 'good' | 'warning' | 'critical' = 'good';
+  let smellDetails = 'Code style, linting, and complexity metrics are within normal thresholds.';
+  let smellRec = 'Run linter and keep modules modular.';
+
+  const modifiedCount = state.workingTree?.length || 0;
+  if (state.codeSmellsCount && state.codeSmellsCount > 0) {
+    smellDeduction = Math.min(15, state.codeSmellsCount * 4);
+    smellStatus = smellDeduction > 8 ? 'warning' : 'good';
+    smellDetails = `${state.codeSmellsCount} code smell / TODO / lint warnings identified.`;
+    smellRec = 'Refactor complex functions and resolve lint warnings.';
+  } else if (modifiedCount > 8) {
+    smellDeduction = 6;
+    smellStatus = 'warning';
+    smellDetails = `${modifiedCount} uncommitted files in working tree — high context switching risk.`;
+    smellRec = 'Stage and commit in smaller, focused atomic commits.';
   }
 
-  // PRECEDENCE 6: Behind remote with clean tree
-  if (state.currentBranch.behindCount > 0) {
-    return {
-      healthPercentage: Math.max(75, 95 - state.currentBranch.behindCount * 5),
-      healthLevel: 'Attention',
-      primarySymptom: 'behind_remote',
-      symptomTitle: `${state.currentBranch.behindCount} Commits Behind Remote`,
-      symptomDescription: `Upstream branch has incoming commits ready to be pulled cleanly.`,
-      operatorMeaning: 'Fast-forward pull from upstream to stay synchronized.',
-    };
+  factors.push({
+    id: 'code_smells',
+    name: 'Code Smells & Debt',
+    impact: -smellDeduction,
+    status: smellStatus,
+    details: smellDetails,
+    recommendation: smellRec,
+    metricLabel: smellDeduction > 0 ? `-${smellDeduction} pts` : '0 pts (Clean)',
+  });
+
+  // Factor 6: Unreviewed Commits & PR Review Lag
+  let reviewDeduction = 0;
+  let reviewStatus: 'good' | 'warning' | 'critical' = 'good';
+  let reviewDetails = 'All active branch changes have peer reviews and approvals.';
+  let reviewRec = 'Conduct thorough peer code reviews prior to merging.';
+
+  if (state.primarySymptom === 'pr_changes_requested' || state.activePullRequest?.reviewStatus === 'changes_requested') {
+    reviewDeduction = 15;
+    reviewStatus = 'warning';
+    reviewDetails = `PR #${state.activePullRequest?.number || 214} has requested changes from reviewers.`;
+    reviewRec = 'Address review comments in files and request re-review.';
+  } else if (state.primarySymptom === 'pr_pending_review' || (state.activePullRequest && state.activePullRequest.waitingDays >= 3)) {
+    reviewDeduction = 10;
+    reviewStatus = 'warning';
+    reviewDetails = `PR #${state.activePullRequest?.number || 305} waiting ${state.activePullRequest?.waitingDays || 3} days for review.`;
+    reviewRec = 'Send friendly review reminder to unblock PR.';
+  } else if (state.unreviewedCommitsCount && state.unreviewedCommitsCount > 0) {
+    reviewDeduction = Math.min(15, state.unreviewedCommitsCount * 4);
+    reviewStatus = 'warning';
+    reviewDetails = `${state.unreviewedCommitsCount} unreviewed commits on protected branch.`;
+    reviewRec = 'Ensure pull requests require at least 1 peer approval.';
   }
 
-  // PRECEDENCE 7: Ahead count / unpushed work
-  if (state.currentBranch.aheadCount > 0) {
-    return {
-      healthPercentage: 85,
-      healthLevel: 'Attention',
-      primarySymptom: 'unpushed_work',
-      symptomTitle: `${state.currentBranch.aheadCount} Unpushed Local Commits`,
-      symptomDescription: `You have commits that haven't been backed up or published to upstream.`,
-      operatorMeaning: 'Push commits to origin when ready for review or backup.',
-    };
+  factors.push({
+    id: 'unreviewed_commits',
+    name: 'Unreviewed Commits & PR Lag',
+    impact: -reviewDeduction,
+    status: reviewStatus,
+    details: reviewDetails,
+    recommendation: reviewRec,
+    metricLabel: reviewDeduction > 0 ? `-${reviewDeduction} pts` : '0 pts (Reviewed)',
+  });
+
+  // Factor 7: Large PR Size
+  let prSizeDeduction = 0;
+  let prSizeStatus: 'good' | 'warning' | 'critical' = 'good';
+  let prSizeDetails = 'PR size is small and easy to review (< 300 lines changed).';
+  let prSizeRec = 'Break massive changes into smaller, incremental PRs.';
+
+  const totalTreeLines = (state.workingTree || []).reduce((acc, f) => acc + (f.additions || 0) + (f.deletions || 0), 0);
+  if (state.activePullRequest && (state.activePullRequest.commentsCount > 5 || totalTreeLines > 400)) {
+    prSizeDeduction = 8;
+    prSizeStatus = 'warning';
+    prSizeDetails = `PR exceeds recommended change volume (> 400 lines or > 15 files).`;
+    prSizeRec = 'Split into smaller stacked PRs to speed up reviews.';
   }
 
-  // PRECEDENCE 8: Active local working tree
-  if (state.workingTree.length > 0) {
-    return {
-      healthPercentage: 92,
-      healthLevel: 'Healthy',
-      primarySymptom: 'unpushed_work',
-      symptomTitle: 'Active Working Directory',
-      symptomDescription: `${state.workingTree.length} files modified locally.`,
-      operatorMeaning: 'Review diff and commit changes when logical unit is complete.',
-    };
+  factors.push({
+    id: 'large_pr_size',
+    name: 'Large PR Size',
+    impact: -prSizeDeduction,
+    status: prSizeStatus,
+    details: prSizeDetails,
+    recommendation: prSizeRec,
+    metricLabel: prSizeDeduction > 0 ? `-${prSizeDeduction} pts` : '0 pts (Optimal Size)',
+  });
+
+  // 2. Compute Final Aggregated Health Score
+  const totalDeductions = divergenceDeduction + testDeduction + secretDeduction + vulnDeduction + smellDeduction + reviewDeduction + prSizeDeduction;
+  let calculatedScore = Math.max(0, Math.min(100, 100 - totalDeductions));
+
+  // Determine Health Level & Risk Category
+  let healthLevel: HealthLevel = 'Healthy';
+  let riskCategory: 'Low Risk' | 'Moderate Risk' | 'High Risk' | 'Critical Risk' = 'Low Risk';
+
+  if (isDestructive || calculatedScore === 0) {
+    calculatedScore = 0;
+    healthLevel = 'Unsafe';
+    riskCategory = 'Critical Risk';
+  } else if (hasConflict || testDeduction >= 25 || secretDeduction >= 30 || calculatedScore < 45) {
+    healthLevel = 'Blocked';
+    riskCategory = 'High Risk';
+  } else if (calculatedScore < 80) {
+    healthLevel = 'Attention';
+    riskCategory = 'Moderate Risk';
+  } else {
+    healthLevel = 'Healthy';
+    riskCategory = 'Low Risk';
   }
 
-  // PRECEDENCE 9: Clean & Pristine 100%
+  // Preserve explicit preset symptoms if defined
+  let primarySymptom: SymptomType = state.primarySymptom || 'clean_sync';
+  let symptomTitle = state.symptomTitle;
+  let symptomDescription = state.symptomDescription;
+  let operatorMeaning = state.operatorMeaning;
+
+  if (!symptomTitle) {
+    if (isDestructive) {
+      primarySymptom = 'destructive_hazard';
+      symptomTitle = 'Destructive Work-Loss Hazard';
+      symptomDescription = 'Work-loss risk due to upstream force-push.';
+      operatorMeaning = 'Preserve changes with git stash before syncing.';
+    } else if (hasConflict) {
+      primarySymptom = 'merge_conflict';
+      symptomTitle = 'Merge Conflict Detected';
+      symptomDescription = 'Conflicting file markers block merge/rebase.';
+      operatorMeaning = 'Resolve conflict markers and continue rebase.';
+    } else if (calculatedScore < 80) {
+      symptomTitle = 'Repository Attention Needed';
+      symptomDescription = `${riskCategory} calculated from 7 repo health factors.`;
+      operatorMeaning = 'Inspect risk breakdown and apply recommended remediations.';
+    } else {
+      primarySymptom = 'clean_sync';
+      symptomTitle = 'Synchronized & Pristine';
+      symptomDescription = 'Working directory clean and up to date.';
+      operatorMeaning = 'Repository in optimal state.';
+    }
+  }
+
+  const riskBreakdown: import('../types').RiskScoreBreakdown = {
+    overallScore: calculatedScore,
+    healthLevel,
+    riskCategory,
+    summary: `${riskCategory} (Score: ${calculatedScore}/100) derived from 7 data-driven repository and DevOps risk factors.`,
+    factors,
+  };
+
   return {
-    healthPercentage: 100,
-    healthLevel: 'Healthy',
-    primarySymptom: 'clean_sync',
-    symptomTitle: 'Synchronized & Pristine',
-    symptomDescription: 'Working directory clean and up to date with remote.',
-    operatorMeaning: 'Repository in optimal state.',
+    healthPercentage: calculatedScore,
+    healthLevel,
+    primarySymptom,
+    symptomTitle,
+    symptomDescription,
+    operatorMeaning,
+    riskBreakdown,
   };
 }
+

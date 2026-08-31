@@ -10,6 +10,7 @@ import { PRIntelligenceDrawer } from './components/PRIntelligenceDrawer';
 import { AICommitGeneratorModal } from './components/AICommitGeneratorModal';
 import { PreviewChangesModal } from './components/PreviewChangesModal';
 import { QuickPaletteModal } from './components/QuickPaletteModal';
+import { RiskScoreModal } from './components/RiskScoreModal';
 import {
   isAudioMuted,
   toggleAudioMuted,
@@ -49,6 +50,7 @@ import {
   ModelTier,
   ChatHistoryEntry,
   LiveScanState,
+  RiskFactorItem,
 } from './types';
 
 export default function App() {
@@ -59,6 +61,7 @@ export default function App() {
   const [isPipelineDrawerOpen, setIsPipelineDrawerOpen] = useState<boolean>(false);
   const [isPRDrawerOpen, setIsPRDrawerOpen] = useState<boolean>(false);
   const [isCommitModalOpen, setIsCommitModalOpen] = useState<boolean>(false);
+  const [isRiskModalOpen, setIsRiskModalOpen] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<ChatRole>('byte_mascot');
   const [selectedTier, setSelectedTier] = useState<ModelTier>('general');
 
@@ -747,6 +750,7 @@ export default function App() {
         onOpenPipelineDrawer={() => setIsPipelineDrawerOpen(true)}
         onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
         onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
+        onOpenRiskModal={() => setIsRiskModalOpen(true)}
         isDrawerOpen={isDrawerOpen}
         isLiveMode={isLiveMode}
         liveScanState={liveScanState}
@@ -786,6 +790,7 @@ export default function App() {
               petTriggerTimestamp={petTriggerTimestamp}
               onOpenPipelineDrawer={() => setIsPipelineDrawerOpen(true)}
               onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
+              onOpenRiskModal={() => setIsRiskModalOpen(true)}
             />
 
             {/* Quick Practice Metrics Card */}
@@ -863,6 +868,16 @@ export default function App() {
         onExecutePRAction={handleExecutePRAction}
       />
 
+      {/* Repository Risk Score & Health Breakdown Modal */}
+      <RiskScoreModal
+        isOpen={isRiskModalOpen}
+        onClose={() => setIsRiskModalOpen(false)}
+        state={repoState}
+        onRemediateFactor={(factor: RiskFactorItem) => {
+          handleSendMessage(`How do I remediate the "${factor.name}" repository risk factor (${factor.details})?`, selectedRole, selectedTier);
+        }}
+      />
+
       {/* AI Commit Generator Modal */}
       <AICommitGeneratorModal
         isOpen={isCommitModalOpen}
@@ -893,6 +908,8 @@ export default function App() {
         isLiveMode={isLiveMode}
         onToggleLiveMode={handleToggleLiveMode}
         onRefreshLive={handleFetchLiveStatus}
+        onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
+        onOpenRiskModal={() => setIsRiskModalOpen(true)}
         isAudioMuted={isAudioMutedState}
         onToggleAudio={handleToggleAudio}
         onPetByte={handlePetByte}

@@ -194,6 +194,173 @@ function generateRuleBasedAction(state: any, userPrompt?: string) {
     };
   }
 
+  // PRECEDENCE 0d: PR Changes Requested
+  if (state?.primarySymptom === 'pr_changes_requested') {
+    const prNum = state.activePullRequest?.number || 214;
+    return {
+      explanation: `📝 Your PR #${prNum} has been waiting for review for 3 days. Sarah commented on src/auth.ts and requested changes: "Sanitize token payload before storing in local session to prevent XSS." Address this review comment and push an updated commit to unblock approvals.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'Address Review Comments & Push PR Fix Commit',
+        summary: 'Inspect inline review comments on src/auth/authService.ts, stage sanitized payload changes, and push fix commit.',
+        command: 'git add src/auth/authService.ts && git commit -m "fix(auth): sanitize token payload per PR review" && git push origin feature/auth-v2',
+        confidence: 'High',
+        confidenceScore: 98,
+        riskLevel: 'Safe',
+        expectedResult: 'Updated commit pushed to PR #214; notifies Sarah Chen and reviewers for re-approval.',
+        reversalStep: 'git reset --soft HEAD~1',
+        evidence: [
+          'Sarah Chen requested changes on src/auth/authService.ts (line 42)',
+          'PR review status: Changes Requested (waiting 3 days)',
+          '1 approval pending re-review',
+        ],
+        affectedFiles: ['src/auth/authService.ts'],
+        steps: [
+          {
+            label: '1. Inspect diff and review comments',
+            command: 'git diff HEAD~1 src/auth/authService.ts',
+            details: 'Reviews recent changes against PR comments.',
+          },
+          {
+            label: '2. Stage and commit review fixes',
+            command: 'git add src/auth/authService.ts && git commit -m "fix(auth): sanitize token payload per PR review"',
+            details: 'Commits the requested security fix.',
+          },
+          {
+            label: '3. Push to PR feature branch',
+            command: 'git push origin feature/auth-v2',
+            details: 'Updates PR #214 on remote.',
+          },
+        ],
+      },
+      evidencePoints: [
+        'PR #214: Sarah commented on src/auth.ts and requested changes',
+        'Review status: Changes Requested (waiting 3 days)',
+        'Action: Request review / Rebase branch / Generate changelog / Address comments',
+      ],
+    };
+  }
+
+  // PRECEDENCE 0e: PR Pending Review (Waiting)
+  if (state?.primarySymptom === 'pr_pending_review') {
+    const prNum = state.activePullRequest?.number || 305;
+    return {
+      explanation: `⌛ Your PR #${prNum} has been waiting 4 days for initial review from requested reviewers (@marcus-vance, @alex-lead). GitPet recommends sending a friendly nudge or generating a summary changelog to assist reviewers.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'Nudge Reviewers & Generate PR Changelog',
+        summary: 'Send polite review reminder ping to @marcus-vance and @alex-lead with concise PR highlights.',
+        command: `gh pr comment ${prNum} --body "Friendly reminder: PR #${prNum} is ready for review when you have a moment!"`,
+        confidence: 'High',
+        confidenceScore: 96,
+        riskLevel: 'Safe',
+        expectedResult: 'Notification sent to reviewers to unblock review queue.',
+        reversalStep: 'N/A (comment / notification action)',
+        evidence: [
+          'Waiting 4 days for initial review',
+          'Assigned reviewers: @marcus-vance, @alex-lead',
+          'Mergeability: Clean',
+        ],
+        affectedFiles: [],
+        steps: [
+          {
+            label: '1. Send review nudge reminder',
+            command: `gh pr comment ${prNum} --body "Friendly ping on PR #${prNum}"`,
+            details: 'Pings requested reviewers on GitHub.',
+          },
+        ],
+      },
+      evidencePoints: [
+        `PR #${prNum} waiting 4 days for review`,
+        'Requested reviewers: @marcus-vance, @alex-lead',
+        'Action: Request review / Send gentle reminder',
+      ],
+    };
+  }
+
+  // PRECEDENCE 0f: PR Conflicted
+  if (state?.primarySymptom === 'pr_conflicted') {
+    const prNum = state.activePullRequest?.number || 189;
+    return {
+      explanation: `🧶 PR #${prNum} cannot be merged automatically because of merge conflicts with upstream main. You must fetch upstream, rebase your feature branch, resolve conflicts, and force-push with lease.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'Rebase Feature Branch & Resolve PR Conflicts',
+        summary: 'Fetch upstream main, initiate rebase onto main, resolve conflict markers, and update PR.',
+        command: 'git fetch origin main && git rebase origin/main',
+        confidence: 'High',
+        confidenceScore: 95,
+        riskLevel: 'Caution',
+        expectedResult: 'Branch rebased cleanly on top of main; PR mergeability becomes clean.',
+        reversalStep: 'git rebase --abort',
+        evidence: [
+          `PR #${prNum} marked conflicted by GitHub merge engine`,
+          'Base branch: main has advanced ahead',
+          'Safe recovery guaranteed by git rebase --abort',
+        ],
+        affectedFiles: ['src/components/checkout/PaymentForm.tsx', 'src/services/paymentService.ts'],
+        steps: [
+          {
+            label: '1. Fetch upstream main',
+            command: 'git fetch origin main',
+            details: 'Gets latest commit tree from upstream.',
+          },
+          {
+            label: '2. Start rebase onto main',
+            command: 'git rebase origin/main',
+            details: 'Replays local PR commits onto latest main.',
+          },
+        ],
+      },
+      evidencePoints: [
+        `PR #${prNum} has merge conflicts with main`,
+        'GitHub merge blocked until conflicts resolved',
+        'Action: Resolve conflicts / Rebase branch',
+      ],
+    };
+  }
+
+  // PRECEDENCE 0g: PR Approved & Ready
+  if (state?.primarySymptom === 'pr_approved_ready') {
+    const prNum = state.activePullRequest?.number || 242;
+    return {
+      explanation: `🎉 PR #${prNum} has received all required approvals (3 approvals) and all CI/CD checks have passed! Ready for clean squash or merge.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'Merge PR & Prune Local Feature Branch',
+        summary: 'Merge PR #242 into main branch, switch to main, and delete merged local feature branch.',
+        command: 'git switch main && git pull origin main && git branch -d feature/user-profile',
+        confidence: 'High',
+        confidenceScore: 100,
+        riskLevel: 'Safe',
+        expectedResult: 'PR #242 merged into main; local workspace pristine and up-to-date.',
+        reversalStep: 'git switch -c feature/user-profile HEAD@{1}',
+        evidence: [
+          '3 reviewer approvals verified',
+          'All CI/CD pipeline stages green (passed)',
+          'Clean mergeability with zero conflicts',
+        ],
+        affectedFiles: [],
+        steps: [
+          {
+            label: '1. Switch to main and sync',
+            command: 'git switch main && git pull origin main',
+            details: 'Pulls the merged commits from upstream main.',
+          },
+          {
+            label: '2. Delete merged feature branch',
+            command: 'git branch -d feature/user-profile',
+            details: 'Prunes local branch cleanly.',
+          },
+        ],
+      },
+      evidencePoints: [
+        'PR approved by 3 reviewers; CI passed',
+        'Action: Merge PR / Generate changelog / Prune branch',
+      ],
+    };
+  }
+
   // PRECEDENCE 1: Immediate work-loss hazard (Unsafe state 0% health)
   const isDestructive =
     state?.healthLevel === 'Unsafe' ||

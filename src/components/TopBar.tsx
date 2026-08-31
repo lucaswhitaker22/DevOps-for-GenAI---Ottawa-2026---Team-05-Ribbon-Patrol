@@ -18,12 +18,11 @@ import { RepositoryState, PracticeStats, LiveScanState } from '../types';
 interface TopBarProps {
   state: RepositoryState;
   practiceStats: PracticeStats;
-  onSelectBranch: (branch: string) => void;
-  onToggleDrawer: () => void;
   onOpenQuickPalette?: () => void;
   onOpenPipelineDrawer?: () => void;
   onOpenPRDrawer?: () => void;
   onOpenCommitGenerator?: () => void;
+  onOpenRiskModal?: () => void;
   isDrawerOpen: boolean;
   isLiveMode?: boolean;
   liveScanState?: LiveScanState;
@@ -41,6 +40,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenPipelineDrawer,
   onOpenPRDrawer,
   onOpenCommitGenerator,
+  onOpenRiskModal,
   isDrawerOpen,
   isLiveMode = false,
   liveScanState,
@@ -152,6 +152,25 @@ export const TopBar: React.FC<TopBarProps> = ({
               ↓{state.currentBranch.behindCount}
             </span>
           </div>
+
+          {/* Repository Health Score (Data-Driven HP) Badge Button */}
+          {onOpenRiskModal && (
+            <button
+              id="topbar-health-score-btn"
+              onClick={onOpenRiskModal}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition-all cursor-pointer shadow-2xs"
+              title="Click to view 7-Factor Repository Risk Score & Health Breakdown"
+            >
+              <ShieldCheck className={`w-3.5 h-3.5 ${
+                state.healthPercentage >= 85
+                  ? 'text-emerald-400'
+                  : state.healthPercentage >= 70
+                  ? 'text-amber-400'
+                  : 'text-rose-400 animate-pulse'
+              }`} />
+              <span className="font-mono text-[11px] font-bold">HP {state.healthPercentage}%</span>
+            </button>
+          )}
         </div>
 
         {/* Right Section: Unified DevOps Hub & Quick Tools */}

@@ -33,6 +33,7 @@ interface PetStageProps {
   onOpenImageStudio?: () => void;
   onOpenPipelineDrawer?: () => void;
   onOpenPRDrawer?: () => void;
+  onOpenRiskModal?: () => void;
 }
 
 interface FloatingParticle {
@@ -71,6 +72,7 @@ export const PetStage: React.FC<PetStageProps> = ({
   onOpenImageStudio,
   onOpenPipelineDrawer,
   onOpenPRDrawer,
+  onOpenRiskModal,
 }) => {
   const [particles, setParticles] = useState<FloatingParticle[]>([]);
   const [isHovered, setIsHovered] = useState(false);
@@ -418,9 +420,14 @@ export const PetStage: React.FC<PetStageProps> = ({
           </div>
         </div>
 
-        {/* Health Progress Bar */}
-        <div className="flex items-center gap-2 min-w-[140px]">
-          <span className="text-[11px] font-mono font-bold text-slate-400">HP</span>
+        {/* Health Progress Bar with click trigger to open Risk Breakdown */}
+        <button
+          type="button"
+          onClick={onOpenRiskModal}
+          title="Click to view 7-Factor Repository Risk Score & Health Breakdown"
+          className="flex items-center gap-2 min-w-[145px] p-1 rounded-xl hover:bg-slate-100/80 transition-colors cursor-pointer group"
+        >
+          <span className="text-[11px] font-mono font-bold text-slate-400 group-hover:text-indigo-600">HP</span>
           <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/80 p-0.5">
             <motion.div
               className={`h-full rounded-full ${theme.barBg}`}
@@ -429,10 +436,10 @@ export const PetStage: React.FC<PetStageProps> = ({
               transition={{ duration: 0.6, ease: 'easeOut' }}
             />
           </div>
-          <span className="text-xs font-bold text-slate-700 w-9 text-right font-mono">
+          <span className="text-xs font-bold text-slate-700 w-9 text-right font-mono group-hover:text-indigo-600">
             {state.healthPercentage}%
           </span>
-        </div>
+        </button>
       </div>
 
       {/* Center Stage: Thought Bubble + Mascot Canvas (Clean, no box frame) */}

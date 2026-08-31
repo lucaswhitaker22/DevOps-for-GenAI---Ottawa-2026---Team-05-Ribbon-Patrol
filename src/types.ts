@@ -219,6 +219,31 @@ export interface BranchState {
   lastActivity: string;
 }
 
+export interface RiskFactorItem {
+  id:
+    | 'branch_divergence'
+    | 'failed_tests'
+    | 'secrets_detected'
+    | 'code_smells'
+    | 'vulnerabilities'
+    | 'unreviewed_commits'
+    | 'large_pr_size';
+  name: string;
+  impact: number; // e.g. -12 or 0
+  status: 'good' | 'warning' | 'critical';
+  details: string;
+  recommendation: string;
+  metricLabel?: string;
+}
+
+export interface RiskScoreBreakdown {
+  overallScore: number; // 0 - 100
+  healthLevel: HealthLevel;
+  riskCategory: 'Low Risk' | 'Moderate Risk' | 'High Risk' | 'Critical Risk';
+  summary: string;
+  factors: RiskFactorItem[];
+}
+
 export interface RepositoryState {
   repoName: string;
   currentBranch: BranchState;
@@ -242,6 +267,10 @@ export interface RepositoryState {
   scannedAt?: string;
   pipelineState?: CICDPipelineState;
   activePullRequest?: PullRequestInfo;
+  riskBreakdown?: RiskScoreBreakdown;
+  secretsDetectedCount?: number;
+  codeSmellsCount?: number;
+  unreviewedCommitsCount?: number;
 }
 
 export interface RecommendedAction {

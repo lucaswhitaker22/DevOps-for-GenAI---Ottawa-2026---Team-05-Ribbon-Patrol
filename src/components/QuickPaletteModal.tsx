@@ -17,6 +17,7 @@ import {
   RefreshCw,
   ArrowRight,
   Radio,
+  GitPullRequest,
 } from 'lucide-react';
 import { ScenarioPreset } from '../types';
 
@@ -47,6 +48,8 @@ interface QuickPaletteModalProps {
   isLiveMode: boolean;
   onToggleLiveMode: () => void;
   onRefreshLive?: () => void;
+  onOpenPRDrawer?: () => void;
+  onOpenRiskModal?: () => void;
   onOpenVoiceModal?: () => void;
   onOpenImageStudio?: () => void;
   isAudioMuted: boolean;
@@ -68,6 +71,8 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   isLiveMode,
   onToggleLiveMode,
   onRefreshLive,
+  onOpenPRDrawer,
+  onOpenRiskModal,
   onOpenVoiceModal,
   onOpenImageStudio,
   isAudioMuted,
@@ -107,6 +112,34 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
       keywords: ['drawer', 'graph', 'dag', 'tree', 'commits', 'stashes', 'diff'],
       onSelect: onToggleDrawer,
     });
+
+    if (onOpenRiskModal) {
+      actions.push({
+        id: 'open_risk_modal',
+        title: 'Inspect Repository Risk Score & Health Breakdown',
+        description: 'View 7 data-driven risk dimensions (Branch divergence, failed tests, secrets, CVEs, smells)',
+        category: 'Repository & Safety',
+        icon: ShieldAlert,
+        badge: 'Risk Engine',
+        badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+        keywords: ['risk', 'health', 'score', 'hp', 'factors', 'tests', 'secrets', 'vulnerabilities', 'debt'],
+        onSelect: onOpenRiskModal,
+      });
+    }
+
+    if (onOpenPRDrawer) {
+      actions.push({
+        id: 'open_pr_drawer',
+        title: 'Open Pull Request Intelligence Hub',
+        description: 'Inspect review status, requested reviewers, inline comments, changelog, and mergeability',
+        category: 'Repository & Safety',
+        icon: GitPullRequest,
+        badge: 'PR Intelligence',
+        badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
+        keywords: ['pr', 'pull request', 'review', 'comments', 'nudge', 'reviewers', 'merge', 'conflict', 'changelog'],
+        onSelect: onOpenPRDrawer,
+      });
+    }
 
     if (hasPendingAction && onOpenPreviewAction) {
       actions.push({
