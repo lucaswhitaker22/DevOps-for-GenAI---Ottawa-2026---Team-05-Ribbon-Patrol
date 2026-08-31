@@ -19,14 +19,18 @@ import {
   Radio,
   GitPullRequest,
   Rocket,
+  Home,
+  FolderGit2,
+  Zap,
+  ShieldCheck,
 } from 'lucide-react';
-import { ScenarioPreset } from '../types';
+import { ScenarioPreset, ActivePageId } from '../types';
 
 export interface PaletteAction {
   id: string;
   title: string;
   description: string;
-  category: 'Scenarios' | 'Repository & Safety' | 'Live Workspace' | 'Companion & Studios' | 'Audio & Petting';
+  category: 'Navigation' | 'Scenarios' | 'Repository & Safety' | 'Live Workspace' | 'Companion & Studios' | 'Audio & Petting';
   icon: React.ComponentType<{ className?: string }>;
   shortcut?: string;
   badge?: string;
@@ -40,8 +44,9 @@ interface QuickPaletteModalProps {
   onClose: () => void;
   scenarios: ScenarioPreset[];
   onSelectScenario: (scenario: ScenarioPreset) => void;
-  onToggleDrawer: () => void;
-  isDrawerOpen: boolean;
+  onNavigate?: (page: ActivePageId) => void;
+  onToggleDrawer?: () => void;
+  isDrawerOpen?: boolean;
   onOpenPreviewAction?: () => void;
   hasPendingAction?: boolean;
   onRollbackLastAction?: () => void;
@@ -64,6 +69,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   onClose,
   scenarios,
   onSelectScenario,
+  onNavigate,
   onToggleDrawer,
   isDrawerOpen,
   onOpenPreviewAction,
@@ -102,19 +108,92 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   const allActions = useMemo(() => {
     const actions: PaletteAction[] = [];
 
+    // 1. Navigation Actions
+    if (onNavigate) {
+      actions.push({
+        id: 'nav_companion',
+        title: 'Go to Ambient Companion (Home)',
+        description: 'Pet avatar, telemetry state, and conversational repository assistant',
+        category: 'Navigation',
+        icon: Home,
+        keywords: ['home', 'companion', 'byte', 'chat', 'stage', 'avatar'],
+        onSelect: () => onNavigate('companion'),
+      });
 
+      actions.push({
+        id: 'nav_repository',
+        title: 'Go to Repository Details & DAG Graph',
+        description: 'Interactive Git DAG commit visualizer, full diff viewer, working tree, stashes, and audit trail',
+        category: 'Navigation',
+        icon: FolderGit2,
+        badge: 'Full Page',
+        badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+        keywords: ['repo', 'graph', 'dag', 'tree', 'commits', 'stashes', 'diff', 'audit'],
+        onSelect: () => onNavigate('repository'),
+      });
+
+      actions.push({
+        id: 'nav_cicd',
+        title: 'Go to CI/CD Build & Pipeline Telemetry',
+        description: 'Pipeline execution stages, pass rates, flaky tests, and CVE security scans',
+        category: 'Navigation',
+        icon: Zap,
+        badge: 'Full Page',
+        badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+        keywords: ['cicd', 'pipeline', 'build', 'tests', 'stages', 'flaky', 'vulnerabilities'],
+        onSelect: () => onNavigate('cicd'),
+      });
+
+      actions.push({
+        id: 'nav_pr',
+        title: 'Go to Pull Request Intelligence Hub',
+        description: 'Review status, reviewer comments, conflict check, and AI changelog generation',
+        category: 'Navigation',
+        icon: GitPullRequest,
+        badge: 'Full Page',
+        badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
+        keywords: ['pr', 'pull request', 'review', 'comments', 'nudge', 'reviewers', 'merge'],
+        onSelect: () => onNavigate('pr'),
+      });
+
+      actions.push({
+        id: 'nav_release',
+        title: 'Go to Release Readiness Advisor',
+        description: '5-pillar release sign-off gate across tests, coverage, security, and freshness',
+        category: 'Navigation',
+        icon: Rocket,
+        badge: 'Full Page',
+        badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        keywords: ['release', 'readiness', 'gate', 'advisor', 'ship', 'deploy'],
+        onSelect: () => onNavigate('release'),
+      });
+
+      actions.push({
+        id: 'nav_risk',
+        title: 'Go to 7-Factor Repository Risk Score & HP',
+        description: 'Detailed breakdown of repository risk dimensions and guided AI remediation',
+        category: 'Navigation',
+        icon: ShieldCheck,
+        badge: 'Full Page',
+        badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+        keywords: ['risk', 'health', 'score', 'hp', 'factors', 'diagnostics'],
+        onSelect: () => onNavigate('risk'),
+      });
+    }
 
     // 2. Repository & Safety Actions
-    actions.push({
-      id: 'toggle_drawer',
-      title: isDrawerOpen ? 'Close Repository Drawer' : 'Open Repository Drawer (DAG & Tree)',
-      description: 'Inspect full commit history, DAG topology, active diffs, and stashes',
-      category: 'Repository & Safety',
-      icon: Layers,
-      shortcut: '⌘B',
-      keywords: ['drawer', 'graph', 'dag', 'tree', 'commits', 'stashes', 'diff'],
-      onSelect: onToggleDrawer,
-    });
+    if (onToggleDrawer) {
+      actions.push({
+        id: 'toggle_drawer',
+        title: isDrawerOpen ? 'Close Repository Drawer' : 'Open Repository Drawer (DAG & Tree)',
+        description: 'Inspect full commit history, DAG topology, active diffs, and stashes',
+        category: 'Repository & Safety',
+        icon: Layers,
+        shortcut: '⌘B',
+        keywords: ['drawer', 'graph', 'dag', 'tree', 'commits', 'stashes', 'diff'],
+        onSelect: onToggleDrawer,
+      });
+    }
 
     if (onOpenRiskModal) {
       actions.push({

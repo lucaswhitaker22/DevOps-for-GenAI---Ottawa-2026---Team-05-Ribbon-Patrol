@@ -1,34 +1,31 @@
 import React, { useState } from 'react';
 import {
   GitBranch,
-  Flame,
-  ShieldCheck,
   ChevronDown,
-  Layers,
   CheckCircle2,
-  Award,
-  RefreshCw,
   Search,
   Volume2,
   VolumeX,
   Sparkles,
+  Menu,
+  Home,
+  FolderGit2,
+  Zap,
+  GitPullRequest,
   Rocket,
+  ShieldCheck,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
-import { RepositoryState, PracticeStats, LiveScanState } from '../types';
-import { calculateReleaseReadiness } from '../utils/releaseReadiness';
+import { RepositoryState, LiveScanState, ActivePageId } from '../types';
 
 interface TopBarProps {
   state: RepositoryState;
-  practiceStats: PracticeStats;
+  activePage: ActivePageId;
+  onOpenMobileSidebar?: () => void;
   onSelectBranch: (branch: string) => void;
-  onToggleDrawer: () => void;
   onOpenQuickPalette?: () => void;
-  onOpenPipelineDrawer?: () => void;
-  onOpenPRDrawer?: () => void;
   onOpenCommitGenerator?: () => void;
-  onOpenRiskModal?: () => void;
-  onOpenReleaseModal?: () => void;
-  isDrawerOpen: boolean;
   isLiveMode?: boolean;
   liveScanState?: LiveScanState;
   onRefreshLive?: () => void;
@@ -38,74 +35,64 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({
   state,
-  practiceStats,
+  activePage,
+  onOpenMobileSidebar,
   onSelectBranch,
-  onToggleDrawer,
   onOpenQuickPalette,
-  onOpenPipelineDrawer,
-  onOpenPRDrawer,
   onOpenCommitGenerator,
-  onOpenRiskModal,
-  onOpenReleaseModal,
-  isDrawerOpen,
   isLiveMode = false,
-  liveScanState,
-  onRefreshLive,
   isAudioMuted = false,
   onToggleAudio,
 }) => {
-  const readiness = calculateReleaseReadiness(state);
   const [showBranchMenu, setShowBranchMenu] = useState(false);
 
-  const isHealthy = state.healthLevel === 'Healthy';
-  const isAttention = state.healthLevel === 'Attention';
-  const isBlocked = state.healthLevel === 'Blocked';
-  const isUnsafe = state.healthLevel === 'Unsafe';
+  const getPageInfo = (page: ActivePageId) => {
+    switch (page) {
+      case 'companion':
+        return { label: 'Ambient Companion', icon: <Home className="w-4 h-4 text-pink-400" /> };
+      case 'repository':
+        return { label: 'Repository Details & DAG Graph', icon: <FolderGit2 className="w-4 h-4 text-indigo-400" /> };
+      case 'cicd':
+        return { label: 'CI/CD Pipeline Telemetry', icon: <Zap className="w-4 h-4 text-amber-400" /> };
+      case 'pr':
+        return { label: `Pull Request Intelligence (#${state.activePullRequest?.number || 214})`, icon: <GitPullRequest className="w-4 h-4 text-purple-400" /> };
+      case 'release':
+        return { label: 'Release Readiness Advisor', icon: <Rocket className="w-4 h-4 text-emerald-400" /> };
+      case 'risk':
+        return { label: '7-Factor Risk Score & HP', icon: <ShieldCheck className="w-4 h-4 text-cyan-400" /> };
+    }
+  };
+
+  const pageInfo = getPageInfo(activePage);
 
   return (
     <header
       id="gitpet-header"
-      className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-2.5 transition-all text-slate-100 shadow-sm"
+      className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-2.5 transition-all text-slate-100 shadow-sm"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-        {/* Left Section: Brand Logo + Repo & Branch Selector + Status */}
-        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-          {/* Brand Mark */}
-          <div className="flex items-center gap-2.5">
-            <div className="relative w-8 h-8 rounded-xl bg-pink-600 text-white flex items-center justify-center text-base shadow-xs ring-1 ring-pink-400/40">
-              <span>🐕</span>
-              <span
-                className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-slate-900 ${
-                  isHealthy
-                    ? 'bg-emerald-400'
-                    : isAttention
-                    ? 'bg-amber-400'
-                    : isBlocked
-                    ? 'bg-orange-500'
-                    : 'bg-rose-500 ring-2 ring-rose-300 animate-ping'
-                }`}
-              />
+      <div className="flex items-center justify-between gap-3">
+        {/* Left Section: Mobile Sidebar Toggle + Page Title + Branch Indicator */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Mobile Sidebar Hamburger */}
+          <button
+            onClick={onOpenMobileSidebar}
+            className="lg:hidden p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors cursor-pointer"
+            title="Open Navigation Menu"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
+
+          {/* Active Page Header Badge */}
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-slate-800 border border-slate-700/80">
+              {pageInfo.icon}
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-white tracking-tight text-sm">GitPet</span>
-                <span className="text-[11px] text-slate-400 font-mono hidden md:block">
-                  {state.repoName}
-                </span>
-                {isLiveMode && (
-                  <span
-                    id="live-mode-badge"
-                    className="text-[9px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/80 flex items-center gap-1"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Live Workspace
-                  </span>
-                )}
-              </div>
-            </div>
+            <h1 className="text-sm font-bold text-white tracking-tight hidden sm:block">
+              {pageInfo.label}
+            </h1>
           </div>
 
-          <div className="h-4 w-[1px] bg-slate-800 hidden sm:block" />
+          <div className="h-4 w-[1px] bg-slate-800 hidden md:block" />
 
           {/* Branch Selector Dropdown */}
           <div className="relative">
@@ -115,7 +102,9 @@ export const TopBar: React.FC<TopBarProps> = ({
               className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 border border-slate-700/80 transition-colors cursor-pointer"
             >
               <GitBranch className="w-3.5 h-3.5 text-slate-400" />
-              <span className="max-w-[130px] truncate font-mono text-[11px]">{state.currentBranch.name}</span>
+              <span className="max-w-[120px] sm:max-w-[150px] truncate font-mono text-[11px]">
+                {state.currentBranch.name}
+              </span>
               <ChevronDown className="w-3 h-3 text-slate-400" />
             </button>
 
@@ -149,98 +138,47 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* Branch Sync Pill */}
           <div
             id="sync-status-pill"
-            className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-mono bg-slate-800/80 border border-slate-700 text-slate-300"
+            className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-mono bg-slate-800/80 border border-slate-700 text-slate-300 hidden sm:flex"
           >
-            <span className={state.currentBranch.aheadCount > 0 ? 'text-indigo-400 font-bold' : 'text-slate-400'}>
-              ↑{state.currentBranch.aheadCount}
+            <span className={state.currentBranch.aheadCount > 0 ? 'text-indigo-400 font-bold flex items-center gap-0.5' : 'text-slate-400 flex items-center gap-0.5'}>
+              <ArrowUp className="w-3 h-3" />
+              {state.currentBranch.aheadCount}
             </span>
             <span className="text-slate-500">/</span>
-            <span className={state.currentBranch.behindCount > 0 ? 'text-amber-400 font-bold' : 'text-slate-400'}>
-              ↓{state.currentBranch.behindCount}
+            <span className={state.currentBranch.behindCount > 0 ? 'text-amber-400 font-bold flex items-center gap-0.5' : 'text-slate-400 flex items-center gap-0.5'}>
+              <ArrowDown className="w-3 h-3" />
+              {state.currentBranch.behindCount}
             </span>
           </div>
 
-          {/* Repository Health Score (Data-Driven HP) Badge Button */}
-          {onOpenRiskModal && (
-            <button
-              id="topbar-health-score-btn"
-              onClick={onOpenRiskModal}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition-all cursor-pointer shadow-2xs"
-              title="Click to view 7-Factor Repository Risk Score & Health Breakdown"
+          {/* Live Workspace Badge */}
+          {isLiveMode && (
+            <span
+              id="live-mode-badge"
+              className="text-[9px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/80 flex items-center gap-1"
             >
-              <ShieldCheck className={`w-3.5 h-3.5 ${
-                state.healthPercentage >= 85
-                  ? 'text-emerald-400'
-                  : state.healthPercentage >= 70
-                  ? 'text-amber-400'
-                  : 'text-rose-400 animate-pulse'
-              }`} />
-              <span className="font-mono text-[11px] font-bold">HP {state.healthPercentage}%</span>
-            </button>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live Workspace
+            </span>
           )}
         </div>
 
-        {/* Right Section: Unified DevOps Hub & Quick Tools */}
+        {/* Right Section: Quick Tools (AI Commit, ⌘K, Audio) */}
         <div className="flex items-center gap-2">
-          {/* AI Commit Generator Trigger */}
+          {/* AI Conventional Commit Generator Button */}
           {onOpenCommitGenerator && (
             <button
               id="topbar-ai-commit-btn"
               onClick={onOpenCommitGenerator}
               className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white border border-purple-500 shadow-2xs transition-colors cursor-pointer"
-              title="Open AI Conventional Commit & Release Generator"
+              title="Open AI Conventional Commit Generator"
             >
               <Sparkles className="w-3.5 h-3.5 text-purple-200" />
               <span className="hidden sm:inline">AI Commit</span>
             </button>
           )}
 
-          {/* Unified DevOps Hub Drawer Launchers */}
-          <div className="flex items-center bg-slate-800/90 rounded-xl p-0.5 border border-slate-700/80">
-            {onOpenPipelineDrawer && (
-              <button
-                id="topbar-cicd-pipeline-btn"
-                onClick={onOpenPipelineDrawer}
-                className="px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-300 hover:bg-slate-700 flex items-center gap-1 transition-colors cursor-pointer"
-                title="CI/CD Build & Test Health"
-              >
-                <span>⚡</span>
-                <span className="hidden md:inline">CI/CD</span>
-              </button>
-            )}
-
-            {onOpenPRDrawer && (
-              <button
-                id="topbar-pr-intelligence-btn"
-                onClick={onOpenPRDrawer}
-                className="px-2.5 py-1 rounded-lg text-xs font-semibold text-purple-300 hover:bg-slate-700 flex items-center gap-1 transition-colors cursor-pointer"
-                title="Pull Request Intelligence"
-              >
-                <span>🔀</span>
-                <span>PR #{state.activePullRequest?.number || 214}</span>
-              </button>
-            )}
-
-            {onOpenReleaseModal && (
-              <button
-                id="topbar-release-readiness-btn"
-                onClick={onOpenReleaseModal}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                  readiness.overallScore >= 85
-                    ? 'text-emerald-300 hover:bg-slate-700'
-                    : readiness.overallScore >= 70
-                    ? 'text-amber-300 hover:bg-slate-700'
-                    : 'text-rose-300 hover:bg-slate-700 animate-pulse'
-                }`}
-                title="Release Readiness Advisor: Tests, Coverage, CVEs, PRs & Freshness"
-              >
-                <Rocket className="w-3.5 h-3.5" />
-                <span className="font-bold">{readiness.overallScore}% Ready</span>
-              </button>
-            )}
-          </div>
-
-          {/* Quick Palette Launcher Button */}
+          {/* Quick Command Palette Launcher */}
           {onOpenQuickPalette && (
             <button
               id="topbar-quick-palette-btn"
@@ -249,7 +187,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               title="Open Command Palette (⌘K)"
             >
               <Search className="w-3.5 h-3.5 text-slate-400" />
-              <kbd className="text-[10px] font-mono font-bold bg-slate-900 text-slate-400 px-1.5 py-0.2 rounded border border-slate-700">
+              <kbd className="text-[10px] font-mono font-bold bg-slate-900 text-slate-400 px-1.5 py-0.2 rounded border border-slate-700 hidden sm:inline">
                 ⌘K
               </kbd>
             </button>
@@ -266,21 +204,6 @@ export const TopBar: React.FC<TopBarProps> = ({
               {isAudioMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
             </button>
           )}
-
-          {/* Repository Drawer Toggle */}
-          <button
-            id="toggle-repo-drawer-button"
-            onClick={onToggleDrawer}
-            title="Toggle Repo Details Drawer"
-            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer ${
-              isDrawerOpen
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-xs'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Details</span>
-          </button>
         </div>
       </div>
     </header>

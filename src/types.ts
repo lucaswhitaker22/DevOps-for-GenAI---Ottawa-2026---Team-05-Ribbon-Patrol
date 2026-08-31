@@ -518,3 +518,5 @@ export interface GeneratedReleaseNotes {
   formattedMarkdown: string;
 }
 
+export type ActivePageId = 'companion' | 'repository' | 'cicd' | 'pr' | 'release' | 'risk';
+

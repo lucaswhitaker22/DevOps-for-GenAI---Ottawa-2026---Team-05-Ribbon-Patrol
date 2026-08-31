@@ -7,8 +7,18 @@ import {
   ShieldAlert,
   CheckCircle2,
   Coffee,
+  GitBranch,
+  FileCode,
+  Zap,
+  GitPullRequest,
+  ShieldCheck,
+  Rocket,
+  ArrowUpRight,
+  ChevronRight,
+  Shield,
+  Layers,
 } from 'lucide-react';
-import { RepositoryState, HealthLevel } from '../types';
+import { RepositoryState, HealthLevel, ActivePageId, RecommendedAction } from '../types';
 import {
   playPetChirpSound,
   playPurrSound,
@@ -16,6 +26,7 @@ import {
   playAccessoryEquipSound,
 } from '../utils/audioEffects';
 import { PixelPetGraphic } from './PixelPetGraphic';
+import { calculateReleaseReadiness } from '../utils/releaseReadiness';
 
 export type MascotAccessory =
   | 'none'
@@ -31,9 +42,12 @@ interface PetStageProps {
   petTriggerTimestamp?: number;
   customAvatarUrl?: string;
   onOpenImageStudio?: () => void;
+  onNavigate?: (page: ActivePageId) => void;
   onOpenPipelineDrawer?: () => void;
   onOpenPRDrawer?: () => void;
   onOpenRiskModal?: () => void;
+  pendingAction?: RecommendedAction | null;
+  onPreviewAction?: (action: RecommendedAction) => void;
 }
 
 interface FloatingParticle {
@@ -70,9 +84,12 @@ export const PetStage: React.FC<PetStageProps> = ({
   petTriggerTimestamp,
   customAvatarUrl,
   onOpenImageStudio,
+  onNavigate,
   onOpenPipelineDrawer,
   onOpenPRDrawer,
   onOpenRiskModal,
+  pendingAction,
+  onPreviewAction,
 }) => {
   const [particles, setParticles] = useState<FloatingParticle[]>([]);
   const [isHovered, setIsHovered] = useState(false);
@@ -85,35 +102,48 @@ export const PetStage: React.FC<PetStageProps> = ({
   const [isBlinking, setIsBlinking] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const readiness = calculateReleaseReadiness(state);
+
+  const handleNav = (page: ActivePageId) => {
+    if (onNavigate) {
+      onNavigate(page);
+    } else if (page === 'cicd' && onOpenPipelineDrawer) {
+      onOpenPipelineDrawer();
+    } else if (page === 'pr' && onOpenPRDrawer) {
+      onOpenPRDrawer();
+    } else if (page === 'risk' && onOpenRiskModal) {
+      onOpenRiskModal();
+    }
+  };
 
   // Update contextual bubble message based on repo state and actions
   useEffect(() => {
     if (state.primarySymptom === 'lost_map') {
       setBubbleText('🗺️ GitPet cannot verify infrastructure consistency because the state backend is unavailable.');
     } else if (state.primarySymptom === 'smoke_cloud') {
-      setBubbleText('💨 Checkout deployment failed. Three pods are unable to start because environment variable DATABASE_URL is missing.');
+      setBubbleText('💨 Checkout deployment failed. Three pods are unable to start because DATABASE_URL is missing.');
     } else if (state.primarySymptom === 'shield_cracked') {
-      setBubbleText('🛡️ Infrastructure violates security policy. A newly provisioned storage account allows anonymous access.');
+      setBubbleText('🛡️ Infrastructure violates security policy. Anonymous storage access detected.');
     } else if (state.primarySymptom === 'pr_changes_requested') {
-      setBubbleText('📝 Your PR #214 has been waiting for review for 3 days. Sarah commented on src/auth.ts and requested changes.');
+      setBubbleText('📝 Your PR #214 has review comments waiting on src/auth.ts.');
     } else if (state.primarySymptom === 'pr_pending_review') {
-      setBubbleText('⌛ PR #305 is pending review from @marcus-vance & @alex-lead (waiting 4 days).');
+      setBubbleText('⌛ PR #305 is waiting for reviewer approvals.');
     } else if (state.primarySymptom === 'pr_conflicted') {
-      setBubbleText('🧶 PR #189 has merge conflicts with main! Rebase required.');
+      setBubbleText('🧶 PR #189 has merge conflicts with main! Rebase recommended.');
     } else if (state.primarySymptom === 'pr_approved_ready') {
-      setBubbleText('🎉 PR #242 approved by 3 reviewers! All checks green and ready to merge.');
+      setBubbleText('🎉 PR #242 approved by reviewers! All checks green and ready to merge.');
     } else if (state.primarySymptom === 'failed_build') {
       setBubbleText('🤢 CI Build failed in job #1042! Fix compilation errors!');
     } else if (state.primarySymptom === 'flaky_tests') {
-      setBubbleText('😰 Flaky tests in auth.spec.ts! 2/10 runs failed intermittently.');
+      setBubbleText('😰 Flaky tests in auth.spec.ts! Intermittent test failure detected.');
     } else if (state.primarySymptom === 'vulnerability_risk') {
       setBubbleText('🛡️ Security Alert: CVE-2026-8819 detected! Shield activated!');
     } else if (state.primarySymptom === 'deploy_success') {
-      setBubbleText('🎉 Production deployment successful! All 48 microservices green!');
+      setBubbleText('🎉 Production deployment successful! All 48 services green!');
     } else if (state.healthLevel === 'Unsafe') {
-      setBubbleText('🚨 Work-loss risk! Stash or commit before pulling!');
+      setBubbleText('🚨 Work-loss hazard! Stash or commit before pulling to stay safe.');
     } else if (state.healthLevel === 'Blocked') {
-      setBubbleText('🧶 Conflict alert! Let me help you inspect the conflicting files.');
+      setBubbleText('🧶 Conflict alert! Let me help you inspect conflicting files.');
     } else if (state.healthLevel === 'Attention') {
       setBubbleText(`👀 Origin is ahead by ${state.currentBranch.behindCount} commits. Ready to sync!`);
     } else {
@@ -121,7 +151,7 @@ export const PetStage: React.FC<PetStageProps> = ({
     }
   }, [state.healthLevel, state.primarySymptom, state.currentBranch.behindCount]);
 
-  // Autonomous Natural Blinking Loop (every 3.2 - 5.2s)
+  // Autonomous Natural Blinking Loop
   useEffect(() => {
     let blinkTimeout: NodeJS.Timeout;
     const scheduleNextBlink = () => {
@@ -139,7 +169,7 @@ export const PetStage: React.FC<PetStageProps> = ({
     return () => clearTimeout(blinkTimeout);
   }, []);
 
-  // Track mouse coordinates across the stage container
+  // Track mouse coordinates
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -160,7 +190,6 @@ export const PetStage: React.FC<PetStageProps> = ({
     setMousePos({ x: 0, y: 0 });
   };
 
-  // Trigger floating hearts & reactions
   useEffect(() => {
     if (petTriggerTimestamp) {
       triggerPetReaction(120, 70);
@@ -209,7 +238,6 @@ export const PetStage: React.FC<PetStageProps> = ({
     }
   };
 
-  // Action: Feed Coffee to Bot
   const handleFeedCoffee = (e: React.MouseEvent) => {
     e.stopPropagation();
     playCoffeeSlurpSound();
@@ -237,7 +265,6 @@ export const PetStage: React.FC<PetStageProps> = ({
     }, 700);
   };
 
-  // Action: Cycle Wearable Accessory
   const handleCycleAccessory = (e: React.MouseEvent) => {
     e.stopPropagation();
     const currentIndex = ACCESSORY_LIST.findIndex((a) => a.id === activeAccessory);
@@ -269,7 +296,6 @@ export const PetStage: React.FC<PetStageProps> = ({
     }, 600);
   };
 
-  // Action: Ask Bot / Cycle Quips
   const handleCycleQuip = (e: React.MouseEvent) => {
     e.stopPropagation();
     playPetChirpSound();
@@ -279,58 +305,52 @@ export const PetStage: React.FC<PetStageProps> = ({
     setIsBubbleVisible(true);
   };
 
-  // Health theme colors matching theme.scss alarm palette
   const getHealthTheme = (level: HealthLevel) => {
     switch (level) {
       case 'Healthy':
         return {
-          glow: 'rgba(79, 138, 16, 0.16)',
-          pulseColor: 'border-[#4F8A10] bg-[#E6FFCC] text-[#4F8A10]',
-          barBg: 'bg-[#4F8A10]',
-          badgeBg: 'bg-[#E6FFCC] text-[#4F8A10] border-[#4F8A10]/40 font-bold',
+          glow: 'rgba(16, 185, 129, 0.12)',
+          barBg: 'bg-emerald-500',
+          badgeBg: 'bg-emerald-50 text-emerald-800 border-emerald-200',
           icon: CheckCircle2,
-          moodLabel: 'Relaxed & Playful',
-          auraShadow: '0 0 50px rgba(79, 138, 16, 0.22)',
+          moodLabel: 'Relaxed & Healthy',
+          auraShadow: '0 0 50px rgba(16, 185, 129, 0.2)',
         };
       case 'Attention':
         return {
-          glow: 'rgba(209, 193, 1, 0.18)',
-          pulseColor: 'border-[#D1C101] bg-[#FFFBCC] text-[#857A00]',
-          barBg: 'bg-[#D1C101]',
-          badgeBg: 'bg-[#FFFBCC] text-[#857A00] border-[#D1C101]/60 font-bold',
+          glow: 'rgba(245, 158, 11, 0.14)',
+          barBg: 'bg-amber-500',
+          badgeBg: 'bg-amber-50 text-amber-800 border-amber-200',
           icon: AlertTriangle,
           moodLabel: 'Uneasy & Alert',
-          auraShadow: '0 0 50px rgba(209, 193, 1, 0.25)',
+          auraShadow: '0 0 50px rgba(245, 158, 11, 0.22)',
         };
       case 'Blocked':
         return {
-          glow: 'rgba(254, 127, 14, 0.18)',
-          pulseColor: 'border-[#FE7F0E] bg-[#FFE0B3] text-[#FE7F0E]',
-          barBg: 'bg-[#FE7F0E]',
-          badgeBg: 'bg-[#FFE0B3] text-[#B85600] border-[#FE7F0E]/60 font-bold',
+          glow: 'rgba(249, 115, 22, 0.16)',
+          barBg: 'bg-orange-500',
+          badgeBg: 'bg-orange-50 text-orange-800 border-orange-200',
           icon: ShieldAlert,
           moodLabel: 'Distressed & Blocked',
-          auraShadow: '0 0 50px rgba(254, 127, 14, 0.28)',
+          auraShadow: '0 0 50px rgba(249, 115, 22, 0.25)',
         };
       case 'Unsafe':
         return {
-          glow: 'rgba(202, 63, 63, 0.22)',
-          pulseColor: 'border-[#CA3F3F] bg-[#FFCCCC] text-[#CA3F3F]',
-          barBg: 'bg-[#CA3F3F]',
-          badgeBg: 'bg-[#FFCCCC] text-[#912323] border-[#CA3F3F]/60 font-bold ring-2 ring-red-400/20',
+          glow: 'rgba(244, 63, 94, 0.2)',
+          barBg: 'bg-rose-500',
+          badgeBg: 'bg-rose-50 text-rose-800 border-rose-200 ring-2 ring-rose-300 animate-pulse',
           icon: ShieldAlert,
-          moodLabel: 'Guarded & Alert (0%)',
-          auraShadow: '0 0 50px rgba(202, 63, 63, 0.35)',
+          moodLabel: 'Critical Hazard (0% HP)',
+          auraShadow: '0 0 50px rgba(244, 63, 94, 0.35)',
         };
       default:
         return {
-          glow: 'rgba(167, 177, 194, 0.15)',
-          pulseColor: 'border-[#A7B1C2] bg-slate-100 text-[#3F4349]',
-          barBg: 'bg-[#A7B1C2]',
-          badgeBg: 'bg-slate-100 text-[#3F4349] border-slate-300',
+          glow: 'rgba(148, 163, 184, 0.12)',
+          barBg: 'bg-slate-400',
+          badgeBg: 'bg-slate-50 text-slate-700 border-slate-200',
           icon: ShieldAlert,
-          moodLabel: 'Still & Protected',
-          auraShadow: '0 0 35px rgba(167, 177, 194, 0.2)',
+          moodLabel: 'Monitoring State',
+          auraShadow: '0 0 35px rgba(148, 163, 184, 0.15)',
         };
     }
   };
@@ -340,156 +360,109 @@ export const PetStage: React.FC<PetStageProps> = ({
   const StatusIcon = theme.icon;
 
   return (
-    <div
-      ref={containerRef}
-      id="gitpet-stage-container"
-      role="region"
-      aria-label={
-        isUnsafe
-          ? 'Repository Status: Unsafe (0% Health) - Immediate work-loss hazard detected'
-          : `Repository Status: ${state.healthLevel} (${state.healthPercentage}% Health)`
-      }
-      onClick={handleStageClick}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      className={`relative w-full rounded-2xl bg-white border p-4 sm:p-5 shadow-xs overflow-hidden select-none cursor-pointer transition-all duration-300 hover:shadow-md ${
-        isUnsafe ? 'border-rose-300 ring-2 ring-rose-500/10' : 'border-slate-200/80'
-      }`}
-    >
-      {/* Background ambient radial glow */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none transition-all duration-700"
-        animate={{
-          background: `radial-gradient(circle at 50% 45%, ${theme.glow} 0%, rgba(255,255,255,0) 70%)`,
-        }}
-      />
-
-      {/* Floating particles (Hearts, Coffee, Sparkles) */}
-      <AnimatePresence>
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            initial={{ opacity: 1, scale: 0.5, y: p.y, x: p.x }}
-            animate={{
-              opacity: 0,
-              scale: 1.3,
-              y: p.y - 60,
-              x: p.x + (Math.random() * 24 - 12),
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, ease: 'easeOut' }}
-            className={`absolute pointer-events-none z-30 flex items-center gap-1.5 font-semibold text-xs bg-white/95 px-2.5 py-1 rounded-full shadow-md border ${
-              p.type === 'coffee'
-                ? 'text-amber-700 border-amber-200'
-                : p.type === 'sparkle'
-                ? 'text-indigo-600 border-indigo-200'
-                : isUnsafe
-                ? 'text-slate-700 border-slate-300'
-                : 'text-rose-600 border-rose-200'
-            }`}
-          >
-            {p.type === 'coffee' ? (
-              <Coffee className="w-3.5 h-3.5 text-amber-600" />
-            ) : p.type === 'sparkle' ? (
-              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-            ) : (
-              <Heart
-                className={`w-3.5 h-3.5 ${
-                  isUnsafe ? 'fill-slate-500 text-slate-500' : 'fill-rose-500 text-rose-500'
-                }`}
-              />
-            )}
-            <span>{p.text}</span>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-
-      {/* Top stage details: Mood badge & Health meter */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-2">
-        <div className="flex items-center gap-2">
-          <div
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${theme.badgeBg}`}
-          >
-            <StatusIcon className={`w-3.5 h-3.5 ${isUnsafe ? 'text-rose-700' : ''}`} />
-            <span className="tracking-wide">{state.healthLevel.toUpperCase()}</span>
-            <span className="opacity-40">•</span>
-            <span className={`font-normal ${isUnsafe ? 'text-rose-900 font-semibold' : 'text-slate-600'}`}>
-              {theme.moodLabel}
-            </span>
-          </div>
-        </div>
-
-        {/* Health Progress Bar with click trigger to open Risk Breakdown */}
-        <button
-          type="button"
-          onClick={onOpenRiskModal}
-          title="Click to view 7-Factor Repository Risk Score & Health Breakdown"
-          className="flex items-center gap-2 min-w-[145px] p-1 rounded-xl hover:bg-slate-100/80 transition-colors cursor-pointer group"
-        >
-          <span className="text-[11px] font-mono font-bold text-slate-400 group-hover:text-indigo-600">HP</span>
-          <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/80 p-0.5">
-            <motion.div
-              className={`h-full rounded-full ${theme.barBg}`}
-              initial={{ width: 0 }}
-              animate={{ width: `${state.healthPercentage}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            />
-          </div>
-          <span className="text-xs font-bold text-slate-700 w-9 text-right font-mono group-hover:text-indigo-600">
-            {state.healthPercentage}%
-          </span>
-        </button>
-      </div>
-
-      {/* Center Stage: Thought Bubble + Mascot Canvas (Clean, no box frame) */}
-      <div className="relative z-10 flex flex-col items-center justify-center pt-1 pb-2">
-        {/* Dynamic Contextual Thought/Speech Bubble */}
+    <div className="space-y-3.5">
+      {/* Main Avatar Stage Card */}
+      <div
+        ref={containerRef}
+        id="gitpet-stage-container"
+        className="relative overflow-hidden rounded-3xl bg-white border border-slate-200/90 p-4 shadow-xs transition-all flex flex-col items-center select-none"
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleStageClick}
+      >
+        {/* Floating Hearts & Particle Sparks */}
         <AnimatePresence>
-          {isBubbleVisible && bubbleText && (
+          {particles.map((p) => (
             <motion.div
-              initial={{ opacity: 0, y: 4, scale: 0.94 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -4, scale: 0.94 }}
-              transition={{ duration: 0.2 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCycleQuip(e);
-              }}
-              className="relative mb-2 max-w-[280px] bg-slate-900/90 backdrop-blur-md text-white text-[11px] font-medium px-3.5 py-1.5 rounded-2xl shadow-md border border-slate-700/60 text-center cursor-pointer hover:bg-slate-900 transition-colors group"
+              key={p.id}
+              initial={{ opacity: 1, y: p.y, x: p.x, scale: 0.6 }}
+              animate={{ opacity: 0, y: p.y - 45, scale: 1.15 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.1, ease: 'easeOut' }}
+              className={`absolute z-30 pointer-events-none text-xs font-bold font-mono px-2 py-0.5 rounded-full shadow-xs ${
+                p.type === 'heart'
+                  ? 'bg-pink-100 text-pink-700 border border-pink-300'
+                  : p.type === 'coffee'
+                  ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                  : p.type === 'shield'
+                  ? 'bg-rose-100 text-rose-800 border border-rose-300'
+                  : 'bg-purple-100 text-purple-700 border border-purple-300'
+              }`}
             >
-              <p className="leading-snug">{bubbleText}</p>
-              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-slate-900/90 rotate-45 border-r border-b border-slate-700/60" />
+              {p.text}
             </motion.div>
-          )}
+          ))}
         </AnimatePresence>
 
-        {/* Mascot Center Habitat Platform (Clean, open & frameless) */}
-        <div className="relative flex items-center justify-center w-60 h-48 my-1">
-          {/* Ambient pulse circle around pet */}
-          <motion.div
-            animate={{
-              scale: [1, 1.06, 1],
-              opacity: [0.35, 0.7, 0.35],
+        {/* Top Status & Health Bar */}
+        <div className="w-full flex items-center justify-between gap-2 z-20 pb-1">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNav('risk');
             }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: 'easeInOut',
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border transition-all hover:scale-105 cursor-pointer ${theme.badgeBg}`}
+            title="Click to view 7-Factor Risk Scorecard"
+          >
+            <StatusIcon className="w-3.5 h-3.5" />
+            <span className="uppercase text-[10px] tracking-wider">{state.healthLevel}</span>
+            <span className="text-slate-400 font-normal">•</span>
+            <span className="text-[11px] font-normal">{theme.moodLabel}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNav('risk');
             }}
+            className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs hover:bg-slate-100 transition-colors cursor-pointer"
+            title="Click to inspect Repository Health Breakdown"
+          >
+            <span className="text-[10px] font-mono font-bold text-slate-500">HP</span>
+            <div className="w-16 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-700 ${theme.barBg}`}
+                style={{ width: `${Math.max(4, state.healthPercentage)}%` }}
+              />
+            </div>
+            <span className="font-mono text-xs font-bold text-slate-800">{state.healthPercentage}%</span>
+          </button>
+        </div>
+
+        {/* Center Pet Canvas Area */}
+        <div className="relative py-2 flex flex-col items-center justify-center min-h-[220px]">
+          {/* Animated Contextual Speech Bubble */}
+          <AnimatePresence>
+            {isBubbleVisible && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="max-w-xs text-center z-20 mb-2 px-3 py-1.5 bg-slate-900 text-slate-100 text-xs font-medium rounded-2xl shadow-md border border-slate-700/80 leading-snug"
+              >
+                {bubbleText}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Ambient Glow Aura */}
+          <div
             style={{
               boxShadow: theme.auraShadow,
             }}
             className="absolute w-36 h-36 rounded-full pointer-events-none"
           />
 
-          {/* Interactive Pixel TV-Head Robot Pet */}
-          <div className={`transition-all duration-500 z-10 ${isUnsafe ? 'grayscale contrast-125' : ''}`}>
+          {/* Interactive Pixel Pet */}
+          <div className={`transition-all duration-500 z-10 cursor-pointer ${isUnsafe ? 'grayscale contrast-125' : ''}`}>
             {customAvatarUrl ? (
               <img
                 src={customAvatarUrl}
-                alt="Custom Companion Avatar"
-                className="w-48 h-48 object-contain pixelated drop-shadow-md"
+                alt="Custom Avatar"
+                className="w-44 h-44 object-contain pixelated drop-shadow-md"
               />
             ) : (
               <PixelPetGraphic
@@ -505,85 +478,193 @@ export const PetStage: React.FC<PetStageProps> = ({
           </div>
         </div>
 
-        {/* Symptom diagnosis caption */}
-        <div className="mt-1 text-center max-w-md">
-          <h3 className="text-sm font-bold text-slate-900 flex items-center justify-center gap-1.5">
-            <span>{state.symptomTitle}</span>
-          </h3>
+        {/* Diagnosis Caption */}
+        <div className="text-center max-w-md mt-1">
+          <h2 className="text-sm font-bold text-slate-900 flex items-center justify-center gap-1.5">
+            {state.symptomTitle}
+          </h2>
           <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
             {state.operatorMeaning}
           </p>
         </div>
-      </div>
 
-      {/* Interactive Mascot Action Dock */}
-      <div className="relative z-10 flex items-center justify-between gap-1.5 pt-2 mt-2 border-t border-slate-100/90">
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              triggerPetReaction();
-            }}
-            title="Pet Companion (Spacebar shortcut)"
-            className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-600 border border-slate-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
-          >
-            <span>🐾</span>
-            <span>Pet</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleFeedCoffee}
-            title="Give companion a cup of coffee"
-            className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-amber-50 hover:text-amber-700 text-slate-600 border border-slate-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
-          >
-            <span>☕</span>
-            <span>Fuel</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleCycleAccessory}
-            title="Change wearable accessory"
-            className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 border border-slate-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
-          >
-            <span>🎩</span>
-            <span>Outfit</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleCycleQuip}
-            title="Ask for git tips"
-            className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-blue-50 hover:text-blue-600 text-slate-600 border border-slate-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
-          >
-            <span>💬</span>
-            <span>Ask</span>
-          </button>
-
-          {onOpenImageStudio && (
+        {/* Action Dock */}
+        <div className="w-full flex items-center justify-between gap-1.5 pt-3 mt-2 border-t border-slate-100">
+          <div className="flex items-center gap-1 flex-wrap">
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onOpenImageStudio();
+                triggerPetReaction();
               }}
-              title="Open Image Studio for custom avatars"
-              className="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 hover:text-purple-700 text-purple-600 border border-purple-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
+              title="Pet Byte (Spacebar shortcut)"
+              className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-600 border border-slate-200/80 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
             >
-              <span>🎨</span>
-              <span>Studio</span>
+              <span>🐾</span>
+              <span>Pet</span>
             </button>
-          )}
-        </div>
 
-        <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
-          <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-semibold text-slate-600">
-            Space
-          </kbd>
-          <span className="hidden sm:inline">to pet</span>
+            <button
+              type="button"
+              onClick={handleFeedCoffee}
+              title="Give Byte a cup of coffee"
+              className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-amber-50 hover:text-amber-700 text-slate-600 border border-slate-200/80 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <span>☕</span>
+              <span>Fuel</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCycleAccessory}
+              title="Change wearable accessory"
+              className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 border border-slate-200/80 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <span>🎩</span>
+              <span>Outfit</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCycleQuip}
+              title="Ask Byte for git tips"
+              className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-blue-50 hover:text-blue-600 text-slate-600 border border-slate-200/80 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <span>💬</span>
+              <span>Ask</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1 text-[10px] font-mono text-slate-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-semibold text-slate-600">
+              Space
+            </kbd>
+            <span className="hidden sm:inline">to pet</span>
+          </div>
         </div>
+      </div>
+
+      {/* Live Telemetry Mission Control Quick Deck */}
+      <div className="grid grid-cols-2 gap-2.5">
+        {/* Branch Drift & Working Tree Card */}
+        <button
+          type="button"
+          onClick={() => handleNav('repository')}
+          className="text-left p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-indigo-300 hover:bg-slate-50 transition-all cursor-pointer group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 group-hover:scale-105 transition-transform">
+              <GitBranch className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-400 group-hover:text-indigo-600 flex items-center gap-0.5">
+              DAG <ChevronRight className="w-3 h-3" />
+            </span>
+          </div>
+          <div className="mt-2">
+            <span className="text-[11px] font-bold text-slate-800 block truncate">Branch Drift & Tree</span>
+            <div className="flex items-center gap-2 mt-0.5 font-mono text-xs">
+              <span className={state.currentBranch.aheadCount > 0 ? 'text-indigo-600 font-bold' : 'text-slate-500'}>
+                ↑{state.currentBranch.aheadCount} ahead
+              </span>
+              <span className="text-slate-300">|</span>
+              <span className={state.currentBranch.behindCount > 0 ? 'text-amber-600 font-bold' : 'text-slate-500'}>
+                ↓{state.currentBranch.behindCount} behind
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-400 block mt-0.5 font-mono">
+              {state.workingTree.length} uncommitted {state.workingTree.length === 1 ? 'file' : 'files'}
+            </span>
+          </div>
+        </button>
+
+        {/* CI/CD & Test Health Card */}
+        <button
+          type="button"
+          onClick={() => handleNav('cicd')}
+          className="text-left p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-amber-300 hover:bg-slate-50 transition-all cursor-pointer group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600 group-hover:scale-105 transition-transform">
+              <Zap className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-400 group-hover:text-amber-600 flex items-center gap-0.5">
+              CI/CD <ChevronRight className="w-3 h-3" />
+            </span>
+          </div>
+          <div className="mt-2">
+            <span className="text-[11px] font-bold text-slate-800 block truncate">Pipeline & Tests</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span
+                className={`text-[10px] font-mono font-bold px-1.5 py-0.2 rounded uppercase ${
+                  state.pipelineState?.buildStatus === 'failed'
+                    ? 'bg-rose-100 text-rose-800'
+                    : 'bg-emerald-100 text-emerald-800'
+                }`}
+              >
+                {state.pipelineState?.buildStatus || 'Passed'}
+              </span>
+              <span className="text-[11px] font-mono text-slate-600">
+                {state.pipelineState?.passRate || 100}% pass
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-400 block mt-0.5 font-mono">
+              {state.pipelineState?.vulnerabilities.length || 0} CVEs detected
+            </span>
+          </div>
+        </button>
+
+        {/* PR Intelligence Card */}
+        <button
+          type="button"
+          onClick={() => handleNav('pr')}
+          className="text-left p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-purple-300 hover:bg-slate-50 transition-all cursor-pointer group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="p-1.5 rounded-lg bg-purple-50 text-purple-600 group-hover:scale-105 transition-transform">
+              <GitPullRequest className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-400 group-hover:text-purple-600 flex items-center gap-0.5">
+              PR <ChevronRight className="w-3 h-3" />
+            </span>
+          </div>
+          <div className="mt-2">
+            <span className="text-[11px] font-bold text-slate-800 block truncate">
+              PR #{state.activePullRequest?.number || 214}
+            </span>
+            <span className="text-[11px] text-purple-700 font-semibold block mt-0.5 capitalize">
+              {state.activePullRequest?.reviewStatus.replace('_', ' ') || 'Changes Requested'}
+            </span>
+            <span className="text-[10px] text-slate-400 block mt-0.5 font-mono">
+              {state.activePullRequest?.waitingDays || 3} days in review
+            </span>
+          </div>
+        </button>
+
+        {/* Release Gate Readiness Card */}
+        <button
+          type="button"
+          onClick={() => handleNav('release')}
+          className="text-left p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-emerald-300 hover:bg-slate-50 transition-all cursor-pointer group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 group-hover:scale-105 transition-transform">
+              <Rocket className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-400 group-hover:text-emerald-600 flex items-center gap-0.5">
+              Gate <ChevronRight className="w-3 h-3" />
+            </span>
+          </div>
+          <div className="mt-2">
+            <span className="text-[11px] font-bold text-slate-800 block truncate">Release Gate</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-xs font-black font-mono text-slate-900">{readiness.overallScore}%</span>
+              <span className={`text-[10px] font-bold ${readiness.canShip ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {readiness.canShip ? 'Ship Ready' : 'Blockers'}
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-400 block mt-0.5 font-mono">5-Pillar Sign-off</span>
+          </div>
+        </button>
       </div>
     </div>
   );

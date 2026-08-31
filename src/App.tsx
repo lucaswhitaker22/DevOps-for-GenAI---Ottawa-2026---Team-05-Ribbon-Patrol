@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { TopBar } from './components/TopBar';
+import { SidebarNav } from './components/SidebarNav';
 import { PetStage } from './components/PetStage';
 import { ChatStream } from './components/ChatStream';
 import { ScenarioSwitcher } from './components/ScenarioSwitcher';
-import { RepositoryDrawer } from './components/RepositoryDrawer';
-import { CICDPipelineDrawer } from './components/CICDPipelineDrawer';
-import { PRIntelligenceDrawer } from './components/PRIntelligenceDrawer';
 import { AICommitGeneratorModal } from './components/AICommitGeneratorModal';
 import { PreviewChangesModal } from './components/PreviewChangesModal';
 import { QuickPaletteModal } from './components/QuickPaletteModal';
-import { RiskScoreModal } from './components/RiskScoreModal';
-import { ReleaseReadinessModal } from './components/ReleaseReadinessModal';
+import { RepositoryPage } from './components/pages/RepositoryPage';
+import { CICDPage } from './components/pages/CICDPage';
+import { PRIntelligencePage } from './components/pages/PRIntelligencePage';
+import { ReleaseReadinessPage } from './components/pages/ReleaseReadinessPage';
+import { RiskScorePage } from './components/pages/RiskScorePage';
 import {
   isAudioMuted,
   toggleAudioMuted,
@@ -52,18 +53,27 @@ import {
   ChatHistoryEntry,
   LiveScanState,
   RiskFactorItem,
+  ActivePageId,
 } from './types';
 
 export default function App() {
+  const getInitialPage = (): ActivePageId => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      if (['companion', 'repository', 'cicd', 'pr', 'release', 'risk'].includes(hash)) {
+        return hash as ActivePageId;
+      }
+    }
+    return 'companion';
+  };
+
+  const [activePage, setActivePage] = useState<ActivePageId>(getInitialPage);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
   const [activeScenarioId, setActiveScenarioId] = useState<string>(MVP_SCENARIO.id);
   const [repoState, setRepoState] = useState<RepositoryState>(MVP_SCENARIO.state);
   const [practiceStats, setPracticeStats] = useState<PracticeStats>(INITIAL_PRACTICE_STATS);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [isPipelineDrawerOpen, setIsPipelineDrawerOpen] = useState<boolean>(false);
-  const [isPRDrawerOpen, setIsPRDrawerOpen] = useState<boolean>(false);
   const [isCommitModalOpen, setIsCommitModalOpen] = useState<boolean>(false);
-  const [isRiskModalOpen, setIsRiskModalOpen] = useState<boolean>(false);
-  const [isReleaseModalOpen, setIsReleaseModalOpen] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<ChatRole>('byte_mascot');
   const [selectedTier, setSelectedTier] = useState<ModelTier>('general');
 
@@ -88,6 +98,25 @@ export default function App() {
       setIsAudioMutedState(muted);
     });
     return unsubscribe;
+  }, []);
+
+  const handleNavigate = (page: ActivePageId) => {
+    setActivePage(page);
+    if (typeof window !== 'undefined') {
+      window.location.hash = `#${page}`;
+    }
+  };
+
+  // Sync state with URL hash navigation (back/forward buttons)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['companion', 'repository', 'cicd', 'pr', 'release', 'risk'].includes(hash)) {
+        setActivePage(hash as ActivePageId);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   // Alert sound when transitioning into Unsafe or Blocked states
@@ -134,11 +163,10 @@ export default function App() {
         return;
       }
 
-      // 1.5. Cmd+P / Ctrl+P -> Toggle Pitch Deck Modal
-      // 2. Cmd+B / Ctrl+B -> Toggle Repository Drawer
+      // 2. Cmd+B / Ctrl+B -> Toggle Repository Page
       if (isCmdOrCtrl && (e.key === 'b' || e.key === 'B')) {
         e.preventDefault();
-        setIsDrawerOpen((prev) => !prev);
+        handleNavigate(activePage === 'repository' ? 'companion' : 'repository');
         return;
       }
 
@@ -150,22 +178,16 @@ export default function App() {
           setPreviewAction(null);
           return;
         }
-        // Layer 1.5: Release Readiness Modal
-        if (isReleaseModalOpen) {
-          e.preventDefault();
-          setIsReleaseModalOpen(false);
-          return;
-        }
         // Layer 2: Quick Palette
         if (isQuickPaletteOpen) {
           e.preventDefault();
           setIsQuickPaletteOpen(false);
           return;
         }
-        // Layer 3: Repository Drawer
-        if (isDrawerOpen) {
+        // Layer 3: Commit Generator Modal
+        if (isCommitModalOpen) {
           e.preventDefault();
-          setIsDrawerOpen(false);
+          setIsCommitModalOpen(false);
           return;
         }
         return;
@@ -189,9 +211,10 @@ export default function App() {
       window.removeEventListener('keydown', handleGlobalKeyDown);
     };
   }, [
+    activePage,
     previewAction,
     isQuickPaletteOpen,
-    isDrawerOpen,
+    isCommitModalOpen,
   ]);
 
   const [auditHistory, setAuditHistory] = useState<
@@ -741,106 +764,157 @@ export default function App() {
   return (
     <div
       id="gitpet-app-root"
-      className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col font-sans antialiased selection:bg-slate-200 selection:text-slate-900"
+      className="min-h-screen bg-[#F8FAFC] text-slate-900 flex font-sans antialiased selection:bg-slate-200 selection:text-slate-900"
     >
-      {/* Top Bar */}
-      <TopBar
+      {/* Collapsible Sidebar Navigation */}
+      <SidebarNav
+        activePage={activePage}
+        onNavigate={handleNavigate}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
         state={repoState}
         practiceStats={practiceStats}
-        onSelectBranch={(branch) => {
-          setRepoState((prev) => ({
-            ...prev,
-            currentBranch: { ...prev.currentBranch, name: branch },
-          }));
-        }}
-        onToggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)}
-        onOpenQuickPalette={() => setIsQuickPaletteOpen(true)}
-        onOpenPipelineDrawer={() => setIsPipelineDrawerOpen(true)}
-        onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
-        onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
-        onOpenRiskModal={() => setIsRiskModalOpen(true)}
-        onOpenReleaseModal={() => setIsReleaseModalOpen(true)}
-        isDrawerOpen={isDrawerOpen}
-        isLiveMode={isLiveMode}
-        liveScanState={liveScanState}
-        onRefreshLive={handleFetchLiveStatus}
-        isAudioMuted={isAudioMutedState}
-        onToggleAudio={handleToggleAudio}
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      {/* Main Layout Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-5 space-y-4">
-        {/* Scenario Switcher & Anomaly Sandbox Bar */}
-        <ScenarioSwitcher
-          scenarios={ALL_SCENARIOS}
-          activeScenarioId={activeScenarioId}
-          onSelectScenario={handleSelectScenario}
-          onInjectRemoteCommit={handleInjectRemoteCommit}
-          onInjectLocalEdit={handleInjectLocalEdit}
-          onInjectConflict={handleInjectConflict}
-          onInjectUnsafeRisk={handleInjectUnsafeRisk}
-          onResetToClean={handleResetToClean}
+      {/* Main Content Area Container */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
+          isSidebarCollapsed ? 'lg:pl-18' : 'lg:pl-64'
+        }`}
+      >
+        {/* Streamlined Top Bar */}
+        <TopBar
+          state={repoState}
+          activePage={activePage}
+          onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)}
+          onSelectBranch={(branch) => {
+            setRepoState((prev) => ({
+              ...prev,
+              currentBranch: { ...prev.currentBranch, name: branch },
+            }));
+          }}
+          onOpenQuickPalette={() => setIsQuickPaletteOpen(true)}
+          onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
           isLiveMode={isLiveMode}
-          onToggleLiveMode={handleToggleLiveMode}
-          onRefreshLive={handleFetchLiveStatus}
           liveScanState={liveScanState}
-          activeLiveBranch={activeLiveBranch}
-          isLiveLoading={liveScanState.loading}
-          onSelectLiveBranch={handleSelectLiveBranch}
+          onRefreshLive={handleFetchLiveStatus}
+          isAudioMuted={isAudioMutedState}
+          onToggleAudio={handleToggleAudio}
         />
 
-        {/* Core Layout Grid: Pet Stage (Left) + Chat Stream (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
-          {/* Left Column: Pet Ambient Canvas & Posture Visualization */}
-          <div className="lg:col-span-5 space-y-3">
-            <PetStage
-              state={repoState}
-              onPetClick={handlePetByte}
-              petTriggerTimestamp={petTriggerTimestamp}
-              onOpenPipelineDrawer={() => setIsPipelineDrawerOpen(true)}
-              onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
-              onOpenRiskModal={() => setIsRiskModalOpen(true)}
+        {/* Main Layout Area */}
+        <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-5 space-y-4">
+        {activePage === 'companion' && (
+          <div className="space-y-4 animate-in fade-in duration-150">
+            {/* Scenario Switcher & Anomaly Sandbox Bar */}
+            <ScenarioSwitcher
+              scenarios={ALL_SCENARIOS}
+              activeScenarioId={activeScenarioId}
+              onSelectScenario={handleSelectScenario}
+              onInjectRemoteCommit={handleInjectRemoteCommit}
+              onInjectLocalEdit={handleInjectLocalEdit}
+              onInjectConflict={handleInjectConflict}
+              onInjectUnsafeRisk={handleInjectUnsafeRisk}
+              onResetToClean={handleResetToClean}
+              isLiveMode={isLiveMode}
+              onToggleLiveMode={handleToggleLiveMode}
+              onRefreshLive={handleFetchLiveStatus}
+              liveScanState={liveScanState}
+              activeLiveBranch={activeLiveBranch}
+              isLiveLoading={liveScanState.loading}
+              onSelectLiveBranch={handleSelectLiveBranch}
             />
 
-            {/* Quick Practice Metrics Card */}
-            <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-amber-600 font-bold">
-                  🔥
-                </div>
-                <div>
-                  <span className="font-bold text-slate-800">Clean Review Streak</span>
-                  <p className="text-[11px] text-slate-400">
-                    {practiceStats.cleanCommitStreak} verified reviews in a row
-                  </p>
-                </div>
+            {/* Core Layout Grid: Pet Stage (Left) + Chat Stream (Right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
+              {/* Left Column: Pet Ambient Canvas & Posture Visualization */}
+              <div className="lg:col-span-5 space-y-3.5">
+                <PetStage
+                  state={repoState}
+                  onPetClick={handlePetByte}
+                  petTriggerTimestamp={petTriggerTimestamp}
+                  onNavigate={handleNavigate}
+                  pendingAction={messages.find((m) => m.recommendedAction && !m.executed)?.recommendedAction}
+                  onPreviewAction={(action) => setPreviewAction(action)}
+                />
               </div>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200/80">
-                Active & Protected
-              </span>
+
+              {/* Right Column: Conversational Repository Guidance Stream */}
+              <div className="lg:col-span-7 h-full">
+                <ChatStream
+                  messages={messages}
+                  isLoading={isLoading}
+                  onSendMessage={handleSendMessage}
+                  onPreviewAction={(action) => setPreviewAction(action)}
+                  onExecuteAction={handleExecuteAction}
+                  state={repoState}
+                  executingActionId={executingActionId}
+                  selectedRole={selectedRole}
+                  setSelectedRole={setSelectedRole}
+                  selectedTier={selectedTier}
+                  setSelectedTier={setSelectedTier}
+                  onNavigate={handleNavigate}
+                />
+              </div>
             </div>
           </div>
+        )}
 
-          {/* Right Column: Conversational Repository Guidance Stream */}
-          <div className="lg:col-span-7 h-full">
-            <ChatStream
-              messages={messages}
-              isLoading={isLoading}
-              onSendMessage={handleSendMessage}
-              onPreviewAction={(action) => setPreviewAction(action)}
-              onExecuteAction={handleExecuteAction}
-              state={repoState}
-              executingActionId={executingActionId}
-              selectedRole={selectedRole}
-              setSelectedRole={setSelectedRole}
-              selectedTier={selectedTier}
-              setSelectedTier={setSelectedTier}
-            />
-          </div>
-        </div>
+        {activePage === 'repository' && (
+          <RepositoryPage
+            state={repoState}
+            auditHistory={auditHistory}
+            onRollbackLastAction={handleRollbackLastAction}
+            onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {activePage === 'cicd' && (
+          <CICDPage
+            state={repoState}
+            onNavigate={handleNavigate}
+            onSimulatePipelineEvent={handleSimulatePipelineEvent}
+          />
+        )}
+
+        {activePage === 'pr' && (
+          <PRIntelligencePage
+            state={repoState}
+            onNavigate={handleNavigate}
+            onExecutePRAction={handleExecutePRAction}
+          />
+        )}
+
+        {activePage === 'release' && (
+          <ReleaseReadinessPage
+            state={repoState}
+            onNavigate={handleNavigate}
+            onRemediateBlocker={(blocker) => {
+              handleSendMessage(`How do I resolve the release blocker: "${blocker}"?`, selectedRole, selectedTier);
+            }}
+            onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
+          />
+        )}
+
+        {activePage === 'risk' && (
+          <RiskScorePage
+            state={repoState}
+            onNavigate={handleNavigate}
+            onRemediateFactor={(factor: RiskFactorItem) => {
+              handleSendMessage(
+                `How do I remediate the "${factor.name}" repository risk factor (${factor.details})?`,
+                selectedRole,
+                selectedTier
+              );
+            }}
+          />
+        )}
       </main>
 
-      {/* Preview Changes & Diff Modal */}
+      {/* Preview Changes & Diff Confirmation Modal */}
       {previewAction && (
         <PreviewChangesModal
           isOpen={!!previewAction}
@@ -851,54 +925,7 @@ export default function App() {
         />
       )}
 
-      {/* Repository Drawer */}
-      <RepositoryDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        state={repoState}
-        auditHistory={auditHistory}
-        onRollbackLastAction={handleRollbackLastAction}
-        onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
-      />
-
-      {/* CI/CD Pipeline Health Companion Drawer */}
-      <CICDPipelineDrawer
-        isOpen={isPipelineDrawerOpen}
-        onClose={() => setIsPipelineDrawerOpen(false)}
-        state={repoState}
-        onSimulatePipelineEvent={handleSimulatePipelineEvent}
-      />
-
-      {/* PR Intelligence Drawer */}
-      <PRIntelligenceDrawer
-        isOpen={isPRDrawerOpen}
-        onClose={() => setIsPRDrawerOpen(false)}
-        state={repoState}
-        onExecutePRAction={handleExecutePRAction}
-      />
-
-      {/* Repository Risk Score & Health Breakdown Modal */}
-      <RiskScoreModal
-        isOpen={isRiskModalOpen}
-        onClose={() => setIsRiskModalOpen(false)}
-        state={repoState}
-        onRemediateFactor={(factor: RiskFactorItem) => {
-          handleSendMessage(`How do I remediate the "${factor.name}" repository risk factor (${factor.details})?`, selectedRole, selectedTier);
-        }}
-      />
-
-      {/* Release Readiness Advisor Modal (5-Pillar Gate) */}
-      <ReleaseReadinessModal
-        isOpen={isReleaseModalOpen}
-        onClose={() => setIsReleaseModalOpen(false)}
-        state={repoState}
-        onRemediateBlocker={(blocker) => {
-          handleSendMessage(`How do I resolve the release blocker: "${blocker}"?`, selectedRole, selectedTier);
-        }}
-        onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
-      />
-
-      {/* AI Commit Generator Modal */}
+      {/* AI Conventional Commit Generator Modal */}
       <AICommitGeneratorModal
         isOpen={isCommitModalOpen}
         onClose={() => setIsCommitModalOpen(false)}
@@ -914,8 +941,7 @@ export default function App() {
         onClose={() => setIsQuickPaletteOpen(false)}
         scenarios={ALL_SCENARIOS}
         onSelectScenario={handleSelectScenario}
-        onToggleDrawer={() => setIsDrawerOpen((prev) => !prev)}
-        isDrawerOpen={isDrawerOpen}
+        onNavigate={handleNavigate}
         onOpenPreviewAction={() => {
           const lastWithAction = [...messages].reverse().find((m) => m.recommendedAction && !m.executed);
           if (lastWithAction?.recommendedAction) {
@@ -928,13 +954,14 @@ export default function App() {
         isLiveMode={isLiveMode}
         onToggleLiveMode={handleToggleLiveMode}
         onRefreshLive={handleFetchLiveStatus}
-        onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
-        onOpenRiskModal={() => setIsRiskModalOpen(true)}
-        onOpenReleaseModal={() => setIsReleaseModalOpen(true)}
+        onOpenPRDrawer={() => handleNavigate('pr')}
+        onOpenRiskModal={() => handleNavigate('risk')}
+        onOpenReleaseModal={() => handleNavigate('release')}
         isAudioMuted={isAudioMutedState}
         onToggleAudio={handleToggleAudio}
         onPetByte={handlePetByte}
       />
+      </div>
     </div>
   );
 }
