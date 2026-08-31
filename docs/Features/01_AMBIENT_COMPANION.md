@@ -101,3 +101,26 @@ A dedicated conversational stream providing evidence-based repository advice and
   * `🌲 Explain branch divergence`
   * `🔀 Review PR & reviewer feedback`
   * `⚡ CI/CD test failure diagnosis`
+
+---
+
+### 5. Scenario Switcher & Anomaly Sandbox (`ScenarioSwitcher.tsx`)
+* **Dual Operating Mode Toggle**: Toggle between pre-configured incident presets and your real local workspace.
+* **18 Incident Scenarios**: Grouped by Git Workflows, CI/CD Pipelines, PR Reviews, and Cloud Infrastructure.
+* **Quick Anomaly Injectors**:
+  * `+1 Remote`: Adds an upstream commit to origin without pulling, immediately triggering branch drift.
+  * `+1 Edit`: Creates an uncommitted modification in the working tree, testing dirty tree handling.
+  * `Conflict`: Simulates merge conflict markers in active files.
+  * `Clean`: Resets repository state to a clean 100% health baseline.
+
+---
+
+### 6. Web Audio API Ambient Sound Engineering (`audioEffects.ts`)
+GitPet features zero-dependency, synthesized audio effects via the browser's native `AudioContext`:
+* `playPetChirpSound()`: Ascending two-tone chirp (523Hz -> 659Hz) on mascot interaction.
+* `playPurrSound()`: Modulated low-frequency vibrato (120Hz carrier with 25Hz AM) while being petted.
+* `playCoffeeSlurpSound()`: Pitch slide liquid resonance simulating coffee drinking.
+* `playAccessoryEquipSound()`: High chime (880Hz) on equipping hats or accessories.
+* `playSyncSuccessSound()`: C-Major chord arpeggio (C5 -> E5 -> G5) on verified safe synchronization.
+* `playConflictAlertSound()`: Dissonant warning tritone alert (440Hz + 622Hz) on conflict detection.
+* **Persistent Mute Toggle**: State preserved in global header controls.

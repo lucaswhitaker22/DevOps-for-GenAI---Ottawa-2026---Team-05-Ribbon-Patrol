@@ -80,13 +80,16 @@ GitPet aggregates 7 real-time telemetry factors into a single 0–100 DevSecOps 
 
 ---
 
-### Interactive Visual & Intelligence Drawers
+### Multi-Page Dedicated Workspaces Architecture
 
-* **Git DAG Visualizer:** Interactive SVG commit topology graph featuring multi-lane branch routing, commit role badges (HEAD, Upstream, Merge Base, Hazard), and collapsed commit runs.
-* **CI/CD Pipeline Drawer:** Real-time pipeline step monitoring, pass rates, test suite health, flaky test quarantine list, and deployment targets.
-* **PR Intelligence Drawer:** Complete PR metadata, review statuses, inline review comments with line numbers, waiting time tracker, and automated changelog generation.
-* **AI Commit & Changelog Generator:** Conventional commit assistant (`feat`, `fix`, `refactor`, `docs`, `chore`, etc.) synthesizing atomic messages, changelogs, and release notes.
-* **Risk Score Breakdown Modal:** Drilldown modal visualizing each factor's point deductions, severity status, and remediation advice.
+GitPet organizes complex DevSecOps workflows into 6 dedicated full-page workspaces connected by a responsive, collapsible sidebar (`SidebarNav.tsx`):
+
+1. **Ambient Companion (`#companion`):** Interactive pixel pet stage, 18 physical symptom auras, 4-card live telemetry mission control quick deck, and multi-turn Gemini stream with 4 personas & 3 model speed tiers.
+2. **Repository Details & DAG Graph (`#repository`):** Multi-lane topological DAG graph visualizer, multi-file working tree diff viewer, checkbox staging controls, stash snapshot restoration, and 1-click audit rollback.
+3. **CI/CD Pipeline Telemetry (`#cicd`):** 5-stage progression tracker with expandable stage execution logs, flaky test suite diagnostics & quarantine, and supply chain CVE dependency scans.
+4. **Pull Request Intelligence (`#pr`):** Review turnaround duration metrics, approval meters vs. thresholds, inline review threads, 1-click AI resolution reply drafting, and squash & merge execution.
+5. **Release Gate & Deployment Sign-Off (`#release`):** 5-pillar deployment readiness scorecard (Tests, Coverage, Vulnerabilities, PR Approvals, Freshness), blocker remediation, Markdown export, and JSON compliance artifact download.
+6. **Risk Scorecard & Health Pool (`#risk`):** Granular 7-factor repository health pool (0–100 HP) with factor category filtering (All, Hazards, Warnings, Healthy) and 1-click "Remediate with Byte" deep links.
 
 ---
 

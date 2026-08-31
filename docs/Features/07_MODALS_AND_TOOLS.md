@@ -18,6 +18,16 @@ GitPet provides an array of global modals and utility subsystems accessible from
 ---
 
 ### 1. AI Conventional Commit Generator Modal (`AICommitGeneratorModal.tsx`)
+* **Endpoint**: `POST /api/ai/commit`
+* **Input Schema**:
+  ```json
+  {
+    "diffContext": "diff --git a/src/auth.ts b/src/auth.ts...",
+    "commitType": "feat",
+    "scope": "cart",
+    "breakingChange": false
+  }
+  ```
 * **Semantic Type Selection**: Select or generate commits conforming to `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `perf`, or `ci`.
 * **Scope & Subject Formatting**: Formats commit header with proper scope syntax (e.g. `feat(cart): implement multi-currency checkout`).
 * **Breaking Change Alerts**: Flags breaking API changes with `BREAKING CHANGE:` footer notices.
@@ -27,10 +37,11 @@ GitPet provides an array of global modals and utility subsystems accessible from
 ---
 
 ### 2. Preview Changes & Diff Confirmation Modal (`PreviewChangesModal.tsx`)
+* **Endpoint**: `POST /api/git/preview-action`
 * **Human-in-the-Loop Safety Enforcement**: Ensures zero blind command execution.
-* **Blast Radius Calculation**: Lists every file affected by the command.
+* **Blast Radius Calculation**: Lists every file affected by the command and classifies file mutations.
 * **Pre-Computed Reversal Step**: Shows the exact command required to undo the action (e.g., `git stash pop`, `git rebase --abort`).
-* **Explicit Execution Confirmation**: Action executes only after explicit developer approval.
+* **Explicit Execution Confirmation**: Action executes only after explicit developer approval, routing to `POST /api/git/execute-action`.
 
 ---
 
@@ -43,12 +54,15 @@ GitPet provides an array of global modals and utility subsystems accessible from
 ---
 
 ### 4. Live Voice Streaming (`LiveVoiceModal.tsx`)
-* **Bidirectional PCM Audio**: Streams audio to the Gemini Live API via WebSockets (`/live`).
+* **Endpoint**: `WebSocket ws://localhost:3001/live`
+* **Bidirectional PCM Audio**: Streams audio at 16kHz/24kHz to the Gemini Live API via WebSockets.
 * **Real-time Voice Feedback**: Talk directly with Byte to diagnose repository issues hands-free.
+* **Real-time Live Audio Waveform**: Animated visual equalizer reflecting active audio input levels.
 
 ---
 
 ### 5. Pet Avatar Studio (`ImageStudioModal.tsx`)
+* **Endpoints**: `POST /api/ai/images/generate`, `POST /api/ai/images/edit`, `POST /api/ai/images/:id/approve`
 * **Mascot Customization**: Generates custom avatar variations using `gemini-3.1-flash-image`.
 * **Ephemeral Asset Registry**: 30-minute preview lifecycle before applying to the active stage.
 * **Aesthetic SVG Fallback**: Guaranteed offline fallback generator if remote image generation is unavailable.
@@ -56,4 +70,11 @@ GitPet provides an array of global modals and utility subsystems accessible from
 ---
 
 ### 6. Pitch Deck Presentation Modal (`PitchDeckModal.tsx`)
-* **Instant Presentation**: Press `P` anywhere in the app to open the 7-slide pitch deck covering the core mission, problem statement, architecture, safety engine, and hackathon highlights.
+* **Instant Presentation**: Press `P` anywhere in the app to open the 7-slide pitch deck:
+  1. *Title & Problem*: The Hidden State Crisis in Developer Workflows.
+  2. *The Solution*: GitPet — DevSecOps Ambient Companion.
+  3. *Architecture*: Multi-Tier Gemini Intelligence + 2-Layer Safety Gate.
+  4. *7-Factor Risk & 5-Pillar Gate*: Data-Driven Scoring Engine.
+  5. *Live Workspace vs Sandbox*: Dual-Mode Operational Realism.
+  6. *Security & Governance*: NIST AI RMF 1.0 & Zero Force-Push Guarantee.
+  7. *Team Ribbon Patrol*: Team Credits & Submission Checklist.

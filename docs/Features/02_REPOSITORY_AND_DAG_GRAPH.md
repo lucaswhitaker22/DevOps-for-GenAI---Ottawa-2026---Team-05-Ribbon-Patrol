@@ -37,6 +37,11 @@ The **Repository Details & DAG Graph** workspace provides a full-page, multi-tab
   * Click any commit node in the graph to view full commit details: short hash, author name, commit message, parent hashes, and relative timestamp.
 * **Legend Badges**: Header legend clearly indicates local ahead counts (`↑X`) and origin behind counts (`↓Y`).
 
+#### SVG Coordinate & Topology Layout Engine:
+* Computes lane indices based on branch topology (Lane 0: main/upstream trunk; Lane 1: feature branches; Lane 2: fork branches).
+* Connects parent-child commit nodes with cubic bezier spline paths (`M x1 y1 C x1 yMid, x2 yMid, x2 y2`) to produce smooth visual branch curves.
+* Animates node pulsing for `HEAD` and highlights merge base nodes with double-ring SVG strokes.
+
 ---
 
 ### 2. Working Tree & Side-by-Side Diffs (`DiffViewer.tsx`)
@@ -71,3 +76,4 @@ The **Repository Details & DAG Graph** workspace provides a full-page, multi-tab
   * Every command executed through GitPet is recorded with an exact timestamp, description, and shell command.
 * **1-Click Rollback**:
   * Click **Rollback Last Action** in the header to execute the pre-computed safe reversal command of the most recent action.
+* **Rollback Safeguard**: Verifies working tree is clean or stashed before executing a rollback, preventing overwriting current in-flight edits.
