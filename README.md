@@ -28,6 +28,7 @@
 - 🎨 **Pet Avatar Studio (Image Gen):** Custom avatar generation for your mascot using Gemini Imagen / Image generation capabilities.
 - 🧪 **Interactive Scenarios:** Practice solving branch drift, merge conflicts, uncommitted diffs, and clean repository flows in a safe sandbox.
 - 📊 **Repository Health & Practice Stats:** Automatic health metrics scoring, daily streak tracking, and interactive pitch deck presentation mode.
+- 📖 **Comprehensive End-User Guide:** Check out the complete [End-User Guide & Feature Manual](docs/USER_GUIDE.md) detailing all pages, controls, and workflows.
 
 ---
 

@@ -3,6 +3,8 @@
 ## GitPet Documentation Index
 
 * [Functional Specification Document](README.md)
+* [End-User Guide & Feature Manual](USER_GUIDE.md)
+* [Feature Deep Dive Documentation Suite](Features/README.md)
 * [Architecture & System Design](ARCHITECTURE.md)
 * [Project Overview & Elevator Pitch](PROJECT_OVERVIEW.md)
 * [Participant Guidelines & Evidence Matrix (P-01 to P-15)](GUIDELINES_COMPLIANCE.md)
