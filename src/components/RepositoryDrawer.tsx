@@ -32,6 +32,7 @@ interface RepositoryDrawerProps {
     description: string;
   }[];
   onRollbackLastAction?: () => void;
+  onOpenCommitGenerator?: () => void;
 }
 
 export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
@@ -40,6 +41,7 @@ export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
   state,
   auditHistory,
   onRollbackLastAction,
+  onOpenCommitGenerator,
 }) => {
   const [activeTab, setActiveTab] = useState<'working_tree' | 'divergence' | 'stashes' | 'audit'>(
     'working_tree'
@@ -173,7 +175,15 @@ export const RepositoryDrawer: React.FC<RepositoryDrawerProps> = ({
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>Uncommitted changes ({state.workingTree.length} files)</span>
-                    <span className="font-mono text-[11px] text-slate-500">HEAD: {state.currentBranch.lastCommitHash}</span>
+                    {onOpenCommitGenerator && (
+                      <button
+                        onClick={onOpenCommitGenerator}
+                        className="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                      >
+                        <span>⚡</span>
+                        <span>AI Conventional Commit</span>
+                      </button>
+                    )}
                   </div>
 
                   {state.workingTree.length === 0 ? (

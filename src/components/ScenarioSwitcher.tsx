@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Plus,
   AlertTriangle,
@@ -8,6 +8,8 @@ import {
   Activity,
   Github,
   Loader2,
+  ChevronDown,
+  Zap,
 } from 'lucide-react';
 import { ScenarioPreset, LiveScanState } from '../types';
 import { LIVE_REPO, LIVE_REPO_BRANCHES } from '../data/liveRepoConfig';
@@ -47,189 +49,211 @@ export const ScenarioSwitcher: React.FC<ScenarioSwitcherProps> = ({
   isLiveLoading,
   onSelectLiveBranch,
 }) => {
+  const [showSimMenu, setShowSimMenu] = useState(false);
+
+  const activeScenario = scenarios.find((s) => s.id === activeScenarioId) || scenarios[0];
+
+  // Group scenarios into categories
+  const gitScenarios = scenarios.filter(
+    (s) => !s.id.startsWith('cicd_') && !s.id.startsWith('pr_')
+  );
+  const cicdScenarios = scenarios.filter((s) => s.id.startsWith('cicd_'));
+  const prScenarios = scenarios.filter((s) => s.id.startsWith('pr_'));
+
   return (
     <div
       id="scenario-switcher-bar"
-      className="w-full bg-white rounded-2xl border border-slate-200/80 p-2 sm:p-2.5 shadow-xs"
+      className="w-full bg-white rounded-2xl border border-slate-200/90 p-3 shadow-xs space-y-2.5"
     >
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
-        {/* Left: Mode & Preset Scenarios Segmented Selector */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
-          <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 px-1">
-            <Layers className="w-3.5 h-3.5 text-slate-400" />
-            <span>Mode:</span>
-          </div>
-
-          <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl">
-            {/* Live Workspace Mode Toggle */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Left: Mode Toggle & Categorized Scenario Dropdown */}
+        <div className="flex items-center gap-2.5 flex-wrap flex-1">
+          {/* Mode Segmented Toggle */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl">
             <button
-              id="live-workspace-mode-btn"
-              onClick={onToggleLiveMode}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                isLiveMode
-                  ? 'bg-emerald-600 text-white shadow-xs font-bold'
-                  : 'text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800'
+              onClick={() => isLiveMode && onToggleLiveMode && onToggleLiveMode()}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                !isLiveMode ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Activity className={`w-3.5 h-3.5 ${isLiveMode ? 'animate-pulse text-white' : 'text-emerald-600'}`} />
-              <span>Live Workspace</span>
-              <span
-                className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isLiveMode ? 'bg-emerald-800 text-emerald-100' : 'bg-emerald-100 text-emerald-800'
-                }`}
-              >
-                Local Git
-              </span>
+              Sandbox Presets
             </button>
 
-            <div className="w-[1px] h-4 bg-slate-300 mx-0.5" />
-
-            {/* Sandbox Presets */}
-            {scenarios.map((sc) => {
-              const isActive = !isLiveMode && sc.id === activeScenarioId;
-              const isUnsafePreset = sc.id.includes('unsafe') || sc.badge.includes('Unsafe');
-
-              return (
-                <button
-                  key={sc.id}
-                  onClick={() => onSelectScenario(sc)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                    isActive
-                      ? isUnsafePreset
-                        ? 'bg-[#CA3F3F] text-white shadow-xs'
-                        : 'bg-[#BD006E] text-white shadow-xs font-bold'
-                      : isUnsafePreset
-                      ? 'text-[#CA3F3F] hover:bg-rose-50'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-                  }`}
-                >
-                  <span>{sc.title}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isActive
-                        ? isUnsafePreset
-                          ? 'bg-[#A32B2B] text-white'
-                          : 'bg-[#9E005B] text-white'
-                        : isUnsafePreset
-                        ? 'bg-rose-100 text-[#CA3F3F]'
-                        : 'bg-slate-200/70 text-slate-600'
-                    }`}
-                  >
-                    {sc.badge}
-                  </span>
-                </button>
-              );
-            })}
+            <button
+              id="live-workspace-mode-btn"
+              onClick={() => !isLiveMode && onToggleLiveMode && onToggleLiveMode()}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                isLiveMode ? 'bg-emerald-600 text-white shadow-xs' : 'text-emerald-700 hover:bg-emerald-50'
+              }`}
+            >
+              <Activity className={`w-3.5 h-3.5 ${isLiveMode ? 'animate-pulse' : ''}`} />
+              <span>Live Local Git</span>
+            </button>
           </div>
+
+          {!isLiveMode ? (
+            /* Categorized Preset Selector Dropdown */
+            <div className="relative flex-1 max-w-md">
+              <select
+                value={activeScenarioId}
+                onChange={(e) => {
+                  const target = scenarios.find((s) => s.id === e.target.value);
+                  if (target) onSelectScenario(target);
+                }}
+                className="w-full text-xs font-bold rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-slate-800 cursor-pointer hover:bg-slate-100 transition-colors focus:ring-2 focus:ring-purple-500/20"
+              >
+                <optgroup label="🌱 Git Repository Scenarios">
+                  {gitScenarios.map((sc) => (
+                    <option key={sc.id} value={sc.id}>
+                      {sc.title} ({sc.badge})
+                    </option>
+                  ))}
+                </optgroup>
+
+                <optgroup label="⚡ CI/CD Pipeline Health">
+                  {cicdScenarios.map((sc) => (
+                    <option key={sc.id} value={sc.id}>
+                      {sc.title} ({sc.badge})
+                    </option>
+                  ))}
+                </optgroup>
+
+                <optgroup label="🔀 Pull Request Intelligence">
+                  {prScenarios.map((sc) => (
+                    <option key={sc.id} value={sc.id}>
+                      {sc.title} ({sc.badge})
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+          ) : (
+            /* Live Repo Branch Selector */
+            <div className="flex items-center gap-2 flex-wrap">
+              <select
+                value={activeLiveBranch || ''}
+                onChange={(e) => e.target.value && onSelectLiveBranch(e.target.value)}
+                disabled={isLiveLoading}
+                className="text-xs font-semibold rounded-xl border border-emerald-300 px-3 py-1.5 bg-emerald-50 text-emerald-900 cursor-pointer"
+              >
+                <option value="" disabled>
+                  Select branch to inspect…
+                </option>
+                {LIVE_REPO_BRANCHES.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+
+              {onRefreshLive && (
+                <button
+                  onClick={onRefreshLive}
+                  disabled={liveScanState?.loading}
+                  className="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${liveScanState?.loading ? 'animate-spin' : ''}`} />
+                  <span>Scan Repo</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Right: Anomaly Sandbox Simulator Tools OR Live Refresh Action */}
-        {isLiveMode ? (
-          <div className="flex items-center gap-2 shrink-0 flex-wrap pt-1.5 lg:pt-0 border-t lg:border-t-0 border-slate-100">
-            <span className="text-[11px] font-medium text-slate-500">
-              Inspecting active local repository (read-only)
-            </span>
+        {/* Right: Anomaly Simulator Dropdown Menu */}
+        {!isLiveMode && (
+          <div className="relative shrink-0">
             <button
-              id="refresh-live-git-btn"
-              onClick={onRefreshLive}
-              disabled={liveScanState?.loading}
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              onClick={() => setShowSimMenu(!showSimMenu)}
+              className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center gap-2 transition-all shadow-2xs cursor-pointer"
             >
-              <RefreshCw className={`w-3.5 h-3.5 text-emerald-600 ${liveScanState?.loading ? 'animate-spin' : ''}`} />
-              <span>{liveScanState?.loading ? 'Scanning...' : 'Scan Live Repo'}</span>
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-1.5 shrink-0 flex-wrap pt-1.5 lg:pt-0 border-t lg:border-t-0 border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">
-              Simulate:
-            </span>
-
-            <button
-              onClick={onInjectRemoteCommit}
-              title="Add +1 remote commit on origin"
-              className="px-2 py-1 text-xs font-medium rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              <Plus className="w-3 h-3 text-amber-500" />
-              <span>+1 Remote</span>
+              <Zap className="w-3.5 h-3.5 text-amber-400" />
+              <span>Simulate Anomaly</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
             </button>
 
-            <button
-              onClick={onInjectLocalEdit}
-              title="Create an uncommitted file in working tree"
-              className="px-2 py-1 text-xs font-medium rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              <Plus className="w-3 h-3 text-blue-500" />
-              <span>+1 Local Edit</span>
-            </button>
+            {showSimMenu && (
+              <div className="absolute right-0 top-full mt-1.5 w-56 bg-white rounded-xl shadow-2xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Inject Repository Event
+                </div>
 
-            <button
-              onClick={onInjectConflict}
-              title="Trigger merge conflict markers in payment service"
-              className="px-2 py-1 text-xs font-medium rounded-lg bg-slate-50 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-slate-700 border border-slate-200/80 flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              <AlertTriangle className="w-3 h-3 text-rose-500" />
-              <span>Conflict</span>
-            </button>
+                <button
+                  onClick={() => {
+                    onInjectRemoteCommit();
+                    setShowSimMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-amber-50 text-slate-700 font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <Plus className="w-3.5 h-3.5 text-amber-500" /> +1 Remote Commit
+                  </span>
+                </button>
 
-            <button
-              id="inject-unsafe-hazard-btn"
-              onClick={onInjectUnsafeRisk}
-              title="Simulate upstream force-push divergence with uncommitted local work (0% Unsafe State)"
-              className="px-2 py-1 text-xs font-semibold rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              <ShieldAlert className="w-3 h-3 text-rose-600" />
-              <span>Hazard (0%)</span>
-            </button>
+                <button
+                  onClick={() => {
+                    onInjectLocalEdit();
+                    setShowSimMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-blue-50 text-slate-700 font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <Plus className="w-3.5 h-3.5 text-blue-500" /> +1 Uncommitted Edit
+                  </span>
+                </button>
 
-            <button
-              onClick={onResetToClean}
-              title="Reset repository to 100% clean & synchronized"
-              className="px-2 py-1 text-xs font-medium rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 transition-colors cursor-pointer"
-            >
-              <RefreshCw className="w-3 h-3 text-emerald-600" />
-              <span>Reset</span>
-            </button>
+                <button
+                  onClick={() => {
+                    onInjectConflict();
+                    setShowSimMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-rose-50 text-rose-700 font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-500" /> Merge Conflict
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    onInjectUnsafeRisk();
+                    setShowSimMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-rose-100 text-rose-900 font-bold"
+                >
+                  <span className="flex items-center gap-2">
+                    <ShieldAlert className="w-3.5 h-3.5 text-rose-600" /> Hazard State (0%)
+                  </span>
+                </button>
+
+                <div className="my-1 border-t border-slate-100" />
+
+                <button
+                  onClick={() => {
+                    onResetToClean();
+                    setShowSimMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-emerald-50 text-emerald-800 font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <RefreshCw className="w-3.5 h-3.5 text-emerald-600" /> Reset to Clean (100%)
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
 
-      {/* Live Repo: real GitHub data from the public test fixture */}
-      <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-slate-100 flex-wrap">
-        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 px-1">
-          <Github className="w-3.5 h-3.5 text-slate-500" />
-          <span>Live Repo:</span>
+      {/* Active Preset Description Summary */}
+      {!isLiveMode && activeScenario && (
+        <div className="px-1 text-[11px] text-slate-500 flex items-center justify-between">
+          <span className="truncate">
+            <strong className="text-slate-800">{activeScenario.title}:</strong> {activeScenario.description}
+          </span>
         </div>
-
-        <select
-          value={activeLiveBranch || ''}
-          onChange={(e) => e.target.value && onSelectLiveBranch(e.target.value)}
-          disabled={isLiveLoading}
-          className={`text-xs font-semibold rounded-lg border px-2 py-1 bg-white cursor-pointer ${
-            activeLiveBranch ? 'border-blue-300 text-blue-800' : 'border-slate-200 text-slate-600'
-          }`}
-        >
-          <option value="" disabled>
-            Select a branch…
-          </option>
-          {LIVE_REPO_BRANCHES.map((b) => (
-            <option key={b} value={b}>
-              {b}
-            </option>
-          ))}
-        </select>
-
-        {isLiveLoading && <Loader2 className="w-3.5 h-3.5 text-blue-600 animate-spin" />}
-
-        <a
-          href={`https://github.com/${LIVE_REPO.owner}/${LIVE_REPO.repo}`}
-          target="_blank"
-          rel="noreferrer"
-          className="text-[11px] text-slate-400 hover:text-blue-600 underline decoration-dotted ml-1"
-        >
-          {LIVE_REPO.owner}/{LIVE_REPO.repo}
-        </a>
-      </div>
+      )}
     </div>
   );
 };
+

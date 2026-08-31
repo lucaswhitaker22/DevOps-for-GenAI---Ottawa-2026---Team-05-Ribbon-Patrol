@@ -21,7 +21,7 @@ interface CICDPipelineDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   state: RepositoryState;
-  onSimulatePipelineEvent?: (type: 'failed_build' | 'flaky_tests' | 'vulnerability' | 'deploy_success') => void;
+  onSimulatePipelineEvent?: (type: 'failed_build' | 'flaky_tests' | 'vulnerability' | 'deploy_success' | 'lost_map' | 'smoke_cloud' | 'shield_cracked') => void;
 }
 
 export const CICDPipelineDrawer: React.FC<CICDPipelineDrawerProps> = ({
@@ -172,6 +172,33 @@ export const CICDPipelineDrawer: React.FC<CICDPipelineDrawerProps> = ({
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                         <span>Deploy Green 🎉</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onSimulatePipelineEvent('lost_map')}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200/80 flex items-center gap-1.5 transition-colors text-left"
+                      >
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                        <span>Lost Map 🗺️</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onSimulatePipelineEvent('smoke_cloud')}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 flex items-center gap-1.5 transition-colors text-left"
+                      >
+                        <Flame className="w-3.5 h-3.5 shrink-0 text-slate-600" />
+                        <span>Smoke Cloud 💨</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onSimulatePipelineEvent('shield_cracked')}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 border border-red-200/80 flex items-center gap-1.5 transition-colors text-left"
+                      >
+                        <Shield className="w-3.5 h-3.5 shrink-0" />
+                        <span>Shield Cracked 🛡️</span>
                       </button>
                     </div>
                   </div>

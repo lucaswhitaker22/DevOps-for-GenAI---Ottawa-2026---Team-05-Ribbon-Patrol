@@ -6,6 +6,8 @@ import { ChatStream } from './components/ChatStream';
 import { ScenarioSwitcher } from './components/ScenarioSwitcher';
 import { RepositoryDrawer } from './components/RepositoryDrawer';
 import { CICDPipelineDrawer } from './components/CICDPipelineDrawer';
+import { PRIntelligenceDrawer } from './components/PRIntelligenceDrawer';
+import { AICommitGeneratorModal } from './components/AICommitGeneratorModal';
 import { PreviewChangesModal } from './components/PreviewChangesModal';
 import { QuickPaletteModal } from './components/QuickPaletteModal';
 import {
@@ -28,6 +30,13 @@ import {
   FLAKY_TESTS_SCENARIO,
   VULNERABILITY_SCENARIO,
   DEPLOYMENT_SUCCESS_SCENARIO,
+  PR_CHANGES_REQUESTED_SCENARIO,
+  PR_PENDING_REVIEW_SCENARIO,
+  PR_CONFLICTED_SCENARIO,
+  PR_APPROVED_READY_SCENARIO,
+  LOST_MAP_SCENARIO,
+  SMOKE_CLOUD_SCENARIO,
+  SHIELD_CRACKED_SCENARIO,
 } from './data/mockScenarios';
 import {
   RepositoryState,
@@ -48,6 +57,8 @@ export default function App() {
   const [practiceStats, setPracticeStats] = useState<PracticeStats>(INITIAL_PRACTICE_STATS);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isPipelineDrawerOpen, setIsPipelineDrawerOpen] = useState<boolean>(false);
+  const [isPRDrawerOpen, setIsPRDrawerOpen] = useState<boolean>(false);
+  const [isCommitModalOpen, setIsCommitModalOpen] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<ChatRole>('byte_mascot');
   const [selectedTier, setSelectedTier] = useState<ModelTier>('general');
 
@@ -672,7 +683,7 @@ export default function App() {
   };
 
   const handleSimulatePipelineEvent = (
-    type: 'failed_build' | 'flaky_tests' | 'vulnerability' | 'deploy_success'
+    type: 'failed_build' | 'flaky_tests' | 'vulnerability' | 'deploy_success' | 'lost_map' | 'smoke_cloud' | 'shield_cracked'
   ) => {
     let preset: ScenarioPreset;
     switch (type) {
@@ -691,8 +702,29 @@ export default function App() {
           confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
         }
         break;
+      case 'lost_map':
+        preset = LOST_MAP_SCENARIO;
+        break;
+      case 'smoke_cloud':
+        preset = SMOKE_CLOUD_SCENARIO;
+        break;
+      case 'shield_cracked':
+        preset = SHIELD_CRACKED_SCENARIO;
+        break;
     }
     handleSelectScenario(preset);
+  };
+
+  const handleExecutePRAction = (actionType: 'nudge' | 'rebase' | 'changelog' | 'resolve_conflicts') => {
+    if (actionType === 'nudge') {
+      handleSendMessage('Please send a friendly reminder to review PR #' + (repoState.activePullRequest?.number || 214), selectedRole, selectedTier);
+    } else if (actionType === 'rebase') {
+      handleSendMessage('How do I rebase branch ' + repoState.currentBranch.name + ' onto main cleanly?', selectedRole, selectedTier);
+    } else if (actionType === 'changelog') {
+      handleSendMessage('Generate a formatted commit changelog and summary for PR #' + (repoState.activePullRequest?.number || 214), selectedRole, selectedTier);
+    } else if (actionType === 'resolve_conflicts') {
+      handleSendMessage('Guide me through resolving merge conflicts on PR #' + (repoState.activePullRequest?.number || 214), selectedRole, selectedTier);
+    }
   };
 
   return (
@@ -713,6 +745,8 @@ export default function App() {
         onToggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)}
         onOpenQuickPalette={() => setIsQuickPaletteOpen(true)}
         onOpenPipelineDrawer={() => setIsPipelineDrawerOpen(true)}
+        onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
+        onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
         isDrawerOpen={isDrawerOpen}
         isLiveMode={isLiveMode}
         liveScanState={liveScanState}
@@ -751,6 +785,7 @@ export default function App() {
               onPetClick={handlePetByte}
               petTriggerTimestamp={petTriggerTimestamp}
               onOpenPipelineDrawer={() => setIsPipelineDrawerOpen(true)}
+              onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
             />
 
             {/* Quick Practice Metrics Card */}
@@ -809,6 +844,7 @@ export default function App() {
         state={repoState}
         auditHistory={auditHistory}
         onRollbackLastAction={handleRollbackLastAction}
+        onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
       />
 
       {/* CI/CD Pipeline Health Companion Drawer */}
@@ -817,6 +853,24 @@ export default function App() {
         onClose={() => setIsPipelineDrawerOpen(false)}
         state={repoState}
         onSimulatePipelineEvent={handleSimulatePipelineEvent}
+      />
+
+      {/* PR Intelligence Drawer */}
+      <PRIntelligenceDrawer
+        isOpen={isPRDrawerOpen}
+        onClose={() => setIsPRDrawerOpen(false)}
+        state={repoState}
+        onExecutePRAction={handleExecutePRAction}
+      />
+
+      {/* AI Commit Generator Modal */}
+      <AICommitGeneratorModal
+        isOpen={isCommitModalOpen}
+        onClose={() => setIsCommitModalOpen(false)}
+        state={repoState}
+        onApplyCommit={(commitMessage) => {
+          handleSendMessage(`Apply conventional commit: "${commitMessage}"`, selectedRole, selectedTier);
+        }}
       />
 
       {/* Quick Command Palette Modal (Cmd+K / Ctrl+K) */}

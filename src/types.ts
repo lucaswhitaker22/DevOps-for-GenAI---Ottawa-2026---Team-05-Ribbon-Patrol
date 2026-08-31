@@ -11,11 +11,52 @@ export type SymptomType =
   | 'failed_build'
   | 'flaky_tests'
   | 'vulnerability_risk'
-  | 'deploy_success';
+  | 'deploy_success'
+  | 'pr_changes_requested'
+  | 'pr_pending_review'
+  | 'pr_conflicted'
+  | 'pr_approved_ready'
+  | 'lost_map'
+  | 'smoke_cloud'
+  | 'shield_cracked';
 
 export type PipelineBuildStatus = 'passed' | 'failed' | 'running' | 'queued';
 export type TestSuiteHealth = 'healthy' | 'flaky' | 'failing';
 export type VulnerabilitySeverity = 'none' | 'low' | 'medium' | 'high' | 'critical';
+
+export type PullRequestReviewStatus = 'approved' | 'changes_requested' | 'commented' | 'pending';
+export type PullRequestMergeability = 'clean' | 'conflicted' | 'blocked' | 'unknown';
+
+export interface PRCommentItem {
+  id: string;
+  author: string;
+  avatarUrl?: string;
+  filePath: string;
+  line: number;
+  commentText: string;
+  timestamp: string;
+  resolved: boolean;
+}
+
+export interface PullRequestInfo {
+  number: number;
+  title: string;
+  author: string;
+  branch: string;
+  baseBranch: string;
+  status: 'open' | 'merged' | 'closed' | 'draft';
+  reviewStatus: PullRequestReviewStatus;
+  mergeability: PullRequestMergeability;
+  approvalsCount: number;
+  requestedChangesCount: number;
+  requestedReviewers: string[];
+  commentsCount: number;
+  comments: PRCommentItem[];
+  waitingDays: number;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface PipelineStep {
   name: string;
@@ -200,6 +241,7 @@ export interface RepositoryState {
   repositoryUnavailable?: boolean;
   scannedAt?: string;
   pipelineState?: CICDPipelineState;
+  activePullRequest?: PullRequestInfo;
 }
 
 export interface RecommendedAction {
@@ -355,3 +397,45 @@ export interface LiveScanState {
   error?: string | null;
   unavailable?: boolean;
 }
+
+export type ConventionalCommitType =
+  | 'feat'
+  | 'fix'
+  | 'refactor'
+  | 'docs'
+  | 'style'
+  | 'test'
+  | 'chore'
+  | 'perf'
+  | 'ci';
+
+export interface GeneratedCommitSuggestion {
+  id: string;
+  type: ConventionalCommitType;
+  scope: string;
+  subject: string;
+  body?: string;
+  breakingChange?: string;
+  formattedCommit: string;
+  reasoning: string;
+}
+
+export interface GeneratedChangelog {
+  version: string;
+  date: string;
+  features: string[];
+  fixes: string[];
+  refactors: string[];
+  breakingChanges: string[];
+  formattedMarkdown: string;
+}
+
+export interface GeneratedReleaseNotes {
+  title: string;
+  version: string;
+  summary: string;
+  highlights: string[];
+  contributors: string[];
+  formattedMarkdown: string;
+}
+

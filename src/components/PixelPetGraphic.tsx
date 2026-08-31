@@ -52,10 +52,17 @@ export const PixelPetGraphic: React.FC<PixelPetGraphicProps> = ({
   const isFlakyTests = symptom === 'flaky_tests';
   const isVulnerability = symptom === 'vulnerability_risk';
   const isDeploySuccess = symptom === 'deploy_success';
+  const isPRChangesRequested = symptom === 'pr_changes_requested';
+  const isPRPendingReview = symptom === 'pr_pending_review';
+  const isPRConflicted = symptom === 'pr_conflicted';
+  const isPRApprovedReady = symptom === 'pr_approved_ready';
+  const isLostMap = symptom === 'lost_map';
+  const isSmokeCloud = symptom === 'smoke_cloud';
+  const isShieldCracked = symptom === 'shield_cracked';
 
   // Breathing, floating, jitter & antenna physics
-  const nervousJitterX = isFlakyTests ? (frame % 2 === 0 ? -1 : 1) : 0;
-  const danceY = isDeploySuccess ? (frame % 2 === 0 ? -2 : 0) : 0;
+  const nervousJitterX = isFlakyTests || isPRPendingReview ? (frame % 2 === 0 ? -1 : 1) : 0;
+  const danceY = isDeploySuccess || isPRApprovedReady ? (frame % 2 === 0 ? -2 : 0) : 0;
   const bobY = (isSleeping ? (frame % 2 === 0 ? 0 : 1) : frame === 1 || frame === 3 ? -1 : 0) + danceY;
   const antWiggleL = frame === 1 ? -1 : frame === 3 ? 1 : 0;
   const antWiggleR = frame === 1 ? 1 : frame === 3 ? -1 : 0;
@@ -498,6 +505,65 @@ export const PixelPetGraphic: React.FC<PixelPetGraphicProps> = ({
 
   // --- 6. PROPS & SYMPTOM VISUALIZATIONS ---
   const renderSymptomProps = () => {
+    // 0a. Lost Map (Upside-down map & spinning compass)
+    if (isLostMap) {
+      return (
+        <g>
+          {/* Upside Down Map held in front */}
+          <g transform={`translate(${10 * scale}, ${(22 + bobY) * scale}) rotate(180, ${6 * scale}, ${6 * scale})`}>
+            <rect x={0} y={0} width={12 * scale} height={9 * scale} fill="#FEF08A" stroke={P.OUTLINE} strokeWidth={0.5 * scale} rx={1} />
+            <path d={`M ${2 * scale} ${2 * scale} L ${5 * scale} ${7 * scale} L ${9 * scale} ${3 * scale}`} fill="none" stroke={P.RED} strokeWidth={1 * scale} />
+            <circle cx={9 * scale} cy={3 * scale} r={1 * scale} fill={P.CYAN} />
+            <rect x={3 * scale} y={4 * scale} width={2 * scale} height={2 * scale} fill={P.GOLD_DARK} />
+          </g>
+          {/* Walking in circles indicator arrows */}
+          <g opacity={frame % 2 === 0 ? 0.9 : 0.4} transform={`translate(${34 * scale}, ${(12 + bobY) * scale})`}>
+            <path d={`M 0 4 A 4 4 0 1 1 6 6`} fill="none" stroke={P.GOLD} strokeWidth={1.5 * scale} strokeDasharray="3 2" />
+            <polygon points={`6,6 8,4 4,4`} fill={P.GOLD} />
+          </g>
+        </g>
+      );
+    }
+
+    // 0b. Smoke Cloud (Running through smoke & soot marks)
+    if (isSmokeCloud) {
+      return (
+        <g>
+          {/* Soot marks on pet face */}
+          <g transform={`translate(${16 * scale}, ${(14 + bobY) * scale})`}>
+            <circle cx={2 * scale} cy={2 * scale} r={1.5 * scale} fill="#334155" opacity={0.7} />
+            <circle cx={14 * scale} cy={3 * scale} r={2 * scale} fill="#334155" opacity={0.8} />
+            <circle cx={8 * scale} cy={8 * scale} r={1.2 * scale} fill="#334155" opacity={0.6} />
+          </g>
+          {/* Billowing Smoke Puffs around mascot */}
+          <g opacity={frame % 2 === 0 ? 0.85 : 0.5}>
+            <circle cx={(6 + (frame % 2)) * scale} cy={(16 - (frame % 3)) * scale} r={5 * scale} fill="#64748B" opacity={0.6} />
+            <circle cx={(38 - (frame % 2)) * scale} cy={(14 - (frame % 2)) * scale} r={6 * scale} fill="#475569" opacity={0.7} />
+            <circle cx={(24 + (frame % 3)) * scale} cy={(4 - (frame % 2)) * scale} r={7 * scale} fill="#334155" opacity={0.5} />
+          </g>
+        </g>
+      );
+    }
+
+    // 0c. Shield Cracked (Cracked Shield & Defensive Stance)
+    if (isShieldCracked) {
+      return (
+        <g>
+          {/* Cracked Shield Prop */}
+          <g transform={`translate(${16 * scale}, ${(22 + bobY) * scale})`}>
+            {/* Base Shield */}
+            <path d={`M 0 0 L ${16 * scale} 0 L ${16 * scale} ${10 * scale} L ${8 * scale} ${18 * scale} L 0 ${10 * scale} Z`} fill={P.RED_DARK} stroke={P.OUTLINE} strokeWidth={1 * scale} />
+            <path d={`M ${1.5 * scale} ${1.5 * scale} L ${14.5 * scale} ${1.5 * scale} L ${14.5 * scale} ${9 * scale} L ${8 * scale} ${16.5 * scale} L ${1.5 * scale} ${9 * scale} Z`} fill={P.RED} />
+            {/* Crack Zig-zag */}
+            <path d={`M ${8 * scale} 0 L ${6 * scale} ${5 * scale} L ${10 * scale} ${9 * scale} L ${7 * scale} ${14 * scale}`} fill="none" stroke="#FEE2E2" strokeWidth={1.5 * scale} />
+            {/* Security Exclamation Icon */}
+            <circle cx={4 * scale} cy={5 * scale} r={1.5 * scale} fill={P.GOLD_HL} />
+          </g>
+          {/* Defensive Energy Grid */}
+          <ellipse cx={24 * scale} cy={(24 + bobY) * scale} rx={23 * scale} ry={21 * scale} fill="none" stroke={P.RED} strokeWidth={1.5 * scale} strokeDasharray="5 3" opacity={0.8} />
+        </g>
+      );
+    }
     // 1. Failed Build Ice Pack & Toxic Drops
     if (isFailedBuild) {
       return (
@@ -535,7 +601,7 @@ export const PixelPetGraphic: React.FC<PixelPetGraphicProps> = ({
     }
 
     // 3. Deploy Success Golden Party Crown & Confetti
-    if (isDeploySuccess) {
+    if (isDeploySuccess || isPRApprovedReady) {
       return (
         <g>
           {/* Golden Party Crown */}
@@ -549,6 +615,36 @@ export const PixelPetGraphic: React.FC<PixelPetGraphicProps> = ({
           <rect x={(8 + (frame % 3 * 2)) * scale} y={(6 + (frame % 4 * 2)) * scale} width={1.5 * scale} height={1.5 * scale} fill={P.PINK_HL} />
           <rect x={(36 - (frame % 3 * 2)) * scale} y={(8 + (frame % 2 * 3)) * scale} width={1.5 * scale} height={1.5 * scale} fill={P.GOLD_HL} />
           <rect x={(40 - (frame % 4 * 2)) * scale} y={(18 + (frame % 3 * 2)) * scale} width={1.5 * scale} height={1.5 * scale} fill={P.CYAN_HL} />
+        </g>
+      );
+    }
+
+    // 4. PR Changes Requested (Review Clipboard)
+    if (isPRChangesRequested) {
+      return (
+        <g>
+          {/* Review Clipboard Prop */}
+          <g transform={`translate(${6 * scale}, ${(22 + bobY) * scale})`}>
+            <rect x={0} y={0} width={8 * scale} height={12 * scale} fill={P.GOLD_DARK} rx={1} stroke={P.OUTLINE} strokeWidth={0.5 * scale} />
+            <rect x={1 * scale} y={1 * scale} width={6 * scale} height={10 * scale} fill="#FFFFFF" />
+            <rect x={2.5 * scale} y={-1.5 * scale} width={3 * scale} height={2 * scale} fill={P.METAL_HL} rx={0.5} />
+            {/* Red Changes Requested Cross */}
+            <line x1={2.5 * scale} y1={4 * scale} x2={5.5 * scale} y2={7 * scale} stroke={P.RED} strokeWidth={1 * scale} />
+            <line x1={5.5 * scale} y1={4 * scale} x2={2.5 * scale} y2={7 * scale} stroke={P.RED} strokeWidth={1 * scale} />
+          </g>
+        </g>
+      );
+    }
+
+    // 5. PR Pending Review (Hourglass Timer Bubble)
+    if (isPRPendingReview) {
+      return (
+        <g>
+          {/* Hourglass Timer Bubble */}
+          <g transform={`translate(${38 * scale}, ${(6 + bobY) * scale})`}>
+            <circle cx={4 * scale} cy={4 * scale} r={5 * scale} fill={P.PURPLE_LIGHT} stroke={P.OUTLINE} strokeWidth={0.8 * scale} />
+            <path d={`M ${2.5 * scale} ${2 * scale} L ${5.5 * scale} ${2 * scale} L ${4 * scale} ${4 * scale} L ${5.5 * scale} ${6 * scale} L ${2.5 * scale} ${6 * scale} Z`} fill={P.GOLD_HL} />
+          </g>
         </g>
       );
     }

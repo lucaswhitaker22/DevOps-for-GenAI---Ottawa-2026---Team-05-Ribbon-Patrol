@@ -71,6 +71,129 @@ function generateRuleBasedAction(state: any, userPrompt?: string) {
   const aheadCount = branch.aheadCount || 0;
   const hasConflict = files.some((f: any) => f.status === 'conflicted');
 
+  // PRECEDENCE 0a: Lost Map (State problem detected)
+  if (state?.primarySymptom === 'lost_map') {
+    return {
+      explanation: `🗺️ GitPet cannot verify infrastructure consistency because the state backend is unavailable. State lock on s3://acme-tf-state/prod.tfstate is active or inaccessible.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'Check S3 Backend & Force Unlock Terraform State',
+        summary: 'Verify remote state accessibility, review DynamoDB lock table, or run terraform force-unlock.',
+        command: 'terraform force-unlock -force 8f9b201a-98bc-4123-a110-381928371928',
+        confidence: 'High',
+        confidenceScore: 95,
+        riskLevel: 'Caution',
+        expectedResult: 'Stuck Terraform state lock released; infrastructure state backend re-synchronized.',
+        reversalStep: 'terraform init -reconfigure',
+        evidence: [
+          'Remote state backend: S3 bucket s3://acme-tf-state/prod.tfstate',
+          'Lock ID 8f9b201a-98bc-4123-a110-381928371928 held by stale process',
+          'DynamoDB lock table response: 423 Locked',
+        ],
+        affectedFiles: ['main.tf', 'backend.tf'],
+        steps: [
+          {
+            label: '1. Verify S3 State Bucket Accessibility',
+            command: 'aws s3 ls s3://acme-tf-state/prod.tfstate',
+            details: 'Checks S3 object permissions and bucket state availability.',
+          },
+          {
+            label: '2. Force unlock stale Terraform state',
+            command: 'terraform force-unlock -force 8f9b201a-98bc-4123-a110-381928371928',
+            details: 'Removes stuck lock entry from DynamoDB lock table.',
+          },
+        ],
+      },
+      evidencePoints: [
+        'State lock stuck on s3://acme-tf-state/prod.tfstate',
+        'Backend unavailable or remote state inaccessible',
+        'Action: Check S3 backend / Inspect Azure Blob state / Review Terraform lock',
+      ],
+    };
+  }
+
+  // PRECEDENCE 0b: Smoke Cloud (Deployment failure)
+  if (state?.primarySymptom === 'smoke_cloud') {
+    return {
+      explanation: `💨 Checkout deployment failed. Three pods are unable to start in namespace prod-checkout because environment variable DATABASE_URL is missing from secret checkout-prod-secrets.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'View Deployment Diagnostics & Inject Missing Secrets',
+        summary: 'Inspect ArgoCD sync logs, verify Kubernetes pod status, and inject missing DATABASE_URL.',
+        command: 'kubectl describe pod -l app=checkout-service -n prod-checkout && kubectl rollout status deployment/checkout-service -n prod-checkout',
+        confidence: 'High',
+        confidenceScore: 98,
+        riskLevel: 'Caution',
+        expectedResult: 'Identifies missing DATABASE_URL secret and triggers clean Kubernetes pod rollout.',
+        reversalStep: 'kubectl rollout undo deployment/checkout-service -n prod-checkout',
+        evidence: [
+          'ArgoCD Sync Status: Degraded (Job #9902)',
+          'Pod failure reason: CrashLoopBackOff due to missing DATABASE_URL',
+          'Kubernetes namespace: prod-checkout',
+        ],
+        affectedFiles: ['k8s/deployment.yaml', 'helm/values.yaml'],
+        steps: [
+          {
+            label: '1. View pod logs & deployment diagnostics',
+            command: 'kubectl logs -l app=checkout-service --tail=50 -n prod-checkout',
+            details: 'Fetches recent crash logs from failing checkout pods.',
+          },
+          {
+            label: '2. Rollback or re-trigger ArgoCD sync with fixed secret',
+            command: 'argocd app sync checkout-service --prune',
+            details: 'Triggers ArgoCD sync after restoring missing environment variable.',
+          },
+        ],
+      },
+      evidencePoints: [
+        'Failed ArgoCD sync / Helm deployment failed / K8s rollout stuck',
+        'CrashLoopBackOff: DATABASE_URL environment variable missing in pod spec',
+        'Action: View deployment diagnostics / Open rollout history / View logs',
+      ],
+    };
+  }
+
+  // PRECEDENCE 0c: Shield Cracked (Security deviation)
+  if (state?.primarySymptom === 'shield_cracked') {
+    return {
+      explanation: `🛡️ Infrastructure violates security policy. A newly provisioned storage account (acmepublicassets) allows anonymous public read access in Terraform file storage.tf line 42.`,
+      recommendedAction: {
+        id: `act_${Date.now()}`,
+        title: 'Review Security Finding & Enforce Private Access Policy',
+        summary: 'Enforce private storage account access policy, disable public access block, and apply remediation.',
+        command: 'checkov -f storage.tf --framework terraform && tfsec .',
+        confidence: 'High',
+        confidenceScore: 99,
+        riskLevel: 'Hazard',
+        expectedResult: 'Anonymous access revoked on storage account; security posture restored to 100% compliant.',
+        reversalStep: 'git checkout HEAD -- storage.tf',
+        evidence: [
+          'Security Policy Rule: SEC-AWS-S3-PUBLIC-BLOCKED',
+          'Resource: aws_s3_bucket.public_assets (storage.tf:L42)',
+          'Finding: Anonymous public read access enabled on production storage',
+        ],
+        affectedFiles: ['storage.tf', 'policy.rego'],
+        steps: [
+          {
+            label: '1. Run terraform security scan',
+            command: 'tfsec . --select-types AWS002,AWS003',
+            details: 'Runs static security code check against IaC files.',
+          },
+          {
+            label: '2. Apply policy remediation fix',
+            command: 'git apply fixes/block-public-s3.patch',
+            details: 'Sets block_public_acls = true and ignore_public_acls = true.',
+          },
+        ],
+      },
+      evidencePoints: [
+        'Public S3 bucket / Exposed port / Critical CVE / Policy violation',
+        'Anonymous read access detected on storage account',
+        'Action: Review finding / Apply policy fix / Generate remediation plan',
+      ],
+    };
+  }
+
   // PRECEDENCE 1: Immediate work-loss hazard (Unsafe state 0% health)
   const isDestructive =
     state?.healthLevel === 'Unsafe' ||

@@ -32,6 +32,7 @@ interface PetStageProps {
   customAvatarUrl?: string;
   onOpenImageStudio?: () => void;
   onOpenPipelineDrawer?: () => void;
+  onOpenPRDrawer?: () => void;
 }
 
 interface FloatingParticle {
@@ -56,6 +57,7 @@ const MASCOT_QUIPS = [
   "Pro-tip: Atomic commits make rebasing painless.",
   "Remember to pull before pushing to keep history linear!",
   "Stashing your work first ensures zero overwrite risk.",
+  "PR Pro-tip: Address reviewer comments promptly to land features fast!",
   "CI Pipeline Pro-tip: Quarantine flaky tests early!",
   "You're doing great! Let's ship clean code today.",
   "Beep boop! Ready to help you ship flawless code.",
@@ -68,6 +70,7 @@ export const PetStage: React.FC<PetStageProps> = ({
   customAvatarUrl,
   onOpenImageStudio,
   onOpenPipelineDrawer,
+  onOpenPRDrawer,
 }) => {
   const [particles, setParticles] = useState<FloatingParticle[]>([]);
   const [isHovered, setIsHovered] = useState(false);
@@ -83,7 +86,21 @@ export const PetStage: React.FC<PetStageProps> = ({
 
   // Update contextual bubble message based on repo state and actions
   useEffect(() => {
-    if (state.primarySymptom === 'failed_build') {
+    if (state.primarySymptom === 'lost_map') {
+      setBubbleText('🗺️ GitPet cannot verify infrastructure consistency because the state backend is unavailable.');
+    } else if (state.primarySymptom === 'smoke_cloud') {
+      setBubbleText('💨 Checkout deployment failed. Three pods are unable to start because environment variable DATABASE_URL is missing.');
+    } else if (state.primarySymptom === 'shield_cracked') {
+      setBubbleText('🛡️ Infrastructure violates security policy. A newly provisioned storage account allows anonymous access.');
+    } else if (state.primarySymptom === 'pr_changes_requested') {
+      setBubbleText('📝 Your PR #214 has been waiting for review for 3 days. Sarah commented on src/auth.ts and requested changes.');
+    } else if (state.primarySymptom === 'pr_pending_review') {
+      setBubbleText('⌛ PR #305 is pending review from @marcus-vance & @alex-lead (waiting 4 days).');
+    } else if (state.primarySymptom === 'pr_conflicted') {
+      setBubbleText('🧶 PR #189 has merge conflicts with main! Rebase required.');
+    } else if (state.primarySymptom === 'pr_approved_ready') {
+      setBubbleText('🎉 PR #242 approved by 3 reviewers! All checks green and ready to merge.');
+    } else if (state.primarySymptom === 'failed_build') {
       setBubbleText('🤢 CI Build failed in job #1042! Fix compilation errors!');
     } else if (state.primarySymptom === 'flaky_tests') {
       setBubbleText('😰 Flaky tests in auth.spec.ts! 2/10 runs failed intermittently.');
@@ -550,21 +567,6 @@ export const PetStage: React.FC<PetStageProps> = ({
             >
               <span>🎨</span>
               <span>Studio</span>
-            </button>
-          )}
-
-          {onOpenPipelineDrawer && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpenPipelineDrawer();
-              }}
-              title="Open CI/CD Pipeline Companion drawer"
-              className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 hover:text-indigo-700 text-indigo-600 border border-indigo-200/70 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-2xs"
-            >
-              <span>⚡</span>
-              <span>Pipeline</span>
             </button>
           )}
         </div>
