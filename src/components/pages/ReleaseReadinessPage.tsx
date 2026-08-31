@@ -1,26 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  ArrowLeft,
   Rocket,
-  ShieldCheck,
-  ShieldAlert,
-  AlertTriangle,
   CheckCircle2,
-  XCircle,
-  Sparkles,
-  Bug,
-  Layers,
-  GitPullRequest,
-  GitBranch,
-  RefreshCw,
-  ArrowRight,
-  ExternalLink,
-  ClipboardCheck,
-  FileText,
-  Clock,
+  AlertTriangle,
+  ShieldAlert,
+  ArrowLeft,
+  Download,
+  Copy,
   Check,
+  Sparkles,
+  ShieldCheck,
+  Flame,
+  GitPullRequest,
+  Lock,
 } from 'lucide-react';
-import { RepositoryState, ReleaseReadinessReport, ReleasePillarId, ActivePageId } from '../../types';
+import { RepositoryState, ActivePageId, ReleaseReadinessReport, ReleaseReadinessMetric } from '../../types';
 import { calculateReleaseReadiness } from '../../utils/releaseReadiness';
 
 interface ReleaseReadinessPageProps {
@@ -36,309 +30,217 @@ export const ReleaseReadinessPage: React.FC<ReleaseReadinessPageProps> = ({
   onRemediateBlocker,
   onOpenCommitGenerator,
 }) => {
-  const [report, setReport] = useState<ReleaseReadinessReport>(() => calculateReleaseReadiness(state));
-  const [selectedPillar, setSelectedPillar] = useState<ReleasePillarId>('vulnerabilities');
-  const [isLoadingAI, setIsLoadingAI] = useState<boolean>(false);
-  const [copiedSummary, setCopiedSummary] = useState<boolean>(false);
+  const [copiedMd, setCopiedMd] = useState(false);
+  const [signedOff, setSignedOff] = useState(false);
+  const report: ReleaseReadinessReport = calculateReleaseReadiness(state);
 
-  useEffect(() => {
-    const base = calculateReleaseReadiness(state);
-    setReport(base);
-    if (base.metrics.vulnerabilities.status === 'failed') {
-      setSelectedPillar('vulnerabilities');
-    } else if (base.metrics.testsPassing.status === 'failed') {
-      setSelectedPillar('tests_passing');
-    } else if (base.metrics.prApprovals.status === 'failed') {
-      setSelectedPillar('pr_approvals');
-    }
-  }, [state]);
+  const handleCopyMarkdown = () => {
+    const markdown = `# GitPet Production Release Sign-Off Report
+**Repository:** ${state.repoName}
+**Branch:** ${state.currentBranch.name}
+**Timestamp:** ${new Date().toISOString()}
+**Overall Readiness Score:** ${report.overallScore}% (${report.statusLabel})
+**Can Ship:** ${report.canShip ? 'YES' : 'NO'}
 
-  const handleRefreshAI = async () => {
-    setIsLoadingAI(true);
+## Executive Summary
+${report.executiveSummary}
+
+## 5-Pillar Scorecard
+- **Tests Passing:** ${report.metrics.testsPassing.value} (${report.metrics.testsPassing.status})
+- **Code Coverage:** ${report.metrics.coverage.value} (${report.metrics.coverage.status})
+- **Security Vulnerabilities:** ${report.metrics.vulnerabilities.value} (${report.metrics.vulnerabilities.status})
+- **PR Review Approvals:** ${report.metrics.prApprovals.value} (${report.metrics.prApprovals.status})
+- **Branch Freshness:** ${report.metrics.branchFreshness.value} (${report.metrics.branchFreshness.status})
+
+## Active Blockers
+${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') : '- No active blockers. Ready to deploy.'}
+`;
+
     try {
-      const res = await fetch('/api/ai/release-readiness', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.report) {
-          setReport(data.report);
-        }
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(markdown).catch(() => {});
       }
-    } catch (err) {
-      console.warn('Failed to refresh AI release readiness:', err);
-    } finally {
-      setIsLoadingAI(false);
-    }
+    } catch (_) {}
+    setCopiedMd(true);
+    setTimeout(() => setCopiedMd(false), 2500);
   };
 
-  const handleCopySummary = () => {
-    const text = `${report.headline}\n\nOverall Readiness: ${report.overallScore}% (${report.statusLabel})\n` +
-      `• Tests Passing: ${report.metrics.testsPassing.value}\n` +
-      `• Code Coverage: ${report.metrics.coverage.value}\n` +
-      `• Vulnerabilities: ${report.metrics.vulnerabilities.value}\n` +
-      `• PR Approvals: ${report.metrics.prApprovals.value}\n` +
-      `• Branch Freshness: ${report.metrics.branchFreshness.value}\n\n` +
-      `Evaluated by GitPet Release Readiness Advisor.`;
-    navigator.clipboard.writeText(text);
-    setCopiedSummary(true);
-    setTimeout(() => setCopiedSummary(false), 2000);
+  const handleDownloadJSON = () => {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(report, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', `release-readiness-${state.repoName}-${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
   };
 
-  const getPillarIcon = (id: ReleasePillarId) => {
-    switch (id) {
-      case 'tests_passing':
-        return <Bug className="w-4 h-4 text-emerald-500" />;
-      case 'coverage':
-        return <Layers className="w-4 h-4 text-blue-500" />;
-      case 'vulnerabilities':
-        return <ShieldAlert className="w-4 h-4 text-rose-500" />;
-      case 'pr_approvals':
-        return <GitPullRequest className="w-4 h-4 text-purple-500" />;
-      case 'branch_freshness':
-        return <GitBranch className="w-4 h-4 text-amber-500" />;
-    }
+  const handleSignOff = () => {
+    setSignedOff(true);
+    setTimeout(() => setSignedOff(false), 4000);
   };
 
-  const getStatusBadge = (status: 'passed' | 'warning' | 'failed') => {
-    switch (status) {
-      case 'passed':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Pass
-          </span>
-        );
-      case 'warning':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Warn
-          </span>
-        );
-      case 'failed':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-            <XCircle className="w-3.5 h-3.5 text-rose-600" /> Block
-          </span>
-        );
-    }
-  };
-
-  const activePillarData =
-    Object.values(report.metrics).find((m) => m.id === selectedPillar) || report.metrics.vulnerabilities;
-
-  const radius = 46;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (report.overallScore / 100) * circumference;
-
-  const scoreColor =
-    report.overallScore >= 85
-      ? 'text-emerald-500 stroke-emerald-500'
-      : report.overallScore >= 70
-      ? 'text-amber-500 stroke-amber-500'
-      : 'text-rose-500 stroke-rose-500';
-
-  const scoreBg =
-    report.overallScore >= 85
-      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-      : report.overallScore >= 70
-      ? 'bg-amber-50 text-amber-700 border-amber-200'
-      : 'bg-rose-50 text-rose-700 border-rose-200';
+  const metricList: ReleaseReadinessMetric[] = [
+    report.metrics.testsPassing,
+    report.metrics.coverage,
+    report.metrics.vulnerabilities,
+    report.metrics.prApprovals,
+    report.metrics.branchFreshness,
+  ];
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
+      <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <button
               onClick={() => onNavigate('companion')}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
+              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
               title="Return to Companion"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div className="p-3 rounded-2xl bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-500">
+            <div className="p-3 rounded-2xl bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500">
               <Rocket className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                  Release Readiness Advisor & Gate
+                  Release Gate & Deployment Sign-Off
                 </h1>
-                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
-                  5-Pillar Gate
+                <span
+                  className={`text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold uppercase ${
+                    report.canShip
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : 'bg-rose-100 text-rose-800 border border-rose-300'
+                  }`}
+                >
+                  {report.statusLabel}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Comprehensive automated verification across security CVEs, unit tests, code coverage, PR approvals, and branch freshness.
+              <p className="text-xs text-slate-500 font-mono mt-0.5">
+                5-Pillar Gate • Target Branch <span className="font-bold text-slate-800">{state.currentBranch.name}</span> • Overall Score <span className="font-bold text-slate-800">{report.overallScore}%</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Export & Sign-Off Actions */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {onOpenCommitGenerator && (
+              <button
+                onClick={onOpenCommitGenerator}
+                className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-xs transition-colors cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-purple-200" />
+                <span>AI Conventional Commit</span>
+              </button>
+            )}
+
             <button
-              onClick={handleRefreshAI}
-              disabled={isLoadingAI}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              onClick={handleCopyMarkdown}
+              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-colors cursor-pointer"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingAI ? 'animate-spin text-purple-600' : ''}`} />
-              <span>{isLoadingAI ? 'Evaluating...' : 'Re-evaluate'}</span>
+              {copiedMd ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copiedMd ? 'Copied Markdown' : 'Copy Summary'}</span>
             </button>
 
             <button
-              onClick={handleCopySummary}
-              className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-colors cursor-pointer"
+              onClick={handleDownloadJSON}
+              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-colors cursor-pointer"
             >
-              {copiedSummary ? <Check className="w-3.5 h-3.5" /> : <ClipboardCheck className="w-3.5 h-3.5" />}
-              <span>{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
+              <Download className="w-3.5 h-3.5" />
+              <span>Download JSON</span>
+            </button>
+
+            <button
+              onClick={handleSignOff}
+              disabled={!report.canShip || signedOff}
+              className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-all disabled:opacity-40 cursor-pointer"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{signedOff ? 'Signed Off & Deployed 🎉' : 'Sign Off Release'}</span>
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Top Banner Card: Overall Score & AI Recommendation */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 rounded-2xl border border-indigo-800/40 shadow-md">
-        <div className="md:col-span-4 flex items-center gap-5 justify-center md:justify-start border-b md:border-b-0 md:border-r border-indigo-800/40 pb-4 md:pb-0 md:pr-6">
-          <div className="relative w-28 h-28 flex items-center justify-center">
-            <svg className="w-28 h-28 transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r={radius} className="stroke-slate-800" strokeWidth="8" fill="transparent" />
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                className={`${scoreColor} transition-all duration-700`}
-                strokeWidth="8"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                fill="transparent"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-black tracking-tight">{report.overallScore}%</span>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Readiness</span>
-            </div>
-          </div>
-
-          <div>
-            <div className="text-xs text-slate-400 font-medium">Shipment Gate</div>
-            <div className="text-lg font-extrabold text-white mt-0.5">{report.statusLabel}</div>
-            <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border mt-2 ${scoreBg}`}>
-              {report.canShip ? '✅ Ready to Deploy' : '🛑 Release Blockers Found'}
-            </span>
-          </div>
-        </div>
-
-        <div className="md:col-span-8 space-y-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-300">
-              AI Release Advisor Assessment
-            </span>
-          </div>
-          <h2 className="text-base font-bold text-slate-100">{report.headline}</h2>
-          <p className="text-xs text-slate-300 leading-relaxed">{report.executiveSummary}</p>
+        {/* Executive Summary Callout */}
+        <div className="mt-5 p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-700 leading-relaxed">
+          <span className="font-bold text-slate-900 block mb-1">Executive Summary</span>
+          {report.executiveSummary}
         </div>
       </div>
 
-      {/* 5-Pillar Metric Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-        {Object.values(report.metrics).map((m) => {
-          const isSelected = selectedPillar === m.id;
+      {/* 5-Pillar Scorecard Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {metricList.map((metric) => {
           return (
-            <button
-              key={m.id}
-              onClick={() => setSelectedPillar(m.id)}
-              className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
-                isSelected
-                  ? 'bg-indigo-50/80 border-indigo-400 ring-2 ring-indigo-300/40 shadow-xs'
-                  : 'bg-white hover:bg-slate-50 border-slate-200/90 shadow-xs'
-              }`}
+            <div
+              key={metric.id}
+              className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3"
             >
-              <div className="flex items-center justify-between w-full mb-2">
-                <div className="p-2 rounded-xl bg-slate-100">{getPillarIcon(m.id)}</div>
-                {getStatusBadge(m.status)}
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 capitalize">
+                  {metric.name}
+                </span>
+                <span
+                  className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
+                    metric.status === 'passed'
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : metric.status === 'warning'
+                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                      : 'bg-rose-100 text-rose-800 border border-rose-300'
+                  }`}
+                >
+                  {metric.status}
+                </span>
               </div>
-              <div>
-                <span className="text-xs font-bold text-slate-800 block truncate">{m.name}</span>
-                <span className="text-sm font-black font-mono text-slate-900 mt-1 block">{m.value}</span>
+
+              <div className="text-sm font-mono font-bold text-slate-900">
+                {metric.value}
               </div>
-            </button>
+
+              <p className="text-xs text-slate-500 leading-relaxed">
+                {metric.details}
+              </p>
+
+              {metric.recommendation && (
+                <div className="pt-2 border-t border-slate-100 text-[11px] text-indigo-700 font-medium">
+                  💡 {metric.recommendation}
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
 
-      {/* Selected Pillar Deep Dive & Blocker Resolution */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
-                {getPillarIcon(activePillarData.id)}
-              </div>
-              <div>
-                <h2 className="text-sm font-bold text-slate-900">{activePillarData.name} Drilldown</h2>
-                <span className="text-xs text-slate-500 font-mono">Status: {activePillarData.status.toUpperCase()}</span>
-              </div>
-            </div>
-            {getStatusBadge(activePillarData.status)}
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-            <span className="text-xs font-semibold text-slate-600 block">Measured Value</span>
-            <div className="text-xl font-bold font-mono text-slate-900">{activePillarData.value}</div>
-            <p className="text-xs text-slate-700 leading-relaxed">{activePillarData.details}</p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200/70 space-y-2">
-            <span className="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-              Recommended Gate Action
-            </span>
-            <p className="text-xs text-indigo-950 font-medium">{activePillarData.recommendation}</p>
-          </div>
-        </div>
-
-        {/* Active Blockers & Safe Quick Fix Actions */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
-          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
-            Release Blocker Actions ({report.blockers.length})
+      {/* Release Blockers */}
+      {report.blockers.length > 0 && (
+        <div className="p-5 sm:p-6 rounded-3xl bg-rose-50/80 border border-rose-200 shadow-xs space-y-3">
+          <h2 className="text-sm font-bold text-rose-950 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-rose-600" />
+            Deployment Blockers ({report.blockers.length})
           </h2>
-
-          {report.blockers.length === 0 ? (
-            <div className="py-8 text-center text-slate-400">
-              <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-              <p className="text-xs font-semibold text-slate-700">Zero Release Blockers</p>
-              <p className="text-[11px] text-slate-400">All 5 release pillars meet or exceed minimum deployment thresholds.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {report.blockers.map((b, idx) => (
-                <div
-                  key={idx}
-                  className="p-3.5 rounded-xl border border-rose-200/80 bg-rose-50/60 flex items-start justify-between gap-3 text-xs"
-                >
-                  <div className="space-y-1">
-                    <span className="font-bold text-rose-900 block">{b}</span>
-                    <span className="text-[11px] text-rose-700">Action required before production tagging</span>
-                  </div>
-                  {onRemediateBlocker && (
-                    <button
-                      onClick={() => onRemediateBlocker(b)}
-                      className="px-2.5 py-1 rounded-lg font-bold bg-rose-600 hover:bg-rose-700 text-white shrink-0 transition-colors cursor-pointer"
-                    >
-                      Fix
-                    </button>
-                  )}
+          <ul className="space-y-2 text-xs text-rose-900">
+            {report.blockers.map((b, idx) => (
+              <li key={idx} className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-white/80 border border-rose-200/80">
+                <div className="flex items-start gap-2">
+                  <span className="text-rose-600 font-bold">•</span>
+                  <span>{b}</span>
                 </div>
-              ))}
-            </div>
-          )}
+                {onRemediateBlocker && (
+                  <button
+                    onClick={() => onRemediateBlocker(b)}
+                    className="px-2.5 py-1 text-[11px] font-bold rounded-xl bg-rose-600 hover:bg-rose-700 text-white shrink-0 cursor-pointer shadow-2xs"
+                  >
+                    Remediate
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
+      )}
     </div>
   );
 };

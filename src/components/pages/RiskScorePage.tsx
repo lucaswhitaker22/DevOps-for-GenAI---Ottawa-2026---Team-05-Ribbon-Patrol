@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import {
-  ArrowLeft,
-  ShieldCheck,
   ShieldAlert,
-  AlertTriangle,
   CheckCircle2,
+  AlertTriangle,
+  ArrowLeft,
+  Heart,
+  ShieldCheck,
+  Zap,
+  RotateCcw,
   Sparkles,
-  ArrowUpRight,
-  GitBranch,
-  Bug,
-  KeyRound,
-  FileCode,
-  Lock,
-  Clock,
-  Layers,
-  ChevronRight,
+  Download,
+  Copy,
+  Check,
+  Filter,
 } from 'lucide-react';
-import { RepositoryState, RiskScoreBreakdown, RiskFactorItem, ActivePageId } from '../../types';
-import { computeRepositoryHealth } from '../../data/mockScenarios';
+import { RepositoryState, ActivePageId, RiskFactorItem } from '../../types';
 
 interface RiskScorePageProps {
   state: RepositoryState;
@@ -30,305 +27,249 @@ export const RiskScorePage: React.FC<RiskScorePageProps> = ({
   onNavigate,
   onRemediateFactor,
 }) => {
-  const [selectedFactorId, setSelectedFactorId] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'high' | 'medium' | 'healthy'>('all');
+  const [copied, setCopied] = useState(false);
 
-  const healthData = computeRepositoryHealth(state);
-  const breakdown: RiskScoreBreakdown =
-    state.riskBreakdown ||
-    healthData.riskBreakdown || {
-      overallScore: state.healthPercentage || 82,
-      healthLevel: state.healthLevel || 'Attention',
-      riskCategory:
-        state.healthLevel === 'Unsafe'
-          ? 'Critical Risk'
-          : state.healthLevel === 'Blocked'
-          ? 'High Risk'
-          : state.healthLevel === 'Attention'
-          ? 'Moderate Risk'
-          : 'Low Risk',
-      summary: 'Data-driven repository risk score evaluating 7 DevOps and Git health dimensions.',
-      factors: [
-        {
-          id: 'branch_divergence',
-          name: 'Branch Divergence',
-          impact: -10,
-          status: 'warning',
-          details: 'Active branch has 3 incoming commits from upstream origin.',
-          recommendation: 'Fast-forward pull or rebase onto upstream.',
-        },
-        {
-          id: 'failed_tests',
-          name: 'Failed & Flaky Tests',
-          impact: 0,
-          status: 'good',
-          details: 'All 18 unit and integration test suites passing.',
-          recommendation: 'Maintain continuous test validation.',
-        },
-        {
-          id: 'secrets_detected',
-          name: 'Secrets & Policy Compliance',
-          impact: 0,
-          status: 'good',
-          details: 'Zero plaintext tokens or AWS/GCP credentials in commit diffs.',
-          recommendation: 'Keep secrets securely in environment vaults.',
-        },
-        {
-          id: 'code_smells',
-          name: 'Code Smells & Debt',
-          impact: -4,
-          status: 'good',
-          details: 'Working tree contains uncommitted modified files.',
-          recommendation: 'Review diffs and create atomic commits.',
-        },
-        {
-          id: 'vulnerabilities',
-          name: 'Open Vulnerabilities',
-          impact: 0,
-          status: 'good',
-          details: 'Zero known high/critical CVEs in package lock.',
-          recommendation: 'Run dependency vulnerability audits regularly.',
-        },
-        {
-          id: 'unreviewed_commits',
-          name: 'Unreviewed Commits & PR Lag',
-          impact: -4,
-          status: 'warning',
-          details: 'PR #214 waiting for peer review feedback.',
-          recommendation: 'Ping requested reviewers to unblock approval queue.',
-        },
-        {
-          id: 'large_pr_size',
-          name: 'Large PR Size',
-          impact: 0,
-          status: 'good',
-          details: 'Diff size is compact (< 300 lines changed).',
-          recommendation: 'Keep PRs modular and incremental.',
-        },
-      ],
-    };
+  const factors: RiskFactorItem[] = state.riskBreakdown?.factors || [
+    {
+      id: 'branch_divergence',
+      name: 'Branch Divergence & Merge Drift',
+      impact: state.currentBranch.behindCount > 0 ? -15 : 0,
+      status: state.currentBranch.behindCount > 0 ? 'warning' : 'good',
+      details: state.currentBranch.behindCount > 0
+        ? `Local branch is behind upstream origin by ${state.currentBranch.behindCount} commits.`
+        : 'Local branch is up to date with origin.',
+      recommendation: 'Pull origin changes into local branch to prevent rebase divergence.',
+      metricLabel: `${state.currentBranch.behindCount} commits behind`,
+    },
+    {
+      id: 'unreviewed_commits',
+      name: 'Uncommitted Working Tree Churn',
+      impact: state.workingTree.length > 0 ? -20 : 0,
+      status: state.workingTree.length > 0 ? 'warning' : 'good',
+      details: state.workingTree.length > 0
+        ? `${state.workingTree.length} modified/untracked files at risk of merge conflict overwrite.`
+        : 'Working tree is clean.',
+      recommendation: 'Stash or commit working tree changes before pulling from upstream.',
+      metricLabel: `${state.workingTree.length} uncommitted files`,
+    },
+    {
+      id: 'code_smells',
+      name: 'Merge Conflict Hazard',
+      impact: state.workingTree.some((f) => f.status === 'conflicted') ? -40 : 0,
+      status: state.workingTree.some((f) => f.status === 'conflicted') ? 'critical' : 'good',
+      details: state.workingTree.some((f) => f.status === 'conflicted')
+        ? 'Active merge conflicts blocking compilation and linear history.'
+        : 'No merge conflicts detected.',
+      recommendation: 'Resolve conflict markers in affected files before merging.',
+      metricLabel: state.workingTree.some((f) => f.status === 'conflicted') ? 'Conflict detected' : 'Clean',
+    },
+    {
+      id: 'failed_tests',
+      name: 'CI/CD Pipeline Build Reliability',
+      impact: state.pipelineState?.buildStatus === 'failed' ? -15 : 0,
+      status: state.pipelineState?.buildStatus === 'failed' ? 'warning' : 'good',
+      details: state.pipelineState?.buildStatus === 'failed'
+        ? 'CI build failed in recent run #1042.'
+        : 'All pipeline test steps passing.',
+      recommendation: 'Fix compilation errors and flaky test failures.',
+      metricLabel: state.pipelineState?.buildStatus === 'failed' ? 'CI Build Failed' : 'CI Passed',
+    },
+    {
+      id: 'vulnerabilities',
+      name: 'Supply Chain CVE Vulnerabilities',
+      impact: (state.pipelineState?.vulnerabilities.length || 0) > 0 ? -10 : 0,
+      status: (state.pipelineState?.vulnerabilities.length || 0) > 0 ? 'warning' : 'good',
+      details: (state.pipelineState?.vulnerabilities.length || 0) > 0
+        ? `${state.pipelineState?.vulnerabilities.length} CVEs found in dependency manifest.`
+        : 'Zero CVE vulnerabilities detected.',
+      recommendation: 'Upgrade affected packages to secure patch versions.',
+      metricLabel: `${state.pipelineState?.vulnerabilities.length || 0} CVEs`,
+    },
+  ];
 
-  const selectedFactor =
-    breakdown.factors.find((f) => f.id === selectedFactorId) ||
-    breakdown.factors.find((f) => f.status === 'critical') ||
-    breakdown.factors.find((f) => f.status === 'warning') ||
-    breakdown.factors[0];
+  const filteredFactors = factors.filter((f) => {
+    if (selectedFilter === 'all') return true;
+    if (selectedFilter === 'high') return f.status === 'critical';
+    if (selectedFilter === 'medium') return f.status === 'warning';
+    if (selectedFilter === 'healthy') return f.status === 'good';
+    return true;
+  });
 
-  const getScoreColor = (score: number) => {
-    if (score >= 85) return 'text-emerald-500 stroke-emerald-500';
-    if (score >= 70) return 'text-amber-500 stroke-amber-500';
-    if (score >= 40) return 'text-orange-500 stroke-orange-500';
-    return 'text-rose-500 stroke-rose-500';
+  const handleCopyReport = () => {
+    const text = `GitPet 7-Factor Repository Risk Scorecard
+Repository: ${state.repoName}
+Health Score: ${state.healthPercentage}% (${state.healthLevel})
+Timestamp: ${new Date().toISOString()}
+
+Factors:
+${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts): ${f.details}`).join('\n')}
+`;
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+    } catch (_) {}
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
-
-  const getScoreBg = (score: number) => {
-    if (score >= 85) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    if (score >= 70) return 'bg-amber-50 text-amber-700 border-amber-200';
-    if (score >= 40) return 'bg-orange-50 text-orange-700 border-orange-200';
-    return 'bg-rose-50 text-rose-700 border-rose-200';
-  };
-
-  const getFactorIcon = (id: string) => {
-    switch (id) {
-      case 'branch_divergence':
-        return <GitBranch className="w-4 h-4 text-purple-600" />;
-      case 'failed_tests':
-        return <Bug className="w-4 h-4 text-rose-600" />;
-      case 'secrets_detected':
-        return <KeyRound className="w-4 h-4 text-amber-600" />;
-      case 'code_smells':
-        return <FileCode className="w-4 h-4 text-blue-600" />;
-      case 'vulnerabilities':
-        return <Lock className="w-4 h-4 text-rose-600" />;
-      case 'unreviewed_commits':
-        return <Clock className="w-4 h-4 text-indigo-600" />;
-      case 'large_pr_size':
-      default:
-        return <Layers className="w-4 h-4 text-slate-600" />;
-    }
-  };
-
-  const radius = 46;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (breakdown.overallScore / 100) * circumference;
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
+      <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <button
               onClick={() => onNavigate('companion')}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
+              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
               title="Return to Companion"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div className="p-3 rounded-2xl bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-500">
-              <ShieldCheck className="w-6 h-6" />
+            <div className="p-3 rounded-2xl bg-rose-600 text-white shadow-sm ring-1 ring-rose-500">
+              <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                  7-Factor Repository Risk Score & HP
+                  7-Factor Repository Risk Scorecard
                 </h1>
-                <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
-                  Data-Driven Telemetry
+                <span
+                  className={`text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold uppercase ${
+                    state.healthPercentage >= 90
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : state.healthPercentage >= 50
+                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                      : 'bg-rose-100 text-rose-800 border border-rose-300'
+                  }`}
+                >
+                  {state.healthLevel} ({state.healthPercentage}% HP)
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Evaluates branch drift, test reliability, security posture, uncommitted diffs, and PR turnaround velocity.
+              <p className="text-xs text-slate-500 font-mono mt-0.5">
+                {state.repoName} • Dynamic weighted risk assessment
               </p>
             </div>
           </div>
+
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <button
+              onClick={handleCopyReport}
+              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-colors cursor-pointer"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copied ? 'Copied Summary' : 'Copy Scorecard'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Health Gauge Bar */}
+        <div className="mt-6 pt-5 border-t border-slate-100 space-y-2">
+          <div className="flex items-center justify-between text-xs font-mono font-bold">
+            <span className="text-slate-500">Repository Health Pool</span>
+            <span className="text-slate-900">{state.healthPercentage} / 100 HP</span>
+          </div>
+          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200/60 p-0.5">
+            <div
+              className={`h-full rounded-full transition-all duration-700 ${
+                state.healthPercentage >= 90
+                  ? 'bg-emerald-500'
+                  : state.healthPercentage >= 50
+                  ? 'bg-amber-500'
+                  : 'bg-rose-500'
+              }`}
+              style={{ width: `${Math.max(3, state.healthPercentage)}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Filter Pills */}
+        <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 text-xs font-semibold overflow-x-auto">
+          <button
+            onClick={() => setSelectedFilter('all')}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+              selectedFilter === 'all' ? 'bg-slate-900 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            All Factors ({factors.length})
+          </button>
+          <button
+            onClick={() => setSelectedFilter('high')}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+              selectedFilter === 'high' ? 'bg-rose-600 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Critical Hazards ({factors.filter((f) => f.status === 'critical').length})
+          </button>
+          <button
+            onClick={() => setSelectedFilter('medium')}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+              selectedFilter === 'medium' ? 'bg-amber-600 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Warnings ({factors.filter((f) => f.status === 'warning').length})
+          </button>
+          <button
+            onClick={() => setSelectedFilter('healthy')}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+              selectedFilter === 'healthy' ? 'bg-emerald-600 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Healthy ({factors.filter((f) => f.status === 'good').length})
+          </button>
         </div>
       </div>
 
-      {/* Top Banner Card */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 rounded-2xl border border-slate-700/60 shadow-md">
-        <div className="md:col-span-4 flex items-center gap-5 justify-center md:justify-start border-b md:border-b-0 md:border-r border-slate-700 pb-4 md:pb-0 md:pr-6">
-          <div className="relative w-28 h-28 flex items-center justify-center">
-            <svg className="w-28 h-28 transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r={radius} className="stroke-slate-800" strokeWidth="8" fill="transparent" />
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                className={`${getScoreColor(breakdown.overallScore)} transition-all duration-700`}
-                strokeWidth="8"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                fill="transparent"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-black tracking-tight">{breakdown.overallScore}%</span>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Health HP</span>
+      {/* Factor Cards List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {filteredFactors.map((factor) => (
+          <div
+            key={factor.id}
+            className={`p-5 rounded-3xl border shadow-xs space-y-3 bg-white ${
+              factor.status === 'critical'
+                ? 'border-rose-300 ring-1 ring-rose-400/20'
+                : factor.status === 'warning'
+                ? 'border-amber-200'
+                : 'border-slate-200/90'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-900">{factor.name}</span>
+              <span
+                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
+                  factor.status === 'critical'
+                    ? 'bg-rose-100 text-rose-800'
+                    : factor.status === 'warning'
+                    ? 'bg-amber-100 text-amber-800'
+                    : 'bg-emerald-100 text-emerald-800'
+                }`}
+              >
+                {factor.status === 'good' ? 'Healthy' : factor.status} ({factor.impact} pts)
+              </span>
             </div>
-          </div>
 
-          <div>
-            <div className="text-xs text-slate-400 font-medium">Risk Level</div>
-            <div className="text-lg font-extrabold text-white mt-0.5">{breakdown.riskCategory}</div>
-            <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border mt-2 ${getScoreBg(breakdown.overallScore)}`}>
-              {breakdown.healthLevel} Condition
-            </span>
-          </div>
-        </div>
+            <p className="text-xs text-slate-600 leading-relaxed">{factor.details}</p>
 
-        <div className="md:col-span-8 space-y-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-300">
-              Repository Diagnostics
-            </span>
-          </div>
-          <h2 className="text-base font-bold text-slate-100">{state.symptomTitle}</h2>
-          <p className="text-xs text-slate-300 leading-relaxed">{state.symptomDescription}</p>
-        </div>
-      </div>
+            {factor.recommendation && (
+              <p className="text-[11px] text-slate-500 font-medium pt-1">
+                💡 {factor.recommendation}
+              </p>
+            )}
 
-      {/* 7-Factor Breakdown Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Factor List */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-3">
-          <h2 className="text-sm font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center justify-between">
-            <span>7 Health Assessment Factors</span>
-            <span className="text-xs text-slate-400 font-mono">Weighted Impact</span>
-          </h2>
-
-          <div className="space-y-2">
-            {breakdown.factors.map((factor) => {
-              const isSelected = (selectedFactorId || selectedFactor?.id) === factor.id;
-              return (
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span className="text-[11px] font-mono text-slate-400">{factor.metricLabel || ''}</span>
+              {factor.status !== 'good' && onRemediateFactor && (
                 <button
-                  key={factor.id}
-                  onClick={() => setSelectedFactorId(factor.id)}
-                  className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
-                    isSelected
-                      ? 'bg-indigo-50/80 border-indigo-300 ring-2 ring-indigo-200 shadow-2xs font-semibold'
-                      : 'bg-slate-50/60 hover:bg-slate-100/80 border-slate-200/80'
-                  }`}
+                  onClick={() => onRemediateFactor(factor)}
+                  className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-colors cursor-pointer shadow-2xs"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                      {getFactorIcon(factor.id)}
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold text-slate-900 block">{factor.name}</span>
-                      <span className="text-[11px] text-slate-500 font-mono truncate block max-w-xs sm:max-w-md">
-                        {factor.details}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span
-                      className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
-                        factor.impact < 0 ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
-                      }`}
-                    >
-                      {factor.impact === 0 ? '+0' : `${factor.impact}%`}
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-slate-400" />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Selected Factor Drilldown & Remediation Action */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
-          {selectedFactor ? (
-            <>
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
-                    {getFactorIcon(selectedFactor.id)}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900">{selectedFactor.name}</h3>
-                    <span className="text-xs text-slate-400 font-mono">
-                      Impact: {selectedFactor.impact}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
-                <span className="text-xs font-semibold text-slate-600 block">Factor Assessment</span>
-                <p className="text-xs text-slate-800 leading-relaxed">{selectedFactor.details}</p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200/70 space-y-2">
-                <span className="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                  Remediation Guidance
-                </span>
-                <p className="text-xs text-indigo-950 font-medium leading-relaxed">
-                  {selectedFactor.recommendation}
-                </p>
-              </div>
-
-              {onRemediateFactor && (
-                <button
-                  onClick={() => onRemediateFactor(selectedFactor)}
-                  className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-                >
-                  <Sparkles className="w-4 h-4 text-indigo-200" />
-                  <span>Ask Byte for Step-by-Step Fix</span>
+                  Remediate with Byte
                 </button>
               )}
-            </>
-          ) : (
-            <div className="py-12 text-center text-slate-400">
-              <ShieldCheck className="w-10 h-10 mx-auto mb-2 text-slate-300" />
-              <p className="text-xs font-medium text-slate-600">Select a factor to view remediation details</p>
             </div>
-          )}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

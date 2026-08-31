@@ -19,7 +19,7 @@ graph TD
     Dev["Developer (User)"]:::main
     
     subgraph GitPet Platform
-        UI["GitPet React 19 Frontend<br/>(Vite App / Canvas / Web Audio)"]:::client
+        UI["GitPet React 19 Frontend<br/>(Multi-Page Dashboard / Canvas / Web Audio)"]:::client
         BE["GitPet Node.js Backend<br/>(Express Gateway Server - Port 3004)"]:::main
     end
 
@@ -29,13 +29,13 @@ graph TD
     end
 
     subgraph Google Cloud GenAI Services
-        GeminiChat["Gemini 3.6 / 3.7 Flash<br/>(Reasoning & State Analysis)"]:::ext
+        GeminiChat["Gemini 2.5 / 3 Flash & Pro<br/>(Reasoning & State Analysis)"]:::ext
         GeminiLive["Gemini 3.1 Flash Live<br/>(Bidirectional Audio WebSocket)"]:::ext
         GeminiImage["Gemini 3.1 Flash Image<br/>(Avatar Creation & Editing)"]:::ext
         GeminiTTS["Gemini 3.1 Flash TTS<br/>(Speech Synthesis)"]:::ext
     end
 
-    Dev -->|Interacts / Voice / Keyboard| UI
+    Dev -->|Interacts / Voice / Keyboard / Sidebar Nav| UI
     UI <-->|"HTTP REST & WebSocket (/live)"| BE
     BE <-->|Safe CLI Scan / Dry-Run / Verified Writes| GitCLI
     BE <-->|Octokit / REST API (Live Branch Sync)| GitHub
@@ -56,18 +56,20 @@ graph TB
     classDef group fill:none,stroke:#475569,stroke-dasharray: 5 5;
 
     subgraph ClientContainer [Frontend Application - React 19 + Vite]
-        App["App.tsx<br/>Orchestrator & State Machine"]:::module
-        PetStage["PetStage.tsx & PixelPetGraphic.tsx<br/>Ambient Canvas & 18 Symptom Expressions"]:::module
-        ChatStream["ChatStream.tsx<br/>Evidence Markdown & Approval Cards"]:::module
-        DAG["GitDagVisualizer.tsx<br/>Interactive Multi-Lane DAG Topology"]:::module
-        CICD["CICDPipelineDrawer.tsx<br/>CI/CD Telemetry & Flaky Test Quarantine"]:::module
-        PRDrawer["PRIntelligenceDrawer.tsx<br/>PR Reviews, Blockers & Changelogs"]:::module
-        RiskModal["RiskScoreModal.tsx<br/>7-Factor DevSecOps Risk Score Engine"]:::module
-        CommitGen["AICommitGeneratorModal.tsx<br/>Conventional Commits & Release Notes"]:::module
-        DiffViewer["DiffViewer.tsx & PreviewChangesModal.tsx<br/>Side-by-Side Diffs & Human Approval Gate"]:::module
-        LiveVoice["LiveVoiceModal.tsx<br/>Web Audio & Live Streaming Modal"]:::module
-        ImageStudio["ImageStudioModal.tsx<br/>Avatar Customizer & Preview Gallery"]:::module
-        Palette["QuickPaletteModal.tsx<br/>Command Palette (Cmd+K / Ctrl+K)"]:::module
+        App["App.tsx<br/>Router & State Orchestrator"]:::module
+        Sidebar["SidebarNav.tsx<br/>Collapsible Responsive Sidebar"]:::module
+        TopBar["TopBar.tsx<br/>Breadcrumb & Quick Action Header"]:::module
+        
+        %% Pages
+        P1["Ambient Companion<br/>PetStage.tsx & ChatStream.tsx"]:::module
+        P2["RepositoryPage.tsx<br/>DAG Graph, Working Tree, Stashes, Audit"]:::module
+        P3["CICDPage.tsx<br/>Pipelines, Flaky Tests, CVE Scans"]:::module
+        P4["PRIntelligencePage.tsx<br/>PR Reviews, Inline Comments, Merges"]:::module
+        P5["ReleaseReadinessPage.tsx<br/>5-Pillar Gate & Export Artifacts"]:::module
+        P6["RiskScorePage.tsx<br/>7-Factor Risk Scorecard & Health Pool"]:::module
+        
+        %% Modals
+        Modals["AICommitGeneratorModal.tsx<br/>PreviewChangesModal.tsx<br/>QuickPaletteModal.tsx"]:::module
     end
 
     subgraph ServerContainer [Backend Gateway Service - Node.js / Express]
@@ -82,27 +84,22 @@ graph TB
     end
 
     %% Client component wiring
-    App --> PetStage
-    App --> ChatStream
-    App --> DAG
-    App --> CICD
-    App --> PRDrawer
-    App --> RiskModal
-    App --> CommitGen
-    App --> DiffViewer
-    App --> LiveVoice
-    App --> ImageStudio
-    App --> Palette
+    App --> Sidebar
+    App --> TopBar
+    App --> P1
+    App --> P2
+    App --> P3
+    App --> P4
+    App --> P5
+    App --> P6
+    App --> Modals
 
     %% Client-Server communication
-    ChatStream -->|POST /api/ai/chat| Router
-    CommitGen -->|POST /api/ai/chat| Router
-    ImageStudio -->|POST /api/ai/images/*| Router
-    LiveVoice <-->|WebSocket /live| WSServer
-    DiffViewer -->|POST /api/git/preview-action| Router
-    DiffViewer -->|POST /api/git/execute-action| Router
-    App -->|GET /api/git/live-status| Router
-    App -->|GET /api/repo/live| Router
+    P1 -->|POST /api/ai/chat| Router
+    P2 -->|POST /api/git/execute-action| Router
+    P3 -->|GET /api/gitpet/live-status| Router
+    P5 -->|GET /api/ai/release-readiness| Router
+    Modals -->|POST /api/ai/chat| Router
 
     %% Server internal wiring
     Router --> SafetyGate
@@ -122,90 +119,43 @@ graph TB
 sequenceDiagram
     autonumber
     actor Dev as Developer
-    participant UI as React UI (App.tsx / ChatStream.tsx)
-    participant Preview as PreviewChangesModal.tsx
-    participant BE as Express Gateway (server.ts)
-    participant Safety as Safety Engine (safety.ts)
-    participant Exec as Executor (executor.ts)
-    participant Git as Local Git Engine (execFile)
-    participant LLM as Google Gemini API
+    participant UI as React UI (Preview Modal)
+    participant BE as Express API Gateway
+    participant Guard as Safety Engine (safety.ts)
+    participant Runner as Safe Executor (executor.ts)
+    participant Git as Git CLI Subprocess
 
-    Dev->>UI: Ask status / Trigger remediation (e.g., Diverged branch)
-    UI->>BE: POST /api/ai/chat (Context: repo, branch, diff, risk score)
-    BE->>LLM: Generate explanation & proposed action
-    LLM-->>BE: Return JSON (Summary, evidence, command, reversalStep)
-    BE->>Safety: evaluateCommand(command, repoContext)
-    Safety-->>BE: SafetyReport (verdict: allow|warn|block, findings)
-    BE-->>UI: Return response + recommendation + safety report
-    UI->>Dev: Display Pet emotional shift + Action Card + Confidence Score
-
-    Dev->>UI: Clicks "Preview & Apply"
-    UI->>Preview: Open modal showing diff, exact command, risk, reversal step
-    
-    alt Developer Cancels
-        Dev->>Preview: Clicks "Cancel / Dismiss"
-        Preview->>UI: Closes modal (Zero changes on disk)
-    else Developer Approves
-        Dev->>Preview: Clicks "Confirm & Run"
-        Preview->>BE: POST /api/git/execute-action { command }
-        BE->>Safety: Re-evaluate safety policy against live state
-        alt Safety Verdict is Block
-            BE-->>Preview: HTTP 400 Refused (Command violates safety rules)
-            Preview-->>Dev: Display blocked reason banner
-        else Safety Verdict is Allow / Warn
-            BE->>Exec: executeApprovedCommand (argv execution, no shell)
-            Exec->>Git: child_process.execFile('git', args)
-            Git-->>Exec: Command stdout / stderr / exit code
-            BE->>Git: Re-scan live repository state
-            BE-->>UI: Return execution result + updated live state
-            UI->>Dev: Pet transitions to Healthy (100% green aura) + Celebration SFX
+    Dev->>UI: Clicks "Run Safe Action"
+    UI->>BE: POST /api/git/execute-action { command, targetFiles, expectedRisk }
+    BE->>Guard: evaluateCommand(command, stateContext)
+    alt Destructive / Force Push Detected
+        Guard-->>BE: REJECT: Policy violation (e.g. force push prohibited)
+        BE-->>UI: 400 Bad Request { error, policyViolation: true }
+        UI-->>Dev: Alert: Action blocked by safety boundary
+    else Safe / Bounded Command
+        Guard-->>BE: ACCEPT: Command verified
+        BE->>Runner: executeApprovedCommand(command)
+        alt GITPET_ALLOW_WRITES == 'true'
+            Runner->>Git: execFile('git', argv, { timeout: 10000 })
+            Git-->>Runner: stdout / stderr
+            Runner-->>BE: { success: true, stdout }
+        else Dry-Run Mode (Default)
+            Runner-->>BE: { success: true, simulated: true, output: "[Dry-run verified]" }
         end
+        BE-->>UI: 200 OK { executionResult, newHealthPercentage }
+        UI-->>Dev: Green checkmark + Sound + Reversal step logged
     end
 ```
 
 ---
 
-## 4. Subsystem Details & Responsibilities
+## 4. Multi-Page Layout & Navigation Architecture
 
-### 4.1 Frontend Client Architecture (`src/`)
+GitPet separates operational workflows into 6 distinct full-page views:
 
-* **`App.tsx`**: Primary application controller coordinating 18 preset scenarios, live workspace scanning, active branch telemetry, model tiers, and drawer states.
-* **`PetStage.tsx` & `PixelPetGraphic.tsx`**: Dynamic SVG/Canvas pet renderer displaying Byte across 18 distinct symptoms, reactive eye tracking, particle effects, and audio-synced animations.
-* **`GitDagVisualizer.tsx`**: Multi-lane DAG topology visualizer supporting linear commit chains, merge nodes, detached heads, hazard warnings, and collapsed commit runs.
-* **`CICDPipelineDrawer.tsx`**: Real-time CI/CD telemetry drawer with build step statuses, flaky test quarantine list, CVE vulnerability details, and deployment logs.
-* **`PRIntelligenceDrawer.tsx`**: Pull request intelligence inspector highlighting review blockers, requested changes, inline comment threads with line references, and automated release changelogs.
-* **`RiskScoreModal.tsx`**: Interactive 7-factor DevSecOps risk score breakdown calculating impact deductions and providing clear remediations.
-* **`AICommitGeneratorModal.tsx`**: AI conventional commit message, changelog, and release notes generator supporting standard types (`feat`, `fix`, `refactor`, `chore`, etc.).
-* **`LiveVoiceModal.tsx`**: Low-latency bidirectional voice client streaming 16kHz PCM audio to Gemini Live over WebSockets with live transcription.
-* **`ImageStudioModal.tsx`**: Pet avatar customizer interfacing with Gemini Image Generation, complete with aspect ratio controls and an isolated preview registry.
-* **`DiffViewer.tsx` & `PreviewChangesModal.tsx`**: Syntax-highlighted side-by-side diff viewer and mandatory pre-execution confirmation gate.
-* **`QuickPaletteModal.tsx`**: Fast keyboard-driven command palette (`Cmd+K` / `Ctrl+K`) for switching scenarios, triggering modals, and navigating tools.
-* **`utils/audioEffects.ts`**: Pure Web Audio API sound effects synthesizer creating ambient sound cues (fanfare, alerts, clicks, swooshes, purrs).
-
----
-
-### 4.2 Backend Gateway Architecture (`server.ts` & `src/server/`)
-
-* **`safety.ts` (Two-Layer Safety Engine)**:
-  * *Layer 1 (Static Rules):* Rejects dangerous commands across any repo (`push --force` without lease, `reset --hard`, `clean`, `branch -D`, `stash drop/clear`, history rewriting, and shell metacharacters `;&|>$`).
-  * *Layer 2 (Contextual Lints):* Compares commands against observed working tree state (enforces `git stash -u` when untracked files exist, warns on pushing behind upstream, blocks actions during paused rebases).
-* **`executor.ts` (Execution Gate)**:
-  * Enforces `GITPET_ALLOW_WRITES=true` environment flag.
-  * Uses parameter-array `execFile` execution (never raw shell) with fail-stop step chaining.
-* **`auth.ts` (Access Control)**:
-  * Optional HTTP Basic Authentication gate (`GITPET_AUTH_USER` / `GITPET_AUTH_PASS`).
-* **`githubClient.ts` (Live GitHub Integration)**:
-  * Fetches real commit DAGs, working tree diffs, and branch pointers from the public test fixture (`farisnour/gitpet-acme-corp-ecommerce-store`) with GitHub API rate-limit resilience.
-* **Model Routing & Fallback Chains**:
-  * Multi-tier model routing (`fast`, `general`, `deep`) with automatic 404/429 fallback cascades.
-* **Telemetry & Observability Ring**:
-  * In-memory FIFO ring buffer (max 200 events) accessible via `GET /api/audit-logs`.
-
----
-
-## 5. Security & Production Deployment Path
-
-1. **Static Build Artifacts:** Vite bundles the frontend into optimized static assets (`dist/`), while `esbuild` bundles the server into `dist/server.cjs`.
-2. **Zero Secrets in Client:** All Gemini API keys, GitHub tokens, and auth secrets reside solely on the server in `.env`.
-3. **Continuous Automated CI/CD:** GitHub Actions executes TypeScript linting, 31 Vitest unit/security/executor tests, Gitleaks secret scans, and SBOM generation on every commit.
-4. **Disaster Recovery:** Every suggested Git action pre-computes an explicit reversal command (`git stash pop`, `git rebase --abort`, `git reset --keep HEAD@{1}`).
+1. **Ambient Companion (`#companion`)**: Interactive pixel companion avatar with mood/symptom postures, live telemetry mission control quick deck, and multi-turn Gemini conversation stream.
+2. **Repository Details & Graph (`#repository`)**: Interactive SVG DAG commit visualizer, multi-file working tree diff viewer, stash stack management, and session audit history.
+3. **CI/CD Pipelines (`#cicd`)**: Pipeline stage progression tracking with expandable logs, flaky test quarantining, and CVE security alerts.
+4. **Pull Request Intelligence (`#pr`)**: Active PR approval status, review turnaround tracker, inline comments with AI draft replies, and simulated squash & merge.
+5. **Release Gate (`#release`)**: 5-pillar deployment readiness scorecard with exportable JSON audit artifacts and Markdown summaries.
+6. **Risk & HP Scorecard (`#risk`)**: 7-factor weighted repository health scorecard with interactive factor breakdown and one-click remediation.
