@@ -92,6 +92,7 @@ export interface CICDPipelineState {
   deployTarget: 'staging' | 'production' | 'none';
   deployStatus: 'success' | 'deploying' | 'failed' | 'idle';
   lastRunTime: string;
+  coveragePercentage?: number; // 0 - 100%
   pipelineSteps: PipelineStep[];
 }
 
@@ -244,6 +245,54 @@ export interface RiskScoreBreakdown {
   factors: RiskFactorItem[];
 }
 
+export type ReleasePillarId =
+  | 'tests_passing'
+  | 'coverage'
+  | 'vulnerabilities'
+  | 'pr_approvals'
+  | 'branch_freshness';
+
+export interface ReleaseReadinessMetric {
+  id: ReleasePillarId;
+  name: string;
+  score: number; // 0 - 100
+  weight: number; // e.g. 0.25
+  status: 'passed' | 'warning' | 'failed';
+  value: string;
+  target?: string;
+  details: string;
+  recommendation: string;
+  icon: string;
+}
+
+export interface ReleaseSignOffItem {
+  id: string;
+  label: string;
+  passed: boolean;
+  required: boolean;
+  details: string;
+}
+
+export interface ReleaseReadinessReport {
+  overallScore: number; // 0 - 100%
+  status: 'green' | 'amber' | 'red';
+  statusLabel: 'Ready to Ship' | 'Caution / Review' | 'Blocked';
+  headline: string; // e.g. "Release readiness: 87%. One high-severity vulnerability prevents green status."
+  blockers: string[];
+  warnings: string[];
+  metrics: {
+    testsPassing: ReleaseReadinessMetric;
+    coverage: ReleaseReadinessMetric;
+    vulnerabilities: ReleaseReadinessMetric;
+    prApprovals: ReleaseReadinessMetric;
+    branchFreshness: ReleaseReadinessMetric;
+  };
+  executiveSummary: string;
+  canShip: boolean;
+  signOffChecklist: ReleaseSignOffItem[];
+  generatedAt: string;
+}
+
 export interface RepositoryState {
   repoName: string;
   currentBranch: BranchState;
@@ -268,6 +317,7 @@ export interface RepositoryState {
   pipelineState?: CICDPipelineState;
   activePullRequest?: PullRequestInfo;
   riskBreakdown?: RiskScoreBreakdown;
+  releaseReadiness?: ReleaseReadinessReport;
   secretsDetectedCount?: number;
   codeSmellsCount?: number;
   unreviewedCommitsCount?: number;

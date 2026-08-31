@@ -12,17 +12,22 @@ import {
   Volume2,
   VolumeX,
   Sparkles,
+  Rocket,
 } from 'lucide-react';
 import { RepositoryState, PracticeStats, LiveScanState } from '../types';
+import { calculateReleaseReadiness } from '../utils/releaseReadiness';
 
 interface TopBarProps {
   state: RepositoryState;
   practiceStats: PracticeStats;
+  onSelectBranch: (branch: string) => void;
+  onToggleDrawer: () => void;
   onOpenQuickPalette?: () => void;
   onOpenPipelineDrawer?: () => void;
   onOpenPRDrawer?: () => void;
   onOpenCommitGenerator?: () => void;
   onOpenRiskModal?: () => void;
+  onOpenReleaseModal?: () => void;
   isDrawerOpen: boolean;
   isLiveMode?: boolean;
   liveScanState?: LiveScanState;
@@ -41,6 +46,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenPRDrawer,
   onOpenCommitGenerator,
   onOpenRiskModal,
+  onOpenReleaseModal,
   isDrawerOpen,
   isLiveMode = false,
   liveScanState,
@@ -48,6 +54,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   isAudioMuted = false,
   onToggleAudio,
 }) => {
+  const readiness = calculateReleaseReadiness(state);
   const [showBranchMenu, setShowBranchMenu] = useState(false);
 
   const isHealthy = state.healthLevel === 'Healthy';
@@ -211,6 +218,24 @@ export const TopBar: React.FC<TopBarProps> = ({
               >
                 <span>🔀</span>
                 <span>PR #{state.activePullRequest?.number || 214}</span>
+              </button>
+            )}
+
+            {onOpenReleaseModal && (
+              <button
+                id="topbar-release-readiness-btn"
+                onClick={onOpenReleaseModal}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  readiness.overallScore >= 85
+                    ? 'text-emerald-300 hover:bg-slate-700'
+                    : readiness.overallScore >= 70
+                    ? 'text-amber-300 hover:bg-slate-700'
+                    : 'text-rose-300 hover:bg-slate-700 animate-pulse'
+                }`}
+                title="Release Readiness Advisor: Tests, Coverage, CVEs, PRs & Freshness"
+              >
+                <Rocket className="w-3.5 h-3.5" />
+                <span className="font-bold">{readiness.overallScore}% Ready</span>
               </button>
             )}
           </div>

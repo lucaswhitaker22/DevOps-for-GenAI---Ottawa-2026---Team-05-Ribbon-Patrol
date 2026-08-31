@@ -12,6 +12,7 @@ import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type, Modality } from '@google/genai';
 import { fetchLiveRepositoryState, GitHubRateLimitError } from './src/services/githubClient';
 import { LIVE_REPO, LIVE_REPO_BRANCHES } from './src/data/liveRepoConfig';
+import { calculateReleaseReadiness } from './src/utils/releaseReadiness';
 
 dotenv.config();
 
@@ -1928,6 +1929,110 @@ Respond in valid JSON with:
   } catch (error) {
     console.error('Error in /api/gitpet/analyze:', error);
     res.status(500).json({ requestId, error: 'Failed to analyze repository state' });
+  }
+});
+
+// API: POST /api/ai/release-readiness (Calculate 5-Pillar Release Readiness with AI synthesis)
+app.post('/api/ai/release-readiness', async (req, res) => {
+  const startTime = Date.now();
+  const requestId = generateRequestId('release');
+
+  try {
+    const { state, tier = 'general' } = req.body || {};
+    if (!state) {
+      return res.status(400).json({ requestId, error: 'Missing repository state', code: 'INVALID_REQUEST' });
+    }
+
+    // 1. Calculate deterministic 5-pillar baseline
+    const report = calculateReleaseReadiness(state);
+
+    const ai = getGenAI();
+    let modelName = 'deterministic';
+
+    if (ai) {
+      try {
+        const prompt = `
+You are the Lead Release Engineer & Quality Gate Auditor for GitPet DevOps.
+Analyze the following 5 release readiness pillars:
+
+1. Tests Passing: ${report.metrics.testsPassing.value} (${report.metrics.testsPassing.details})
+2. Code Coverage %: ${report.metrics.coverage.value} (${report.metrics.coverage.details})
+3. Vulnerabilities: ${report.metrics.vulnerabilities.value} (${report.metrics.vulnerabilities.details})
+4. PR Approvals: ${report.metrics.prApprovals.value} (${report.metrics.prApprovals.details})
+5. Branch Freshness: ${report.metrics.branchFreshness.value} (${report.metrics.branchFreshness.details})
+
+Calculated Base Score: ${report.overallScore}%
+Status: ${report.statusLabel}
+
+Provide an executive release verdict in JSON format with:
+- "headline": Concise single-line summary (e.g. "Release readiness: ${report.overallScore}%. One high-severity vulnerability prevents green status.")
+- "executiveSummary": 2-sentence executive summary of release risk and sign-off recommendation.
+- "canShip": boolean indicating if this build is safe to deploy to production.
+- "keyBlockers": array of specific blocker strings.
+`;
+
+        const modelChain = modelChainForTier(tier === 'deep' ? 'deep' : tier === 'fast' ? 'fast' : 'general');
+        const { response, model: usedModel } = await generateWithFallback(ai, modelChain, {
+          contents: prompt,
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                headline: { type: Type.STRING },
+                executiveSummary: { type: Type.STRING },
+                canShip: { type: Type.BOOLEAN },
+                keyBlockers: { type: Type.ARRAY, items: { type: Type.STRING } },
+              },
+              required: ['headline', 'executiveSummary', 'canShip'],
+            },
+          },
+        });
+
+        modelName = usedModel;
+        if (response.text) {
+          const parsed = JSON.parse(response.text.trim());
+          const duration = Date.now() - startTime;
+          logRequestAudit(req.path, requestId, 200, duration, `model: ${modelName}`);
+
+          return res.json({
+            requestId,
+            success: true,
+            source: 'gemini',
+            modelUsed: modelName,
+            report: {
+              ...report,
+              headline: parsed.headline || report.headline,
+              executiveSummary: parsed.executiveSummary || report.executiveSummary,
+              canShip: typeof parsed.canShip === 'boolean' ? parsed.canShip : report.canShip,
+              blockers: Array.isArray(parsed.keyBlockers) && parsed.keyBlockers.length > 0 ? parsed.keyBlockers : report.blockers,
+            },
+          });
+        }
+      } catch (geminiErr) {
+        console.warn('Gemini release readiness evaluation failed, using deterministic engine:', geminiErr);
+      }
+    }
+
+    const duration = Date.now() - startTime;
+    logRequestAudit(req.path, requestId, 200, duration, 'deterministic');
+
+    return res.json({
+      requestId,
+      success: true,
+      source: 'deterministic_engine',
+      modelUsed: 'deterministic',
+      report,
+    });
+  } catch (err: any) {
+    const duration = Date.now() - startTime;
+    logRequestAudit(req.path, requestId, 500, duration, `error: ${String(err)}`);
+    return res.status(500).json({
+      requestId,
+      success: false,
+      error: 'Failed to calculate release readiness',
+      code: 'INTERNAL_ERROR',
+    });
   }
 });
 

@@ -18,6 +18,7 @@ import {
   ArrowRight,
   Radio,
   GitPullRequest,
+  Rocket,
 } from 'lucide-react';
 import { ScenarioPreset } from '../types';
 
@@ -50,6 +51,7 @@ interface QuickPaletteModalProps {
   onRefreshLive?: () => void;
   onOpenPRDrawer?: () => void;
   onOpenRiskModal?: () => void;
+  onOpenReleaseModal?: () => void;
   onOpenVoiceModal?: () => void;
   onOpenImageStudio?: () => void;
   isAudioMuted: boolean;
@@ -73,6 +75,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   onRefreshLive,
   onOpenPRDrawer,
   onOpenRiskModal,
+  onOpenReleaseModal,
   onOpenVoiceModal,
   onOpenImageStudio,
   isAudioMuted,
@@ -138,6 +141,20 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
         badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
         keywords: ['pr', 'pull request', 'review', 'comments', 'nudge', 'reviewers', 'merge', 'conflict', 'changelog'],
         onSelect: onOpenPRDrawer,
+      });
+    }
+
+    if (onOpenReleaseModal) {
+      actions.push({
+        id: 'open_release_advisor',
+        title: 'Evaluate Release Readiness Advisor (5-Pillar Sign-off)',
+        description: 'AI evaluation of Tests Passing, Coverage %, Vulnerability Count, PR Approvals, and Branch Freshness',
+        category: 'Repository & Safety',
+        icon: Rocket,
+        badge: 'Release Gate',
+        badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        keywords: ['release', 'readiness', 'ship', 'deploy', 'coverage', 'tests', 'cve', 'vulnerabilities', 'pr', 'freshness', 'gate', 'advisor'],
+        onSelect: onOpenReleaseModal,
       });
     }
 

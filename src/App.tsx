@@ -11,6 +11,7 @@ import { AICommitGeneratorModal } from './components/AICommitGeneratorModal';
 import { PreviewChangesModal } from './components/PreviewChangesModal';
 import { QuickPaletteModal } from './components/QuickPaletteModal';
 import { RiskScoreModal } from './components/RiskScoreModal';
+import { ReleaseReadinessModal } from './components/ReleaseReadinessModal';
 import {
   isAudioMuted,
   toggleAudioMuted,
@@ -62,6 +63,7 @@ export default function App() {
   const [isPRDrawerOpen, setIsPRDrawerOpen] = useState<boolean>(false);
   const [isCommitModalOpen, setIsCommitModalOpen] = useState<boolean>(false);
   const [isRiskModalOpen, setIsRiskModalOpen] = useState<boolean>(false);
+  const [isReleaseModalOpen, setIsReleaseModalOpen] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<ChatRole>('byte_mascot');
   const [selectedTier, setSelectedTier] = useState<ModelTier>('general');
 
@@ -146,6 +148,12 @@ export default function App() {
         if (previewAction) {
           e.preventDefault();
           setPreviewAction(null);
+          return;
+        }
+        // Layer 1.5: Release Readiness Modal
+        if (isReleaseModalOpen) {
+          e.preventDefault();
+          setIsReleaseModalOpen(false);
           return;
         }
         // Layer 2: Quick Palette
@@ -751,6 +759,7 @@ export default function App() {
         onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
         onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
         onOpenRiskModal={() => setIsRiskModalOpen(true)}
+        onOpenReleaseModal={() => setIsReleaseModalOpen(true)}
         isDrawerOpen={isDrawerOpen}
         isLiveMode={isLiveMode}
         liveScanState={liveScanState}
@@ -878,6 +887,17 @@ export default function App() {
         }}
       />
 
+      {/* Release Readiness Advisor Modal (5-Pillar Gate) */}
+      <ReleaseReadinessModal
+        isOpen={isReleaseModalOpen}
+        onClose={() => setIsReleaseModalOpen(false)}
+        state={repoState}
+        onRemediateBlocker={(blocker) => {
+          handleSendMessage(`How do I resolve the release blocker: "${blocker}"?`, selectedRole, selectedTier);
+        }}
+        onOpenCommitGenerator={() => setIsCommitModalOpen(true)}
+      />
+
       {/* AI Commit Generator Modal */}
       <AICommitGeneratorModal
         isOpen={isCommitModalOpen}
@@ -910,6 +930,7 @@ export default function App() {
         onRefreshLive={handleFetchLiveStatus}
         onOpenPRDrawer={() => setIsPRDrawerOpen(true)}
         onOpenRiskModal={() => setIsRiskModalOpen(true)}
+        onOpenReleaseModal={() => setIsReleaseModalOpen(true)}
         isAudioMuted={isAudioMutedState}
         onToggleAudio={handleToggleAudio}
         onPetByte={handlePetByte}

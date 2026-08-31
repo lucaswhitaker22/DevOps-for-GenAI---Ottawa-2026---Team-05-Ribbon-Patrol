@@ -1,196 +1,136 @@
 # Functional Specification Document: GitPet
 
-## Functional specification: GitPet
+## Functional Specification: GitPet
 
 Repository work often hides context across branches, remotes, and local changes. GitPet makes that state visible without a terminal-first investigation.
 
-GitPet is a repository management companion with ambient awareness. It maps repository signals to an expressive pet state. It explains issues clearly and proposes one safe Git action for approval.
+GitPet is an ambient DevSecOps repository companion. It maps repository signals and infrastructure telemetry directly to an expressive virtual pet (Byte). It explains issues clearly in natural language, calculates a multi-factor risk score, and proposes bounded, safe Git actions for human approval.
 
-GitPet follows a simple repository loop:
+GitPet follows a continuous DevSecOps loop:
 
-1. **Notice:** The pet makes repository health visible at a glance.
-2. **Understand:** The developer receives an evidence-based explanation in plain language.
-3. **Resolve:** The developer approves a bounded, reversible repository action.
+1. **Notice:** The pet makes repository health and pipeline state visible at a glance via ambient postures, auras, and audio cues.
+2. **Understand:** The developer receives an evidence-based explanation with confidence ratings, cited file hunks, and risk breakdowns.
+3. **Resolve:** The developer approves a bounded, reversible repository action verified against strict safety policies before execution.
 
-### Product objectives
+---
 
-* **At-a-glance repository status:** Surface healthy, attention, and blocked states through posture, mood, and color.
-* **Lower cognitive load:** Explain branch divergence, conflicts, and uncommitted work in plain language.
-* **Human-approved actions:** Require confirmation for every write operation.
-* **Explainable recommendations:** Show repository evidence, expected impact, and reversal steps.
-* **Safer Git habits:** Reward review, clean handoffs, and verified repository state.
-* **Multimodal assistance:** Support typed and voice repository questions through Gemini.
-* **Expressive pet assets:** Generate and refine pet visuals without changing repository state.
+### Product Objectives
 
-### Core mechanics and state machine
+* **At-a-glance repository status:** Surface healthy, attention, blocked, and unsafe states through posture, mood, auras, and audio effects.
+* **Lower cognitive load:** Explain branch divergence, merge conflicts, uncommitted diffs, CI/CD build failures, and PR review comments in plain language.
+* **Human-approved actions:** Enforce a mandatory preview-and-confirm gate for every write operation with zero unverified shell execution.
+* **Explainable recommendations:** Show repository evidence, expected impact, step-by-step breakdowns, and verified reversal commands (`git stash pop`, `git rebase --abort`).
+* **DevSecOps Risk Scoring:** Provide a 7-Factor risk score breakdown factoring in branch divergence, test failures, exposed secrets, CVE vulnerabilities, code smells, unreviewed commits, and PR sizing.
+* **Interactive DAG Topology:** Render a multi-lane Git commit graph with lane routing, merge bases, and commit role highlights.
+* **PR & CI/CD Intelligence:** Inspect pull request review blockers, requested changes, and CI/CD pipeline steps with flaky test quarantines.
+* **Multimodal assistance:** Support typed and voice repository conversations powered by Google Gemini (Gemini 3.6/3.7 Flash and Gemini 3.1 Live Audio).
+* **Expressive pet customization:** Generate and edit pet avatars using Gemini Image Generation without mutating repository state.
 
-#### Health and emotional state mapping
+---
 
-The pet state combines **Repository Health** and **Repository Symptom**. Health conveys urgency. Symptoms identify the repository condition.
+### Core Mechanics & State Machine
 
-| **Health** | **Health %** | **Visual treatment**         | **Operator meaning**                        |
-| ---------- | ------------ | ---------------------------- | ------------------------------------------- |
-| Healthy    | 90–100%      | Relaxed, playful, green glow | Branch is synchronized and clean            |
-| Attention  | 60–89%       | Uneasy, amber pulse          | Review local or remote differences          |
-| Blocked    | 1–59%        | Distressed, red pulse        | Resolve a conflict or protect work          |
-| Unsafe     | 0%           | Still, grayscale             | Action could lose work without intervention |
+#### Health & Emotional State Mapping
 
-| **Symptom**    | **Pet expression**  | **Repository signal**                     |
-| -------------- | ------------------- | ----------------------------------------- |
-| Behind remote  | Pulling on a leash  | Local branch is behind its upstream       |
-| Unpushed work  | Carrying a backpack | Commits or changes exist only locally     |
-| Merge conflict | Tangled yarn        | Conflicting files block a merge or rebase |
-| Stale branch   | Sleepy and dusty    | Branch is merged or inactive              |
-| Detached HEAD  | Looking lost        | HEAD does not point to a named branch     |
+The pet state combines **Repository Health** (0–100%) and **Repository Symptom**. Health conveys urgency, while symptoms identify the exact repository or pipeline condition.
 
-#### Repository practice
+| Health Level | Health % | Visual Treatment | Operator Meaning |
+| :--- | :--- | :--- | :--- |
+| **Healthy** | 90–100% | Relaxed, playful tail wag, vibrant green aura | Branch is synchronized, clean working tree, CI green |
+| **Attention** | 60–89% | Uneasy, amber warning pulse | Review local/remote drift, flaky tests, or PR review lag |
+| **Blocked** | 1–59% | Distressed, red pulse, barrier indicators | Resolve a merge conflict, CI failure, or stale lock |
+| **Unsafe** | 0% | Frozen, grayscale distress aura, crimson alert | Destructive hazard: upstream force-push with uncommitted edits |
 
-Practice mechanics reward safe repository work, not fast clicks. They remain secondary to the task at hand.
+#### 18 Comprehensive Symptom Presets
 
-* **Change review:** Award a Clean Commit streak when the developer reviews a proposed diff.
-* **Verified sync:** Award progress after branch status is confirmed clean and synchronized.
-* **Safe handoff:** Award Branch Stewardy for merging or archiving a branch with clear context.
+| Symptom Key | Pet Expression | Repository & DevSecOps Signal | Operator Meaning |
+| :--- | :--- | :--- | :--- |
+| `clean_sync` | Playful tail, green aura | 0 commits ahead/behind, clean tree | Repository in pristine state. Ready for release. |
+| `behind_remote` | Pulling on leash | Local branch is behind upstream | Fast-forward pull or stash before sync. |
+| `unpushed_work` | Heavy backpack with commit stars | Local commits ahead of upstream | Push commits upstream for backup & review. |
+| `merge_conflict` | Tangled red & gray yarn | Rebase/merge paused on conflict markers | Inspect conflicting files and continue or abort. |
+| `stale_branch` | Sleepy nightcap, dusty cobwebs | Branch merged >40 days ago with no commits | Safely delete merged branch to maintain hygiene. |
+| `detached_head` | Wandering compass & question mark | HEAD checked out directly to commit hash | Anchor floating commit to a named branch. |
+| `destructive_hazard` | Frozen grayscale with warning barrier | Upstream force-pushed with uncommitted local work | Halt writes! Stash changes to prevent permanent loss. |
+| `failed_build` | Sick bot with fever thermometer | CI/CD pipeline job compilation error | Inspect build logs and fix broken assertions. |
+| `flaky_tests` | Trembling companion with sweat drops | Tests passed only on auto-retry | Quarantine intermittent test cases. |
+| `vulnerability_risk`| Shielded bot with metallic armor | High/critical CVE vulnerability flagged | Update vulnerable package dependencies. |
+| `deploy_success` | Party hat with confetti & fireworks | CD pipeline deployed cleanly to production | Production deployment healthy and verified. |
+| `pr_changes_requested` | Review clipboard with red indicator | Reviewer requested code changes | Address review comments in PR files. |
+| `pr_pending_review` | Tapping foot with hourglass timer | PR waiting >3 days for initial review | Send polite review nudge ping to reviewers. |
+| `pr_conflicted` | Conflict warning signs | PR has merge conflicts with base branch | Rebase feature branch on updated base. |
+| `pr_approved_ready` | Golden approval stamp & green badge | PR has required approvals & green CI | Squash and merge PR into primary branch. |
+| `lost_map` | Holding upside-down map in circles | Terraform remote state lock stuck | Force unlock stuck backend state. |
+| `smoke_cloud` | Running through smoke with soot marks | Pod CrashLoopBackOff in Kubernetes rollout | Inject missing environment secrets. |
+| `shield_cracked` | Cracked shield in defensive stance | Cloud storage bucket allows anonymous read | Enforce private bucket security policy. |
 
-### End-to-end experience
+---
 
-```
-  [ Healthy Pet ]  --->  ( Repository Changes )  --->  [ Pet Signals a Symptom ]
-         ^                                                       |
-         |                                                       v
-  [ Verified Repository ] <--- ( Developer Approves ) <--- [ Evidence-Based Guidance ]
-```
+### DevSecOps 7-Factor Risk Score Engine
 
-#### 1. Idle repository awareness
+GitPet aggregates 7 real-time telemetry factors into a single 0–100 DevSecOps Health Score:
 
-* The developer keeps GitPet open beside their editor or terminal.
-* The pet idles while the active branch is clean and synchronized.
-* A compact top bar displays repository, branch, sync status, and Clean Commit streak.
+1. **Branch Divergence:** Evaluates commits ahead/behind, detached HEAD, and merge base distance.
+2. **Failed & Flaky Tests:** Deducts points for CI pipeline build failures and flaky test suites.
+3. **Secrets & Security Policies:** Flags unencrypted API keys or permissive cloud infrastructure policies.
+4. **Open Vulnerabilities:** Detects High/Critical CVEs in dependency lockfiles.
+5. **Code Smells & Debt:** Measures uncommitted dirty file sprawl and complex code patterns.
+6. **Unreviewed Commits & PR Lag:** Highlights unreviewed protected branch commits and stale PR review queues.
+7. **Large PR Size:** Flags oversized changesets (>400 lines) that increase review risk.
 
-#### 2. Repository change and emotional shift
+---
 
-* A repository event occurs, such as remote commits, uncommitted changes, or a merge conflict.
-* The health bar changes, ambient accents shift, and the pet adopts a matching expression.
+### Interactive Visual & Intelligence Drawers
 
-#### 3. Conversational repository guidance
+* **Git DAG Visualizer:** Interactive SVG commit topology graph featuring multi-lane branch routing, commit role badges (HEAD, Upstream, Merge Base, Hazard), and collapsed commit runs.
+* **CI/CD Pipeline Drawer:** Real-time pipeline step monitoring, pass rates, test suite health, flaky test quarantine list, and deployment targets.
+* **PR Intelligence Drawer:** Complete PR metadata, review statuses, inline review comments with line numbers, waiting time tracker, and automated changelog generation.
+* **AI Commit & Changelog Generator:** Conventional commit assistant (`feat`, `fix`, `refactor`, `docs`, `chore`, etc.) synthesizing atomic messages, changelogs, and release notes.
+* **Risk Score Breakdown Modal:** Drilldown modal visualizing each factor's point deductions, severity status, and remediation advice.
 
-* The developer opens the chat: _"What needs attention?"_ or _"Status report!"_
-* The developer may ask the same question by voice.
-* The assistant reads structured repository metadata and responds with supporting signals:
+---
 
-> _"`feature/cart` is three commits behind `origin/feature/cart`. You also have two uncommitted files. Save or stash those changes before pulling."_
-
-#### 4. Safe action and approval gate
-
-* The assistant generates one concrete, bounded repository action:
-
-> **Recommended action:** Stash local changes, then pull from `origin/feature/cart`.
->
-> **Confidence:** High
->
-> **Expected result:** Preserve local work and synchronize the branch.
->
-> **Reversal:** Restore the stash after the pull.
-
-* The UI shows evidence, confidence, expected impact, and reversal before the action card.
-* The UI renders a **Preview changes** view before approval.
-* The developer can inspect affected files, commits, and branch movement.
-* The UI renders an interactive **Confirm & tidy** action card in the chat stream.
-* The pet recovers only after repository status is rechecked.
-* The UI then shows a concise repository summary and verified state.
-
-#### 5. Voice conversation
-
-* The developer selects the microphone control in the chat composer.
-* The client requests microphone permission only after that interaction.
-* The app streams audio to the voice service and shows a live transcript.
-* Gemini receives the transcript and the same read-only repository context as typed chat.
-* The assistant returns displayed text and optional synthesized speech.
-* The developer can interrupt speech, edit the transcript, or switch to typed chat.
-* Every repository write still requires the existing preview and confirmation flow.
-
-#### 6. Pet image creation and editing
-
-* The developer selects **Create pet** or **Edit pet** from pet customization.
-* Creation accepts a short prompt, visual style, and emotion set.
-* Editing accepts a selected pet asset and an instruction such as _"add a raincoat"_.
-* The image service returns a preview only. It never accesses repository content.
-* The developer accepts, retries, or discards each generated asset.
-* Accepted assets map to existing health and symptom states.
-
-### Live demo scenarios
-
-The hackathon MVP perfects one deterministic scenario: a branch synchronization conflict. It demonstrates the complete notice-understand-resolve loop in under 90 seconds.
-
-| Scenario         | MVP status    | GitPet guidance           | Target action    |
-| ---------------- | ------------- | ------------------------- | ---------------- |
-| Behind + changes | Full demo     | Protect local work first  | Stash, then pull |
-| Merge conflict   | Scenario card | Resolve two changed files | Open diff        |
-| Stale branch     | Scenario card | Branch is already merged  | Archive branch   |
-
-#### MVP scenario: Remote updates with local work
-
-* **Repository profile:** The remote branch gains three commits. Two local files remain uncommitted.
-* **Pet emotion:** Carrying an overfilled backpack and pulling toward the remote.
-* **GitPet explanation:** _"`feature/cart` is behind by three commits. Your local edits are not committed. Stash them before pulling to avoid mixing unfinished work with incoming changes."_
-* **Proposed action:** Stash local changes, then pull remote commits.
-* **Verification:** The branch matches its upstream and the local work remains recoverable.
-
-#### Demo sequence
-
-1. Show the calm pet and a clean, synchronized branch.
-2. Trigger remote commits and local edits. Show the visual shift.
-3. Ask for a status report. Review the evidence-backed recommendation.
-4. Preview and approve the safe action. Verify synchronization and preserved work.
-
-### UI and visual design
-
-The UI uses a minimalist, flat-modern style that avoids visual noise.
-
-#### Color palette
-
-* **Canvas:** Slate Light (`#F8FAFC`) or Off-White (`#FAF9F7`).
-* **Cards:** Pure White (`#FFFFFF`) with subtle borders (`#E2E8F0`).
-* **Primary accents:** Repository Blue (`#2563EB`) and Sync Green (`#10B981`).
-* **Attention accents:** Amber (`#F59E0B`) and Conflict Crimson (`#EF4444`).
-
-#### Layout
-
-* **Top bar:** Pet name, repository, current branch, and status chip.
-* **Center canvas:** The pet stage, symptom expression, and health aura.
-* **Bottom section:** A streamlined chat stream with evidence and approval cards.
-* **Repository drawer:** Branch, commit, and working-tree details.
-
-### Team sprint plan
+### End-to-End Experience
 
 ```
-[ Track A: UI & Visuals ] ----> Component Library ----> Canvas & Pet Animation ----+
-                                                                                  |
-[ Track B: AI & Tools ]   ----> Prompt Engineering  --> Git Action Engine     -----+---> [ Integration &
-                                                                                  |       Demo Rehearsal ]
-[ Track C: State Engine ] ----> Mock Repository API --> State Transitions     ----+
-                                                                                  |
-[ Track D: Narrative ]    ----> Pitch Deck Design   --> Mock Repository Data  ----+
+  [ Healthy Pet ]  --->  ( Repository / Pipeline Event )  --->  [ Pet Signals Symptom & Aura ]
+         ^                                                                  |
+         |                                                                  v
+  [ Verified State ] <--- ( Developer Confirms Write ) <--- [ Multi-Factor Risk & Explanation ]
 ```
 
-* **Role 1 — Frontend and visual experience**
-  * Build the main canvas, responsive layout, animated pet container, and chat log.
-  * Implement ambient styling transitions from backend state.
-* **Role 2 — Prompt engineering and LLM routing**
-  * Construct a persona prompt that cites repository evidence and confidence.
-  * Integrate Gemini text responses and enforce structured action proposals.
-  * Wire approved repository actions to the mock state engine.
-* **Role 3 — State machine and REST engine**
-  * Build a lightweight repository-state service for status, scenarios, and actions.
-  * Implement branch divergence, local edits, and post-action verification.
-* **Role 4 — Scenario content and pitch strategy**
-  * Write realistic branch-divergence data and an evidence narrative.
-  * Create a five-slide pitch deck and rehearse the 90-second demo.
+#### 1. Ambient Workspace Awareness
+* GitPet sits beside your editor or terminal.
+* The top bar displays active repository, branch, Clean Commit streak, and Live Workspace toggle.
 
-### AI integration specification
+#### 2. Symptom Shift & Telemetry Update
+* An event occurs (e.g. remote commits pushed, failed CI build, or PR changes requested).
+* Health drops, auras shift, audio cues trigger, and Byte visually manifests the symptom.
+
+#### 3. Conversational AI Guidance
+* Developer asks: *"Status report!"* or *"What is blocking my PR?"* (via text or voice).
+* Gemini analyzes repository context using the selected persona (Byte Mascot, Senior Architect, Safety Auditor, Git Tutor).
+* Response displays plain-English explanation, cited evidence points, and risk assessment.
+
+#### 4. Safe Action & Human Approval Gate
+* GitPet proposes one bounded, safe Git action with confidence score, expected impact, and reversal steps.
+* Developer clicks **Preview changes** to inspect affected files and commands in a diff viewer.
+* Developer confirms action; the backend executes argv commands safely, re-scans the repository, and updates the pet state.
+
+#### 5. Real-Time Live Voice
+* Developer clicks the microphone icon to connect to Gemini Live Audio (`gemini-3.1-flash-live-preview`).
+* Streamlined audio chunks stream bidirectionally over WebSockets with real-time text transcription.
+
+#### 6. Avatar Image Studio
+* Developer generates or edits custom pet avatars using Gemini Image Generation (`gemini-3.1-flash-image`).
+* Generated assets are held in an ephemeral preview registry (30-minute TTL) until explicitly approved.
+
+---
+
+### AI Integration Specification
 
 #### Architecture
-
-The client never calls Gemini with a permanent API key. A server-side AI gateway owns credentials, rate limits, audit records, and request validation.
+The client connects to a secure Node.js backend gateway that manages Gemini API keys, rate limits, request audits, and execution safety.
 
 ```mermaid
 graph LR
@@ -199,110 +139,56 @@ graph LR
     classDef service fill:#1e293b,stroke:#4b5563,stroke-width:1px,color:#ffffff;
 
     subgraph Client [Web Client]
-        Chat["Typed Chat"]:::client
-        Voice["Voice Capture/Playback"]:::client
-        Studio["Pet Asset Studio"]:::client
+        Chat["Typed Chat Stream"]:::client
+        Voice["Live Voice Modal"]:::client
+        Studio["Image Studio"]:::client
+        Drawers["CI/CD & PR Drawers"]:::client
     end
 
-    Gateway["AI Gateway"]:::gateway
-    Gemini["Gemini APIs"]:::service
-    RepoState["Repository-State Service"]:::service
+    Gateway["GitPet Node Gateway<br/>(Safety Gate & Audit Buffer)"]:::gateway
+    Gemini["Google Gemini Cloud APIs<br/>(3.6 / 3.7 / Live Audio / Image)"]:::service
+    LocalGit["Local Git Workspace / GitHub Fixture"]:::service
 
-    Chat & Voice & Studio --> Gateway
+    Chat & Voice & Studio & Drawers --> Gateway
     Gateway --> Gemini
-    Gateway --> RepoState
+    Gateway --> LocalGit
 ```
 
-The repository-state service is the only source of Git facts. The gateway passes an allowlisted context object to Gemini. It never passes shell access, repository files, credentials, or unrestricted tool access.
+#### Multi-Tier Model Fallback Chains
 
-#### Gemini chatbot
+| Tier | Primary Candidate | Fallback 1 | Fallback 2 | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **Fast** | `gemini-3.1-flash-lite` | `gemini-3.6-flash` | `gemini-flash-latest` | Ultra-fast one-liner queries & status checks |
+| **General** | `gemini-3.6-flash` | `gemini-3.5-flash` | `gemini-flash-latest` | Standard chat, tutoring, and status analysis |
+| **Deep** | `gemini-3.7-flash` | `gemini-3.6-flash` | `gemini-flash-latest` | Complex rebase conflicts & architecture guidance |
+| **Image** | `gemini-3.1-flash-image` | Offline SVG Generator | — | Avatar generation and visual editing |
+| **Live Voice** | `gemini-3.1-flash-live-preview` | Web Speech API | — | Low-latency bidirectional voice streams |
+| **TTS** | `gemini-3.1-flash-tts-preview` | Browser SpeechSynthesis | — | Synthesized assistant speech |
 
-| Area             | Requirement                                                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Model capability | Use a Gemini text model that supports structured JSON output and function calling.                                       |
-| Input            | Chat message, selected repository, branch, health, symptoms, divergence, changed-file count, and approved scenario data. |
-| Output           | Return `summary`, `evidence`, `recommendedAction`, `confidence`, `expectedImpact`, and `reversal`.                       |
-| Tool boundary    | Expose read-only repository-status tools. Expose action preparation only after user approval.                            |
-| Grounding        | Every recommendation cites values from the supplied repository context.                                                  |
-| Failure behavior | Show a retryable chat error. Preserve the user message and repository snapshot.                                          |
+---
 
-The gateway validates every model response against the action schema. Invalid, missing, or unsupported actions become explanation-only responses.
+### Backend API Routes
 
-```json
-{
-  "summary": "Your branch is three commits behind its upstream.",
-  "evidence": ["behindCount: 3", "uncommittedFiles: 2"],
-  "recommendedAction": "stash_then_pull",
-  "confidence": "high",
-  "expectedImpact": "Preserves local changes and synchronizes the branch.",
-  "reversal": "Restore the created stash after pulling."
-}
-```
-
-#### Voice conversations
-
-| Area          | Requirement                                                                                                                        |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Transport     | Use Gemini Live API for low-latency bidirectional audio. Use the gateway for session creation and short-lived session credentials. |
-| Input control | Start capture only after a microphone interaction. Provide stop, mute, and transcript editing controls.                            |
-| Context       | Send the same sanitized repository snapshot used by typed chat.                                                                    |
-| Output        | Render each transcript turn. Stream voice only when the developer enables spoken replies.                                          |
-| Interruption  | Stop playback and cancel the active response when the developer speaks or presses stop.                                            |
-| Fallback      | If live audio is unavailable, submit the final transcript as a standard Gemini chat request.                                       |
-
-Do not persist raw audio for the MVP. Keep transcripts only in the active session unless the developer explicitly saves chat history.
-
-#### Image creation and editing
-
-| Area             | Requirement                                                                                                  |
-| ---------------- | ------------------------------------------------------------------------------------------------------------ |
-| Model capability | Use a Gemini image-generation and image-editing model through the gateway.                                   |
-| Create flow      | Submit prompt, selected style, transparent-background preference, and target emotional state.                |
-| Edit flow        | Submit the approved source asset and a bounded edit instruction. Preserve the selected canvas ratio.         |
-| Output handling  | Store generated previews in temporary object storage. Promote an asset only after developer approval.        |
-| Asset mapping    | Require `healthy`, `attention`, `blocked`, and `unsafe` variants or a documented fallback.                   |
-| Safety           | Reject prompts that request real-person impersonation, unsafe content, or copyrighted-character replication. |
-
-Use a consistent visual prompt prefix: _"original, friendly Git repository companion; minimalist flat-modern style; no text or logos."_ Keep pet customization separate from repository guidance prompts.
-
-#### API contracts
-
-* `POST /api/ai/chat` accepts a user message and repository snapshot. It returns validated assistant JSON.
-* `POST /api/ai/voice/session` creates an authenticated, short-lived live-audio session.
-* `POST /api/ai/images/generate` creates pet asset previews from an approved style request.
-* `POST /api/ai/images/edit` edits one selected pet asset with an instruction.
-* `POST /api/ai/images/:id/approve` promotes an approved preview to the project asset set.
-
-All endpoints require the project session. Apply per-user rate limits, payload-size limits, and request IDs. Redact tokens, audio payloads, and repository paths from application logs.
-
-#### Acceptance criteria
-
-1. A typed status question returns a repository-grounded Gemini response with evidence.
-2. A voice status question displays a transcript and returns the same safe action card.
-3. Voice output can be disabled, interrupted, and replaced with typed input.
-4. An image prompt creates a preview. Approval updates only the pet asset set.
-5. An image edit preserves the source asset until the developer accepts the result.
-6. No AI request can execute a Git write without preview and explicit confirmation.
-
-### Out-of-scope guardrails
-
-To ensure complete delivery within the eight-hour sprint window, the following are prohibited:
-
-* Kubernetes, observability dashboards, infrastructure alerts, and deployment pipelines.
-* Automatic pushes, merges, rebases, resets, or deletions without developer approval.
-* Live repository hosting integrations for the MVP.
-* Persistent databases or multi-tenant user authentication.
-* Autonomous actions or background state changes.
-* Saved voice recordings, voice cloning, or background microphone capture.
-* Production asset moderation workflows or public sharing of generated pet images.
+* `GET /api/health` — Returns server uptime, memory usage, writes status, active models, and telemetry averages.
+* `GET /api/audit-logs` — Returns FIFO ring buffer of recent requests, latencies, and human approval flags.
+* `GET /api/git/live-status` — Scans local workspace repository state (branches, ahead/behind, working tree, stashes).
+* `GET /api/repo/live` — Scans the live public GitHub test fixture (`farisnour/gitpet-acme-corp-ecommerce-store`).
+* `POST /api/git/preview-action` — Dry-run safety analysis of proposed Git commands.
+* `POST /api/git/execute-action` — Executes human-approved Git commands (active when `GITPET_ALLOW_WRITES=true`).
+* `POST /api/ai/chat` (and `/api/chat`) — Multi-turn conversational chat with repo context injection and safety validation.
+* `POST /api/gitpet/analyze` — Structured JSON repository analysis and action proposal.
+* `POST /api/ai/images/generate` — Generates pet avatar previews.
+* `POST /api/ai/images/edit` — Edits existing pet avatars.
+* `POST /api/ai/images/:id/approve` — Promotes preview asset to active pet set.
+* `GET /api/ai/images/approved` — Retrieves current approved pet assets.
+* `POST /api/voice/tts` — Synthesizes speech using Gemini TTS.
+* `WebSocket /live` — Real-time bidirectional Gemini Live Audio streaming session.
 
 ---
 
 ### AI Usage Disclosure
 
-In accordance with Hackathon Guideline **P-06 (AI Transparency)** and **Item 8 (AI Usage Disclosure)**, development was assisted by the following AI tools:
-* **Google AI Studio:** Prompt structure creation and validation.
-* **Antigravity (Gemini):** React components pair-programming and UI design.
-* **Claude Code:** Test suite drafting and safety validations.
-* **Microsoft Copilot:** Syntax autocompletion and documentation support.
-
+In accordance with Hackathon Guideline **P-06 (AI Transparency)** and **Item 8 (AI Usage Disclosure)**, development was assisted by:
+* **Google AI Studio:** Prompt engineering, safety system instructions, and schema definitions.
+* **Antigravity (Gemini):** Pair programming, TypeScript types, React 19 UI components, and test suites.
+* **Claude Code & Copilot:** Syntax formatting, documentation reviews, and edge-case verification.

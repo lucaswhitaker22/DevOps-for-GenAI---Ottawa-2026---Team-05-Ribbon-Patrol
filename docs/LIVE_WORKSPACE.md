@@ -1,74 +1,81 @@
 # Live Workspace Mode
 
-GitPet has two modes, and confusing them is the most common source of
-"nothing happened when I clicked Confirm".
+GitPet operates in two distinct modes:
 
-| Mode | Repository data | Approved actions |
-|---|---|---|
-| **Sandbox** (default) | Bundled fixture scenarios | **Simulated.** Nothing on disk changes. |
-| **Live Workspace** | A real repository, read live | Run for real — only if writes are enabled. |
+| Mode | Repository Data Source | Approved Actions |
+| :--- | :--- | :--- |
+| **Sandbox Mode** (default) | 18 bundled DevSecOps scenarios | **Simulated.** Visual state transitions animate, transcript clearly flags simulation. |
+| **Live Workspace Mode** | Real local Git workspace or public GitHub fixture | **Real execution** — runs bounded argv commands if `GITPET_ALLOW_WRITES=true`. |
 
-The app starts in **Sandbox**. Toggle **Live Workspace** in the top bar to
-switch. In Sandbox, approving an action animates a state transition and reports
-success; that is a simulation, and the transcript now says so explicitly.
+Toggle **Live Workspace** in the top bar to switch between sandbox scenario fixtures and live repository inspection.
 
 ---
 
-## Enabling real actions
+## 1. Dual Live Data Sources
 
-Two settings in `.env`, then restart:
+### A. Local Host Repository (`/api/git/live-status`)
+* Scans the local Git working tree using read-only `git status --porcelain=v1 -uall`, `git rev-parse`, `git log`, and `git stash list`.
+* Computes real branch divergence (ahead/behind counts), detached HEAD status, uncommitted diffs, and in-progress operations (rebase, merge, cherry-pick).
+
+### B. Public GitHub Live Fixture (`/api/repo/live`)
+* Connects to the public fixture repository: [`farisnour/gitpet-acme-corp-ecommerce-store`](https://github.com/farisnour/gitpet-acme-corp-ecommerce-store).
+* Supports live switching between active branches (`main`, `feature/cart-stepper`, `feature/payment-v2`, `refactor/checkout-v2`) to demonstrate real upstream drift without requiring a local dirty git repository.
+
+---
+
+## 2. Enabling Real Command Execution
+
+By default, the live scanner is **read-only**. To permit GitPet to execute verified Git commands against your local repository, configure `.env`:
 
 ```bash
-# The repository GitPet reads and acts on. Without this it inspects whatever
-# directory the server was started from — usually the GitPet checkout itself,
-# not the project you meant.
+# Point to the repository GitPet should inspect & modify
 GITPET_WORKSPACE_ROOT="/absolute/path/to/your/repo"
 
-# Actions are refused unless this is exactly "true".
+# Explicit write gate: must be set to "true" to allow execution
 GITPET_ALLOW_WRITES=true
+
+# Optional: HTTP Basic Authentication
+GITPET_AUTH_USER="admin"
+GITPET_AUTH_PASS="your-secure-password"
 ```
 
-Confirm both took effect:
-
+Verify your configuration via the health probe:
 ```bash
-curl -s localhost:3004/api/health | jq '{writesEnabled, workspaceRoot}'
+curl -s http://localhost:3004/api/health | jq '{writesEnabled, workspaceRoot}'
 ```
 
 ```json
-{ "writesEnabled": true, "workspaceRoot": "/absolute/path/to/your/repo" }
+{
+  "writesEnabled": true,
+  "workspaceRoot": "/absolute/path/to/your/repo"
+}
 ```
 
-When you switch to Live Workspace, Byte states which repository is in scope and
-whether actions can run, so a read-only server is distinguishable from a broken
-one.
+---
+
+## 3. Four-Layer Safety Defense for Live Writes
+
+Even with writes enabled, four independent security layers protect your repository:
+
+1. **Static Dangerous Rule Interceptor (`safety.ts`):**
+   Refuses destructive commands (`push --force` without lease, `reset --hard`, `clean`, `branch -D`, `stash drop/clear`, and shell injection metacharacters `;&|>$`).
+2. **Contextual Lint Engine (`safety.ts`):**
+   Inspects the live working tree to enforce safety (e.g. requires `git stash -u` if untracked files are present, blocks non-continue commands during active rebases).
+3. **Dry-Run Preview (`/api/git/preview-action`):**
+   Simulates the execution against the current repository state and returns safety findings before prompting the user.
+4. **Mandatory Human-in-the-Loop Confirmation:**
+   Zero automated execution. The developer must inspect the exact command, targeted files, and reversal plan in the **Preview Changes Modal** before confirming execution.
+5. **Fail-Stop Parameter Execution (`executor.ts`):**
+   Executes commands strictly via `child_process.execFile` with argument arrays (never passing through a shell), stopping immediately on any error.
 
 ---
 
-## Why writes are off by default
+## 4. Troubleshooting Live Mode
 
-The live scanner is read-only by design. Enabling writes lets GitPet modify a
-real working tree, so it is an explicit opt-in rather than a default. Once
-enabled, four things still stand between a suggestion and your repository:
-
-1. **The safety policy**, re-evaluated at execution time — a `block` verdict is
-   refused regardless of what the client asked for.
-2. **argv execution**, never a shell, so metacharacters are inert.
-3. **Explicit approval** — nothing runs without a click.
-4. **Fail-stop chains** — a failed step skips the rest rather than compounding.
-
-Destructive operations are refused outright: `push --force` without
-`--force-with-lease`, `reset --hard`, `clean`, `branch -D`, `stash drop`,
-`stash clear`, and history rewriting.
-
----
-
-## Troubleshooting
-
-| Symptom | Cause |
-|---|---|
-| "Simulated in Sandbox Mode" in the transcript | You are in Sandbox. Toggle Live Workspace. |
-| "Live Workspace is read-only on this server" | `GITPET_ALLOW_WRITES` is not `true`, or the server was not restarted. |
-| Byte describes the wrong repository | `GITPET_WORKSPACE_ROOT` is unset, so it is scanning the GitPet checkout. |
-| "Workspace is not inside an active Git repository" | `GITPET_WORKSPACE_ROOT` points somewhere that is not a git work tree. |
-| A command is refused with a `block` verdict | Working as intended — the finding explains which rule fired. |
-| Actions blocked with "a rebase is in progress" | Resolve or `git rebase --abort` first; only continue/skip/abort are safe mid-operation. |
+| Symptom | Cause | Resolution |
+| :--- | :--- | :--- |
+| "Simulated in Sandbox Mode" in transcript | App is currently in Sandbox mode. | Toggle **Live Workspace** in the top bar. |
+| "Live Workspace is read-only on this server" | `GITPET_ALLOW_WRITES` is not set to `true`. | Add `GITPET_ALLOW_WRITES=true` to `.env` and restart the server. |
+| Byte describes the wrong repository | `GITPET_WORKSPACE_ROOT` is unset. | Set `GITPET_WORKSPACE_ROOT` in `.env` to your project directory. |
+| "Workspace is not inside an active Git repository" | The target path is not a valid git work tree. | Run `git init` or point `GITPET_WORKSPACE_ROOT` to a valid git repository. |
+| Action blocked with "rebase in progress" | Repository is paused in an interactive rebase. | Complete the rebase (`git rebase --continue`) or abort (`git rebase --abort`). |
