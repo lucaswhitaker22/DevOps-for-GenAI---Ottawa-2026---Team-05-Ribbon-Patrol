@@ -117,12 +117,12 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
+      <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <button
               onClick={() => onNavigate('companion')}
-              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
               title="Return to Companion"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -132,22 +132,22 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
             </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                <h1 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
                   7-Factor Repository Risk Scorecard
                 </h1>
                 <span
                   className={`text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold uppercase ${
                     state.healthPercentage >= 90
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700'
                       : state.healthPercentage >= 50
-                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                      : 'bg-rose-100 text-rose-800 border border-rose-300'
+                      ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700'
+                      : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700'
                   }`}
                 >
                   {state.healthLevel} ({state.healthPercentage}% HP)
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-mono mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                 {state.repoName} • Dynamic weighted risk assessment
               </p>
             </div>
@@ -156,7 +156,7 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
               onClick={handleCopyReport}
-              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied Summary' : 'Copy Scorecard'}</span>
@@ -165,12 +165,12 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
         </div>
 
         {/* Health Gauge Bar */}
-        <div className="mt-6 pt-5 border-t border-slate-100 space-y-2">
+        <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 space-y-2">
           <div className="flex items-center justify-between text-xs font-mono font-bold">
-            <span className="text-slate-500">Repository Health Pool</span>
-            <span className="text-slate-900">{state.healthPercentage} / 100 HP</span>
+            <span className="text-slate-500 dark:text-slate-400">Repository Health Pool</span>
+            <span className="text-slate-900 dark:text-slate-100">{state.healthPercentage} / 100 HP</span>
           </div>
-          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200/60 p-0.5">
+          <div className="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200/60 dark:border-slate-700 p-0.5">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
                 state.healthPercentage >= 90
@@ -185,11 +185,13 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 text-xs font-semibold overflow-x-auto">
+        <div className="flex items-center gap-2 mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-semibold overflow-x-auto">
           <button
             onClick={() => setSelectedFilter('all')}
             className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-              selectedFilter === 'all' ? 'bg-slate-900 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+              selectedFilter === 'all'
+                ? 'bg-slate-900 dark:bg-slate-700 text-white shadow-2xs font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             All Factors ({factors.length})
@@ -197,7 +199,9 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
           <button
             onClick={() => setSelectedFilter('high')}
             className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-              selectedFilter === 'high' ? 'bg-rose-600 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+              selectedFilter === 'high'
+                ? 'bg-rose-600 text-white shadow-2xs font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Critical Hazards ({factors.filter((f) => f.status === 'critical').length})
@@ -205,7 +209,9 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
           <button
             onClick={() => setSelectedFilter('medium')}
             className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-              selectedFilter === 'medium' ? 'bg-amber-600 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+              selectedFilter === 'medium'
+                ? 'bg-amber-600 text-white shadow-2xs font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Warnings ({factors.filter((f) => f.status === 'warning').length})
@@ -213,7 +219,9 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
           <button
             onClick={() => setSelectedFilter('healthy')}
             className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-              selectedFilter === 'healthy' ? 'bg-emerald-600 text-white shadow-2xs font-bold' : 'text-slate-600 hover:bg-slate-100'
+              selectedFilter === 'healthy'
+                ? 'bg-emerald-600 text-white shadow-2xs font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Healthy ({factors.filter((f) => f.status === 'good').length})
@@ -226,43 +234,43 @@ ${factors.map((f) => `- [${f.status.toUpperCase()}] ${f.name} (${f.impact} pts):
         {filteredFactors.map((factor) => (
           <div
             key={factor.id}
-            className={`p-5 rounded-3xl border shadow-xs space-y-3 bg-white ${
+            className={`p-5 rounded-3xl border shadow-xs space-y-3 bg-white dark:bg-slate-900/90 ${
               factor.status === 'critical'
-                ? 'border-rose-300 ring-1 ring-rose-400/20'
+                ? 'border-rose-300 dark:border-rose-800 ring-1 ring-rose-400/20'
                 : factor.status === 'warning'
-                ? 'border-amber-200'
-                : 'border-slate-200/90'
+                ? 'border-amber-200 dark:border-amber-800'
+                : 'border-slate-200/90 dark:border-slate-800'
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-900">{factor.name}</span>
+              <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{factor.name}</span>
               <span
                 className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
                   factor.status === 'critical'
-                    ? 'bg-rose-100 text-rose-800'
+                    ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300'
                     : factor.status === 'warning'
-                    ? 'bg-amber-100 text-amber-800'
-                    : 'bg-emerald-100 text-emerald-800'
+                    ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300'
+                    : 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300'
                 }`}
               >
                 {factor.status === 'good' ? 'Healthy' : factor.status} ({factor.impact} pts)
               </span>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">{factor.details}</p>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{factor.details}</p>
 
             {factor.recommendation && (
-              <p className="text-[11px] text-slate-500 font-medium pt-1">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium pt-1">
                 💡 {factor.recommendation}
               </p>
             )}
 
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-[11px] font-mono text-slate-400">{factor.metricLabel || ''}</span>
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{factor.metricLabel || ''}</span>
               {factor.status !== 'good' && onRemediateFactor && (
                 <button
                   onClick={() => onRemediateFactor(factor)}
-                  className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition-colors cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white transition-colors cursor-pointer shadow-2xs"
                 >
                   Remediate with Byte
                 </button>

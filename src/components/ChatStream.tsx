@@ -109,19 +109,19 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
   return (
     <div
       id="gitpet-chat-container"
-      className="flex flex-col h-full bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden"
+      className="flex flex-col h-full bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xs overflow-hidden"
     >
       {/* Chat Header & Role / Model Selector */}
-      <div className="px-4 sm:px-5 py-3 border-b border-slate-100 bg-slate-50/70 space-y-2.5">
+      <div className="px-4 sm:px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/90 space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
               <Bot className="w-4 h-4 text-pink-400" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-slate-900 flex items-center gap-2">
+              <h3 className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <span>Multi-Turn Gemini Companion</span>
-                <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200">
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                   Online
                 </span>
               </h3>
@@ -131,19 +131,19 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
         </div>
 
         {/* Roles & Model Tiers Controls */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/60 text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800 text-xs">
           {/* Persona Selector */}
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Role:</span>
-            <div className="flex items-center gap-1 bg-slate-200/60 p-0.5 rounded-xl">
+            <div className="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800/90 p-0.5 rounded-xl">
               {ROLES.map((role) => (
                 <button
                   key={role.id}
                   onClick={() => setSelectedRole(role.id)}
                   className={`px-2.5 py-1 rounded-lg font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                     selectedRole === role.id
-                      ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                      : 'text-slate-500 hover:text-slate-900'
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-2xs font-bold'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                   }`}
                   title={role.desc}
                 >
@@ -157,15 +157,15 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
           {/* Model Speed / Depth Tier */}
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Model:</span>
-            <div className="flex items-center gap-1 bg-slate-200/60 p-0.5 rounded-xl">
+            <div className="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800/90 p-0.5 rounded-xl">
               {TIERS.map((tier) => (
                 <button
                   key={tier.id}
                   onClick={() => setSelectedTier(tier.id)}
                   className={`px-2.5 py-1 rounded-lg font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                     selectedTier === tier.id
-                      ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                      : 'text-slate-500 hover:text-slate-900'
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-2xs font-bold'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                   }`}
                   title={`Powered by ${tier.model}`}
                 >
@@ -209,11 +209,11 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                   className={`p-4 rounded-3xl text-xs leading-relaxed text-left ${
                     msg.sender === 'user'
                       ? 'bg-slate-900 text-slate-100 rounded-tr-xs shadow-xs'
-                      : 'bg-slate-50 border border-slate-200/90 text-slate-800 rounded-tl-xs shadow-xs'
+                      : 'bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 text-slate-800 dark:text-slate-200 rounded-tl-xs shadow-xs'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-200/50 text-[10px] text-slate-400">
-                    <span className="font-bold text-slate-700">
+                  <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-200/50 dark:border-slate-700/50 text-[10px] text-slate-400">
+                    <span className="font-bold text-slate-700 dark:text-slate-300">
                       {msg.sender === 'user'
                         ? 'You'
                         : msg.role === 'senior_architect'
@@ -226,7 +226,7 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                     </span>
                     <div className="flex items-center gap-1.5">
                       {msg.modelUsed && (
-                        <span className="px-1.5 py-0.5 bg-white text-slate-600 rounded-md border border-slate-200 font-mono text-[9px] font-semibold">
+                        <span className="px-1.5 py-0.5 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-md border border-slate-200 dark:border-slate-600 font-mono text-[9px] font-semibold">
                           {msg.modelUsed}
                         </span>
                       )}
@@ -238,14 +238,14 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
 
                   {/* Evidence Signals Callout */}
                   {msg.evidenceSummary && msg.evidenceSummary.evidencePoints?.length > 0 && (
-                    <div className="mt-3.5 pt-3 border-t border-slate-200/60 bg-white/80 p-3 rounded-2xl border">
-                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                    <div className="mt-3.5 pt-3 border-t border-slate-200/60 dark:border-slate-700/60 bg-white/80 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
+                      <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                         <span>Repository Evidence Signals</span>
-                        <span className="font-mono font-bold text-indigo-600">
+                        <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                           {msg.evidenceSummary.healthLevel}
                         </span>
                       </div>
-                      <ul className="space-y-1 text-[11px] text-slate-600">
+                      <ul className="space-y-1 text-[11px] text-slate-600 dark:text-slate-300">
                         {msg.evidenceSummary.evidencePoints.map((pt, idx) => (
                           <li key={idx} className="flex items-start gap-1.5">
                             <span className="text-indigo-500 font-bold">•</span>
@@ -256,11 +256,11 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
 
                       {/* Deep-link jump buttons */}
                       {onNavigate && (
-                        <div className="flex items-center gap-2 mt-2.5 pt-2 border-t border-slate-100 flex-wrap">
+                        <div className="flex items-center gap-2 mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex-wrap">
                           <button
                             type="button"
                             onClick={() => onNavigate('repository')}
-                            className="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 hover:bg-indigo-100 transition-colors cursor-pointer"
+                            className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-colors cursor-pointer"
                           >
                             <FolderGit2 className="w-3 h-3" />
                             <span>Inspect DAG & Diffs</span>
@@ -270,7 +270,7 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                           <button
                             type="button"
                             onClick={() => onNavigate('pr')}
-                            className="text-[10px] font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer"
+                            className="text-[10px] font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-colors cursor-pointer"
                           >
                             <GitPullRequest className="w-3 h-3" />
                             <span>PR Intelligence</span>
@@ -287,10 +287,10 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                   <motion.div
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className={`p-4 rounded-3xl bg-white border shadow-sm text-left space-y-3 ${
+                    className={`p-4 rounded-3xl bg-white dark:bg-slate-800/90 border shadow-sm text-left space-y-3 ${
                       state.healthLevel === 'Unsafe' || msg.recommendedAction.riskLevel === 'Hazard'
-                        ? 'border-rose-300 ring-2 ring-rose-500/10'
-                        : 'border-slate-200/90'
+                        ? 'border-rose-300 dark:border-rose-700 ring-2 ring-rose-500/10'
+                        : 'border-slate-200/90 dark:border-slate-700'
                     }`}
                   >
                     {/* Action Header */}
@@ -317,7 +317,7 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                               ? 'Emergency Work-Loss Prevention'
                               : 'Recommended Safe Action'}
                           </div>
-                          <h4 className="text-xs font-bold text-slate-900">{msg.recommendedAction.title}</h4>
+                          <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">{msg.recommendedAction.title}</h4>
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -339,7 +339,7 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                     </div>
 
                     {/* Summary */}
-                    <p className="text-xs text-slate-600 leading-normal">{msg.recommendedAction.summary}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-normal">{msg.recommendedAction.summary}</p>
 
                     {/* Command Box */}
                     <div className="relative group">
@@ -360,16 +360,16 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                     </div>
 
                     {/* Expected Impact & Reversal */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] bg-slate-50 p-3 rounded-2xl border border-slate-200/70">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-800">
                       <div>
-                        <span className="font-semibold text-slate-700">Expected Result:</span>
-                        <p className="text-slate-600 mt-0.5">{msg.recommendedAction.expectedResult}</p>
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">Expected Result:</span>
+                        <p className="text-slate-600 dark:text-slate-300 mt-0.5">{msg.recommendedAction.expectedResult}</p>
                       </div>
                       <div>
-                        <span className="font-semibold text-amber-800 flex items-center gap-1">
-                          <RotateCcw className="w-3 h-3 text-amber-600" /> Safe Reversal:
+                        <span className="font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-1">
+                          <RotateCcw className="w-3 h-3 text-amber-600 dark:text-amber-400" /> Safe Reversal:
                         </span>
-                        <p className="text-amber-900/90 font-mono text-[10px] mt-0.5 break-all">
+                        <p className="text-amber-900/90 dark:text-amber-200 font-mono text-[10px] mt-0.5 break-all">
                           {msg.recommendedAction.reversalStep}
                         </p>
                       </div>
@@ -380,15 +380,15 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                       <button
                         id={`preview-action-btn-${msg.id}`}
                         onClick={() => onPreviewAction(msg.recommendedAction!)}
-                        className="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 flex items-center gap-1.5 transition-colors cursor-pointer"
+                        className="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer"
                       >
-                        <Eye className="w-3.5 h-3.5 text-slate-500" />
+                        <Eye className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                         <span>Preview Diff & Scope</span>
                       </button>
 
                       {msg.executed ? (
-                        <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-bold text-xs border border-emerald-200 dark:border-emerald-800">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                           <span>Action Verified & Executed</span>
                         </div>
                       ) : (
@@ -428,15 +428,15 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
                   <motion.div
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center justify-between gap-2"
+                    className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 text-xs flex items-center justify-between gap-2"
                   >
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span className="font-semibold text-slate-800">{msg.executionResult.message}</span>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{msg.executionResult.message}</span>
                     </div>
                     <div className="flex items-center gap-1.5 font-mono font-bold text-xs">
                       <span>{msg.executionResult.previousHealth}%</span>
-                      <ChevronRight className="w-3.5 h-3.5 text-emerald-600" />
+                      <ChevronRight className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span className="bg-emerald-600 text-white px-2 py-0.5 rounded-md">
                         {msg.executionResult.newHealth}% HP
                       </span>
@@ -451,14 +451,14 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
         {/* Loading Indicator */}
         {isLoading && (
           <div className="flex items-center gap-2 text-xs text-slate-500 pl-2">
-            <div className="w-7 h-7 rounded-2xl bg-pink-50 border border-pink-200 flex items-center justify-center text-xs shadow-2xs">
+            <div className="w-7 h-7 rounded-2xl bg-pink-50 dark:bg-pink-950/50 border border-pink-200 dark:border-pink-800 flex items-center justify-center text-xs shadow-2xs">
               🐕
             </div>
-            <div className="flex items-center gap-2 bg-slate-100/90 border border-slate-200/70 px-3.5 py-2.5 rounded-2xl">
+            <div className="flex items-center gap-2 bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/70 dark:border-slate-700 px-3.5 py-2.5 rounded-2xl">
               <span className="w-2 h-2 rounded-full bg-pink-600 animate-bounce" />
               <span className="w-2 h-2 rounded-full bg-pink-600 animate-bounce [animation-delay:0.2s]" />
               <span className="w-2 h-2 rounded-full bg-pink-600 animate-bounce [animation-delay:0.4s]" />
-              <span className="text-[11px] text-slate-600 ml-1 font-medium">
+              <span className="text-[11px] text-slate-600 dark:text-slate-300 ml-1 font-medium">
                 Consulting {selectedTier === 'deep' ? 'Gemini 2.5 Pro' : 'Gemini 2.5 Flash'}...
               </span>
             </div>
@@ -469,14 +469,14 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
       </div>
 
       {/* Categorized Quick Prompts Bar */}
-      <div className="px-4 py-2.5 bg-slate-50/70 border-t border-slate-100 flex items-center gap-2 overflow-x-auto scrollbar-none">
+      <div className="px-4 py-2.5 bg-slate-50/70 dark:bg-slate-900/90 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 overflow-x-auto scrollbar-none">
         <Sparkles className="w-3.5 h-3.5 text-pink-600 shrink-0" />
         {quickPromptCategories.map((item, idx) => (
           <button
             key={idx}
             onClick={() => onSendMessage(item.prompt, selectedRole, selectedTier)}
             disabled={isLoading}
-            className="text-[11px] font-semibold text-slate-700 hover:text-indigo-600 hover:border-indigo-300 bg-white hover:bg-indigo-50/50 px-3 py-1.5 rounded-full border border-slate-200/90 transition-all whitespace-nowrap shrink-0 shadow-2xs cursor-pointer flex items-center gap-1.5"
+            className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-600 bg-white dark:bg-slate-800 hover:bg-indigo-50/50 dark:hover:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-200/90 dark:border-slate-700 transition-all whitespace-nowrap shrink-0 shadow-2xs cursor-pointer flex items-center gap-1.5"
           >
             <span>{item.icon}</span>
             <span>{item.label}</span>
@@ -485,7 +485,7 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
       </div>
 
       {/* Input Form */}
-      <form onSubmit={handleSubmit} className="p-3 sm:p-4 border-t border-slate-100 bg-white flex items-center gap-2.5">
+      <form onSubmit={handleSubmit} className="p-3 sm:p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/90 flex items-center gap-2.5">
         <input
           id="gitpet-chat-input"
           type="text"
@@ -493,7 +493,7 @@ export const ChatStream: React.FC<ChatStreamProps> = ({
           onChange={(e) => setInputText(e.target.value)}
           placeholder={`Ask ${selectedRole === 'senior_architect' ? 'Architect' : selectedRole === 'safety_auditor' ? 'Safety Auditor' : selectedRole === 'git_tutor' ? 'Git Tutor' : 'Byte'} about repos, stashes, or safe commands...`}
           disabled={isLoading}
-          className="flex-1 px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all placeholder:text-slate-400"
+          className="flex-1 px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
         />
         <button
           id="gitpet-chat-send-btn"

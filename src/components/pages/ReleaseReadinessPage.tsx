@@ -91,12 +91,12 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
+      <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <button
               onClick={() => onNavigate('companion')}
-              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
               title="Return to Companion"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -106,21 +106,21 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
             </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                <h1 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
                   Release Gate & Deployment Sign-Off
                 </h1>
                 <span
                   className={`text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold uppercase ${
                     report.canShip
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                      : 'bg-rose-100 text-rose-800 border border-rose-300'
+                      ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700'
+                      : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700'
                   }`}
                 >
                   {report.statusLabel}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-mono mt-0.5">
-                5-Pillar Gate • Target Branch <span className="font-bold text-slate-800">{state.currentBranch.name}</span> • Overall Score <span className="font-bold text-slate-800">{report.overallScore}%</span>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
+                5-Pillar Gate • Target Branch <span className="font-bold text-slate-800 dark:text-slate-200">{state.currentBranch.name}</span> • Overall Score <span className="font-bold text-slate-800 dark:text-slate-200">{report.overallScore}%</span>
               </p>
             </div>
           </div>
@@ -139,7 +139,7 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
 
             <button
               onClick={handleCopyMarkdown}
-              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
             >
               {copiedMd ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedMd ? 'Copied Markdown' : 'Copy Summary'}</span>
@@ -147,7 +147,7 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
 
             <button
               onClick={handleDownloadJSON}
-              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download JSON</span>
@@ -165,8 +165,8 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
         </div>
 
         {/* Executive Summary Callout */}
-        <div className="mt-5 p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-700 leading-relaxed">
-          <span className="font-bold text-slate-900 block mb-1">Executive Summary</span>
+        <div className="mt-5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+          <span className="font-bold text-slate-900 dark:text-slate-100 block mb-1">Executive Summary</span>
           {report.executiveSummary}
         </div>
       </div>
@@ -177,35 +177,35 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
           return (
             <div
               key={metric.id}
-              className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3"
+              className="p-5 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-900 capitalize">
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-100 capitalize">
                   {metric.name}
                 </span>
                 <span
                   className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
                     metric.status === 'passed'
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700'
                       : metric.status === 'warning'
-                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                      : 'bg-rose-100 text-rose-800 border border-rose-300'
+                      ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700'
+                      : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700'
                   }`}
                 >
                   {metric.status}
                 </span>
               </div>
 
-              <div className="text-sm font-mono font-bold text-slate-900">
+              <div className="text-sm font-mono font-bold text-slate-900 dark:text-slate-100">
                 {metric.value}
               </div>
 
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 {metric.details}
               </p>
 
               {metric.recommendation && (
-                <div className="pt-2 border-t border-slate-100 text-[11px] text-indigo-700 font-medium">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-indigo-700 dark:text-indigo-400 font-medium">
                   💡 {metric.recommendation}
                 </div>
               )}
@@ -216,16 +216,16 @@ ${report.blockers.length > 0 ? report.blockers.map((b) => `- ${b}`).join('\n') :
 
       {/* Release Blockers */}
       {report.blockers.length > 0 && (
-        <div className="p-5 sm:p-6 rounded-3xl bg-rose-50/80 border border-rose-200 shadow-xs space-y-3">
-          <h2 className="text-sm font-bold text-rose-950 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-rose-600" />
+        <div className="p-5 sm:p-6 rounded-3xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 shadow-xs space-y-3">
+          <h2 className="text-sm font-bold text-rose-950 dark:text-rose-300 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" />
             Deployment Blockers ({report.blockers.length})
           </h2>
-          <ul className="space-y-2 text-xs text-rose-900">
+          <ul className="space-y-2 text-xs text-rose-900 dark:text-rose-200">
             {report.blockers.map((b, idx) => (
-              <li key={idx} className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-white/80 border border-rose-200/80">
+              <li key={idx} className="flex items-start justify-between gap-3 p-3 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-rose-200/80 dark:border-rose-900/60 text-slate-800 dark:text-slate-200">
                 <div className="flex items-start gap-2">
-                  <span className="text-rose-600 font-bold">•</span>
+                  <span className="text-rose-600 dark:text-rose-400 font-bold">•</span>
                   <span>{b}</span>
                 </div>
                 {onRemediateBlocker && (

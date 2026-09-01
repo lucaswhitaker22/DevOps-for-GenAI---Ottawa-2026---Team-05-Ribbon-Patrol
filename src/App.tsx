@@ -92,6 +92,36 @@ export default function App() {
   const [isAudioMutedState, setIsAudioMutedState] = useState<boolean>(() => isAudioMuted());
   const [petTriggerTimestamp, setPetTriggerTimestamp] = useState<number>(0);
 
+  // Theme State: 'light' | 'dark'
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('gitpet-theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        return savedTheme;
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    }
+    return 'light';
+  });
+
+  // Sync theme with document element class and localStorage
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('gitpet-theme', theme);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   // Subscribe to audio mute changes
   useEffect(() => {
     const unsubscribe = subscribeAudioMute((muted) => {
@@ -764,7 +794,7 @@ export default function App() {
   return (
     <div
       id="gitpet-app-root"
-      className="min-h-screen bg-[#F8FAFC] text-slate-900 flex font-sans antialiased selection:bg-slate-200 selection:text-slate-900"
+      className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 flex font-sans antialiased selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 transition-colors duration-200"
     >
       {/* Collapsible Sidebar Navigation */}
       <SidebarNav
@@ -802,6 +832,8 @@ export default function App() {
           onRefreshLive={handleFetchLiveStatus}
           isAudioMuted={isAudioMutedState}
           onToggleAudio={handleToggleAudio}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
 
         {/* Main Layout Area */}
@@ -960,6 +992,8 @@ export default function App() {
         isAudioMuted={isAudioMutedState}
         onToggleAudio={handleToggleAudio}
         onPetByte={handlePetByte}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
       </div>
     </div>

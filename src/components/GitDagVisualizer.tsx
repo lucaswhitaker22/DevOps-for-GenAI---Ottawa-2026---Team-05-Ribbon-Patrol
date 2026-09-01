@@ -49,7 +49,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
   // Build DAG Graph using our pure normalizer
   const graph: DagGraph = useMemo(() => {
     return buildGitDagTopology(state, {
-      drawerWidth: 420,
+      drawerWidth: 380,
       expandedGroups,
       enableLinearCollapse: enableCollapse,
     });
@@ -152,10 +152,10 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
     <div className="space-y-3" ref={containerRef}>
       {/* Header controls & View Switcher */}
       <div className="flex items-center justify-between px-1 text-xs">
-        <div className="flex items-center gap-1.5 font-bold text-slate-700">
-          <GitBranch className="w-3.5 h-3.5 text-[#BD006E]" />
+        <div className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
+          <GitBranch className="w-3.5 h-3.5 text-[#BD006E] dark:text-pink-400" />
           <span>Interactive Commit DAG</span>
-          <span className="text-[10px] font-mono font-normal px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="text-[10px] font-mono font-normal px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             {graph.nodes.length} nodes
           </span>
         </div>
@@ -164,7 +164,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
           {graph.collapsedGroupCount > 0 && (
             <button
               onClick={() => setEnableCollapse(!enableCollapse)}
-              className="text-[10px] px-2 py-0.5 rounded-md font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 transition-colors flex items-center gap-1 cursor-pointer"
+              className="text-[10px] px-2 py-0.5 rounded-md font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
               title="Toggle linear run collapsing"
             >
               {enableCollapse ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
@@ -172,13 +172,13 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
             </button>
           )}
 
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[10px] font-semibold">
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-[10px] font-semibold">
             <button
               onClick={() => setViewMode('dag')}
               className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
                 viewMode === 'dag'
-                  ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-2xs font-bold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               DAG Graph
@@ -187,8 +187,8 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
               onClick={() => setViewMode('linear')}
               className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
                 viewMode === 'linear'
-                  ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-2xs font-bold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               Stream
@@ -206,51 +206,57 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
 
       {/* MAIN VIEW: DAG GRAPH */}
       {viewMode === 'dag' ? (
-        <div className="rounded-2xl border border-slate-200 bg-slate-950 text-slate-100 overflow-hidden shadow-inner flex flex-col">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 text-slate-100 overflow-hidden shadow-inner flex flex-col">
           {/* Lane Header Bar */}
-          <div className="grid grid-cols-2 px-4 py-2 border-b border-slate-800 bg-slate-900/90 text-[11px] font-mono tracking-tight text-slate-300">
-            <div className="flex items-center gap-1.5 truncate">
-              <span className="w-2 h-2 rounded-full bg-slate-400" />
-              <span className="font-semibold truncate">
-                {graph.lanes[0]?.name || 'main / upstream'}
-              </span>
-            </div>
-            {graph.lanes.length > 1 ? (
-              <div className="flex items-center gap-1.5 justify-end truncate">
-                <span
-                  className={`w-2 h-2 rounded-full ${
-                    state.primarySymptom === 'destructive_hazard'
-                      ? 'bg-rose-500 animate-pulse'
-                      : state.currentBranch?.isDetached
-                      ? 'bg-amber-400'
-                      : 'bg-blue-500'
-                  }`}
-                />
-                <span className="font-semibold text-blue-300 truncate">
-                  {graph.lanes[1]?.name || state.currentBranch?.name}
+          <div className="flex flex-wrap items-center justify-between px-3.5 py-2.5 border-b border-slate-800 bg-slate-900/95 text-[11px] font-mono tracking-tight text-slate-300 gap-2">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-1.5 bg-slate-800/90 px-2 py-0.5 rounded-md border border-slate-700/70">
+                <span className="w-2 h-2 rounded-full bg-slate-400" />
+                <span className="font-semibold text-slate-300">
+                  {graph.lanes[0]?.name || 'main / upstream'}
                 </span>
               </div>
-            ) : (
-              <div className="text-right text-[10px] text-emerald-400 font-semibold flex items-center justify-end gap-1">
-                <CheckCircle2 className="w-3 h-3" /> Synchronized
-              </div>
-            )}
+              {graph.lanes.length > 1 ? (
+                <div className="flex items-center gap-1.5 bg-blue-950/70 px-2 py-0.5 rounded-md border border-blue-800/70">
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      state.primarySymptom === 'destructive_hazard'
+                        ? 'bg-rose-500 animate-pulse'
+                        : state.currentBranch?.isDetached
+                        ? 'bg-amber-400'
+                        : 'bg-blue-500'
+                    }`}
+                  />
+                  <span className="font-semibold text-blue-300">
+                    {graph.lanes[1]?.name || state.currentBranch?.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" /> Synchronized
+                </div>
+              )}
+            </div>
+            <div className="text-[10px] text-slate-400 font-sans flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Click any commit to inspect</span>
+            </div>
           </div>
 
           {/* SVG Canvas Area */}
-          <div className="relative overflow-x-auto overflow-y-visible px-2 py-3 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 min-h-[220px]">
+          <div className="relative overflow-x-auto overflow-y-auto px-3 py-3 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 min-h-[160px]">
             <svg
               width="100%"
               height={graph.height}
-              viewBox={`0 0 390 ${graph.height}`}
-              className="w-full h-auto overflow-visible select-none"
+              viewBox={`0 0 380 ${graph.height}`}
+              className="w-full h-auto overflow-visible select-none max-w-full"
               role="region"
               aria-label="Git commit graph topology"
             >
               <defs>
                 {/* Glow Filter for Active / Selected Edges */}
                 <filter id="dag-glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2.5" result="blur" />
+                  <feGaussianBlur stdDeviation="2" result="blur" />
                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
 
@@ -265,8 +271,8 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                   viewBox="0 0 8 8"
                   refX="6"
                   refY="4"
-                  markerWidth="5"
-                  markerHeight="5"
+                  markerWidth="4"
+                  markerHeight="4"
                   orient="auto"
                 >
                   <path d="M 0 1 L 7 4 L 0 7 z" fill="#64748b" />
@@ -276,8 +282,8 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                   viewBox="0 0 8 8"
                   refX="6"
                   refY="4"
-                  markerWidth="5"
-                  markerHeight="5"
+                  markerWidth="4"
+                  markerHeight="4"
                   orient="auto"
                 >
                   <path d="M 0 1 L 7 4 L 0 7 z" fill="#3b82f6" />
@@ -287,8 +293,8 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                   viewBox="0 0 8 8"
                   refX="6"
                   refY="4"
-                  markerWidth="5"
-                  markerHeight="5"
+                  markerWidth="4"
+                  markerHeight="4"
                   orient="auto"
                 >
                   <path d="M 0 1 L 7 4 L 0 7 z" fill="#10b981" />
@@ -297,23 +303,23 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
 
               {/* Background Lane Guides */}
               <line
-                x1={graph.lanes[0]?.x ?? 54}
-                y1="20"
-                x2={graph.lanes[0]?.x ?? 54}
-                y2={graph.height - 20}
+                x1={graph.lanes[0]?.x ?? 45}
+                y1="10"
+                x2={graph.lanes[0]?.x ?? 45}
+                y2={graph.height - 10}
                 stroke="#334155"
-                strokeWidth="1.5"
+                strokeWidth="1.2"
                 strokeDasharray="3 3"
                 opacity="0.4"
               />
               {graph.lanes.length > 1 && (
                 <line
-                  x1={graph.lanes[1]?.x ?? 180}
-                  y1="20"
-                  x2={graph.lanes[1]?.x ?? 180}
-                  y2={graph.height - 20}
+                  x1={graph.lanes[1]?.x ?? 140}
+                  y1="10"
+                  x2={graph.lanes[1]?.x ?? 140}
+                  y2={graph.height - 10}
                   stroke="#1e3a8a"
-                  strokeWidth="1.5"
+                  strokeWidth="1.2"
                   strokeDasharray="3 3"
                   opacity="0.35"
                 />
@@ -332,7 +338,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                     : `M ${edge.fromX} ${edge.fromY} C ${edge.fromX} ${(edge.fromY + edge.toY) / 2}, ${edge.toX} ${(edge.fromY + edge.toY) / 2}, ${edge.toX} ${edge.toY}`;
 
                 let strokeColor = '#475569';
-                let strokeWidth = 2;
+                let strokeWidth = 1.5;
                 let strokeDash = undefined;
 
                 if (edge.isHazard) {
@@ -343,13 +349,13 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                   strokeDash = '4 3';
                 } else if (edge.isDivergent) {
                   strokeColor = '#60a5fa';
-                } else if (edge.fromX === 180 && edge.toX === 180) {
+                } else if (graph.lanes[1] && edge.fromX === graph.lanes[1].x && edge.toX === graph.lanes[1].x) {
                   strokeColor = '#3b82f6';
                 }
 
                 if (isSelectedEdge) {
                   strokeColor = edge.fromId === inspectedNode?.id ? '#a855f7' : '#10b981';
-                  strokeWidth = 3;
+                  strokeWidth = 2.5;
                 }
 
                 return (
@@ -377,24 +383,24 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                 // Role colors and shapes
                 let nodeFill = '#1e293b';
                 let nodeStroke = '#64748b';
-                let nodeRadius = 7;
+                let nodeRadius = 5.5;
 
                 if (node.isHead) {
                   nodeFill = '#BD006E';
                   nodeStroke = '#FF99D6';
-                  nodeRadius = 9;
+                  nodeRadius = 6.5;
                 } else if (node.isUpstreamHead) {
                   nodeFill = '#0f766e';
                   nodeStroke = '#2dd4bf';
-                  nodeRadius = 8;
+                  nodeRadius = 6;
                 } else if (node.isConflicted) {
                   nodeFill = '#CA3F3F';
                   nodeStroke = '#FFCCCC';
-                  nodeRadius = 8;
+                  nodeRadius = 6;
                 } else if (node.isDetached) {
                   nodeFill = '#FE7F0E';
                   nodeStroke = '#FFE0B3';
-                  nodeRadius = 8;
+                  nodeRadius = 6;
                 } else if (node.isLocalAhead) {
                   nodeFill = '#BD006E';
                   nodeStroke = '#FF99D6';
@@ -429,22 +435,22 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                       onMouseLeave={() => setHoveredNodeId(null)}
                     >
                       <rect
-                        x={node.x - 12}
-                        y={node.y - 12}
-                        width={24}
-                        height={24}
-                        rx={12}
+                        x={node.x - 9}
+                        y={node.y - 9}
+                        width={18}
+                        height={18}
+                        rx={9}
                         fill="#1e293b"
                         stroke="#94a3b8"
-                        strokeWidth="1.5"
+                        strokeWidth="1.2"
                         strokeDasharray="2 2"
                         className="group-hover:stroke-white transition-all"
                       />
                       <text
                         x={node.x}
-                        y={node.y + 3.5}
+                        y={node.y + 3}
                         textAnchor="middle"
-                        fontSize="9"
+                        fontSize="8"
                         fontWeight="bold"
                         fill="#cbd5e1"
                         className="pointer-events-none"
@@ -454,14 +460,14 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
 
                       {/* Label beside pill */}
                       <text
-                        x={node.x + 18}
-                        y={node.y + 4}
-                        fontSize="10"
+                        x={node.x + 14}
+                        y={node.y + 3}
+                        fontSize="8.5"
                         fontWeight="500"
                         fill="#94a3b8"
                         className="group-hover:fill-slate-200 transition-colors pointer-events-none font-mono"
                       >
-                        {node.collapsedCount} linear commits (click to expand)
+                        {node.collapsedCount} linear commits (expand)
                       </text>
                     </g>
                   );
@@ -484,11 +490,11 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={nodeRadius + 6}
+                        r={nodeRadius + 4}
                         fill="none"
                         stroke="#3b82f6"
-                        strokeWidth="1.5"
-                        opacity="0.6"
+                        strokeWidth="1.2"
+                        opacity="0.5"
                         className="animate-ping origin-center"
                       />
                     )}
@@ -498,7 +504,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={nodeRadius + 4}
+                        r={nodeRadius + 3}
                         fill="none"
                         stroke={
                           isSelected || isInspected
@@ -507,7 +513,7 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                             ? '#10b981'
                             : '#a855f7'
                         }
-                        strokeWidth="2"
+                        strokeWidth="1.5"
                         strokeDasharray={isParentOfInspected || isChildOfInspected ? '3 2' : undefined}
                       />
                     )}
@@ -519,20 +525,20 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                       r={nodeRadius}
                       fill={nodeFill}
                       stroke={nodeStroke}
-                      strokeWidth={isSelected || isInspected ? 2.5 : 1.5}
+                      strokeWidth={isSelected || isInspected ? 2 : 1.2}
                       className="group-hover:stroke-white transition-all"
                     />
 
                     {/* Inner Shape Indicator */}
                     {node.isForkPoint && (
-                      <circle cx={node.x} cy={node.y} r="2.5" fill="#f8fafc" />
+                      <circle cx={node.x} cy={node.y} r="2" fill="#f8fafc" />
                     )}
 
                     {/* Commit Hash Label */}
                     <text
-                      x={node.x + 15}
+                      x={node.x + 11}
                       y={node.y - 2}
-                      fontSize="10"
+                      fontSize="9"
                       fontWeight="bold"
                       fontFamily="monospace"
                       fill={
@@ -551,36 +557,36 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
 
                     {/* Role Tag Pill */}
                     {node.isHead && (
-                      <g transform={`translate(${node.x + 68}, ${node.y - 10})`}>
-                        <rect x="0" y="0" width="38" height="13" rx="3" fill="#BD006E" />
-                        <text x="19" y="9.5" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
+                      <g transform={`translate(${node.x + 52}, ${node.y - 9})`}>
+                        <rect x="0" y="0" width="32" height="11" rx="2.5" fill="#BD006E" />
+                        <text x="16" y="8" textAnchor="middle" fontSize="7.5" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
                           HEAD
                         </text>
                       </g>
                     )}
 
                     {node.isUpstreamHead && !node.isHead && (
-                      <g transform={`translate(${node.x + 68}, ${node.y - 10})`}>
-                        <rect x="0" y="0" width="44" height="13" rx="3" fill="#0f766e" />
-                        <text x="22" y="9.5" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#5eead4" fontFamily="monospace">
+                      <g transform={`translate(${node.x + 52}, ${node.y - 9})`}>
+                        <rect x="0" y="0" width="44" height="11" rx="2.5" fill="#0f766e" />
+                        <text x="22" y="8" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#5eead4" fontFamily="monospace">
                           UPSTREAM
                         </text>
                       </g>
                     )}
 
                     {node.isConflicted && (
-                      <g transform={`translate(${node.x + 68}, ${node.y - 10})`}>
-                        <rect x="0" y="0" width="56" height="13" rx="3" fill="#e11d48" />
-                        <text x="28" y="9.5" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
+                      <g transform={`translate(${node.x + 52}, ${node.y - 9})`}>
+                        <rect x="0" y="0" width="46" height="11" rx="2.5" fill="#e11d48" />
+                        <text x="23" y="8" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
                           CONFLICT
                         </text>
                       </g>
                     )}
 
                     {node.isDetached && (
-                      <g transform={`translate(${node.x + 68}, ${node.y - 10})`}>
-                        <rect x="0" y="0" width="52" height="13" rx="3" fill="#d97706" />
-                        <text x="26" y="9.5" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
+                      <g transform={`translate(${node.x + 52}, ${node.y - 9})`}>
+                        <rect x="0" y="0" width="46" height="11" rx="2.5" fill="#d97706" />
+                        <text x="23" y="8" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#ffffff" fontFamily="monospace">
                           DETACHED
                         </text>
                       </g>
@@ -588,16 +594,16 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
 
                     {/* Commit Message Snippet */}
                     {(() => {
-                      const maxChars = node.laneIndex === 0 && graph.lanes.length > 1 ? 16 : 30;
+                      const maxChars = node.laneIndex === 0 && graph.lanes.length > 1 ? 22 : 36;
                       const displayMsg =
                         node.message.length > maxChars
                           ? node.message.slice(0, maxChars - 1) + '…'
                           : node.message;
                       return (
                         <text
-                          x={node.x + 14}
-                          y={node.y + 11}
-                          fontSize="9.5"
+                          x={node.x + 11}
+                          y={node.y + 8}
+                          fontSize="8.5"
                           fill={isInspected ? '#f1f5f9' : '#94a3b8'}
                           className="pointer-events-none"
                         >
@@ -622,13 +628,13 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                 onClick={() => handleSelectNode(node)}
                 className={`w-full text-left p-2.5 rounded-xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-blue-50 border-blue-300 shadow-2xs'
-                    : 'bg-white border-slate-200 hover:bg-slate-50'
+                    ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-300 dark:border-blue-700 shadow-2xs'
+                    : 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
               >
                 <div className="flex items-center justify-between text-xs mb-1">
                   <div className="flex items-center gap-1.5 font-mono font-bold">
-                    <span className="text-slate-900">{node.shortHash}</span>
+                    <span className="text-slate-900 dark:text-slate-100">{node.shortHash}</span>
                     {node.isHead && (
                       <span className="text-[9px] px-1.5 py-0.2 rounded bg-blue-600 text-white font-bold">
                         HEAD
@@ -642,8 +648,8 @@ export const GitDagVisualizer: React.FC<GitDagVisualizerProps> = ({
                   </div>
                   <span className="text-[10px] text-slate-400">{node.timestamp}</span>
                 </div>
-                <p className="text-xs font-semibold text-slate-800 line-clamp-1">{node.message}</p>
-                <div className="flex items-center justify-between mt-1 text-[10px] text-slate-500">
+                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 line-clamp-1">{node.message}</p>
+                <div className="flex items-center justify-between mt-1 text-[10px] text-slate-500 dark:text-slate-400">
                   <span>{node.author.split('<')[0]}</span>
                   <span className="font-mono text-slate-400">{node.laneName}</span>
                 </div>

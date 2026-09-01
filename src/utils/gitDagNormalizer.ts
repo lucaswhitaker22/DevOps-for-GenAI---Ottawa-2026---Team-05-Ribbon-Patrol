@@ -33,7 +33,7 @@ export function buildGitDagTopology(
       edges: [],
       lanes: [],
       width: drawerWidth,
-      height: 180,
+      height: 120,
       hasIncompleteHistory: true,
       incompleteHistoryReason: state.repositoryUnavailable
         ? 'Workspace is not an active Git repository'
@@ -65,8 +65,8 @@ export function buildGitDagTopology(
     : currentBranchName;
 
   const lanes: DagLane[] = [];
-  const lane0X = 54;
-  const lane1X = Math.min(drawerWidth - 64, 180);
+  const lane0X = 45;
+  const lane1X = Math.min(drawerWidth - 48, 140);
 
   // If completely healthy/synced on a single branch, we can render 1 lane cleanly
   const useSingleLane = isHealthy && !hasAhead && !hasBehind && !isDetached;
@@ -79,7 +79,7 @@ export function buildGitDagTopology(
       color: '#10b981', // emerald
       isCurrent: true,
       isUpstream: true,
-      x: 64,
+      x: 52,
     });
   } else {
     lanes.push({
@@ -171,8 +171,8 @@ export function buildGitDagTopology(
   const isStaleScenario = state.primarySymptom === 'stale_branch';
 
   // Build nodes in topological/chronological order (from root ancestor at top to HEAD at bottom)
-  let yCounter = 60;
-  const Y_SPACING = 56;
+  let yCounter = 34;
+  const Y_SPACING = 42;
 
   // Let's structure nodes deterministically based on relationships
   if (useSingleLane) {
@@ -577,7 +577,7 @@ export function buildGitDagTopology(
 
   if (enableLinearCollapse && rawDagNodes.length >= 5) {
     const processed = new Set<string>();
-    let currentY = 60;
+    let currentY = 34;
 
     for (let i = 0; i < rawDagNodes.length; i++) {
       const node = rawDagNodes[i];
@@ -706,8 +706,8 @@ export function buildGitDagTopology(
   });
 
   // Calculate total height
-  const maxY = finalNodes.reduce((max, n) => Math.max(max, n.y), 60);
-  const totalHeight = Math.max(220, maxY + 70);
+  const maxY = finalNodes.reduce((max, n) => Math.max(max, n.y), 34);
+  const totalHeight = Math.max(160, maxY + 54);
 
   const headNode = finalNodes.find((n) => n.isHead);
   const upstreamNode = finalNodes.find((n) => n.isUpstreamHead);

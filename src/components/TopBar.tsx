@@ -16,6 +16,8 @@ import {
   ShieldCheck,
   ArrowUp,
   ArrowDown,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { RepositoryState, LiveScanState, ActivePageId } from '../types';
 
@@ -31,6 +33,8 @@ interface TopBarProps {
   onRefreshLive?: () => void;
   isAudioMuted?: boolean;
   onToggleAudio?: () => void;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -43,6 +47,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   isLiveMode = false,
   isAudioMuted = false,
   onToggleAudio,
+  theme = 'light',
+  onToggleTheme,
 }) => {
   const [showBranchMenu, setShowBranchMenu] = useState(false);
 
@@ -202,6 +208,22 @@ export const TopBar: React.FC<TopBarProps> = ({
               title={isAudioMuted ? 'Unmute Audio' : 'Mute Audio'}
             >
               {isAudioMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
+            </button>
+          )}
+
+          {/* Dark / Light Mode Toggle */}
+          {onToggleTheme && (
+            <button
+              id="topbar-theme-toggle-btn"
+              onClick={onToggleTheme}
+              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors cursor-pointer"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-amber-300" />
+              ) : (
+                <Moon className="w-4 h-4 text-indigo-300" />
+              )}
             </button>
           )}
         </div>

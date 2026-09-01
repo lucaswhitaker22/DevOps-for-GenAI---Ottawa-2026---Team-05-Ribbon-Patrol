@@ -24,23 +24,23 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, isU
   let codeBlockCounter = 0;
 
   return (
-    <div className={`prose prose-xs max-w-none break-words leading-relaxed ${isUser ? 'text-slate-100' : 'text-slate-800'}`}>
+    <div className={`prose prose-xs max-w-none break-words leading-relaxed ${isUser ? 'text-slate-100' : 'text-slate-800 dark:text-slate-200'}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
           h1: ({ children }) => (
-            <h1 className={`text-sm font-bold mt-3 mb-1.5 pb-1 border-b ${isUser ? 'text-white border-slate-700' : 'text-slate-900 border-slate-200'}`}>
+            <h1 className={`text-sm font-bold mt-3 mb-1.5 pb-1 border-b ${isUser ? 'text-white border-slate-700' : 'text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700'}`}>
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className={`text-xs font-bold mt-2.5 mb-1 ${isUser ? 'text-white' : 'text-slate-900'}`}>
+            <h2 className={`text-xs font-bold mt-2.5 mb-1 ${isUser ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}>
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className={`text-xs font-semibold mt-2 mb-1 ${isUser ? 'text-slate-200' : 'text-slate-800'}`}>
+            <h3 className={`text-xs font-semibold mt-2 mb-1 ${isUser ? 'text-slate-200' : 'text-slate-800 dark:text-slate-200'}`}>
               {children}
             </h3>
           ),
@@ -50,7 +50,9 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, isU
           blockquote: ({ children }) => (
             <blockquote
               className={`border-l-2 pl-3 py-0.5 my-2 italic text-xs ${
-                isUser ? 'border-slate-500 text-slate-300 bg-slate-800/40' : 'border-blue-500 text-slate-600 bg-blue-50/40'
+                isUser
+                  ? 'border-slate-500 text-slate-300 bg-slate-800/40'
+                  : 'border-blue-500 text-slate-600 dark:text-slate-300 bg-blue-50/40 dark:bg-blue-950/30'
               } rounded-r-md`}
             >
               {children}
@@ -61,25 +63,25 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, isU
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`underline underline-offset-2 font-medium ${isUser ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-800'}`}
+              className={`underline underline-offset-2 font-medium ${isUser ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300'}`}
             >
               {children}
             </a>
           ),
           table: ({ children }) => (
-            <div className="overflow-x-auto my-2 rounded-lg border border-slate-200/80">
-              <table className="min-w-full divide-y divide-slate-200 text-[11px] text-left">
+            <div className="overflow-x-auto my-2 rounded-lg border border-slate-200/80 dark:border-slate-700">
+              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-[11px] text-left">
                 {children}
               </table>
             </div>
           ),
           thead: ({ children }) => (
-            <thead className={isUser ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-700 font-semibold'}>
+            <thead className={isUser ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold'}>
               {children}
             </thead>
           ),
           tbody: ({ children }) => (
-            <tbody className="divide-y divide-slate-200/60">{children}</tbody>
+            <tbody className="divide-y divide-slate-200/60 dark:divide-slate-700/60">{children}</tbody>
           ),
           tr: ({ children }) => <tr>{children}</tr>,
           th: ({ children }) => <th className="px-2.5 py-1.5 font-bold">{children}</th>,
@@ -96,7 +98,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, isU
                   className={`px-1.5 py-0.5 rounded font-mono text-[11px] font-medium ${
                     isUser
                       ? 'bg-slate-800 text-amber-300 border border-slate-700'
-                      : 'bg-slate-200/70 text-slate-900 border border-slate-300/60'
+                      : 'bg-slate-200/70 dark:bg-slate-800 text-slate-900 dark:text-amber-300 border border-slate-300/60 dark:border-slate-700'
                   }`}
                   {...props}
                 >

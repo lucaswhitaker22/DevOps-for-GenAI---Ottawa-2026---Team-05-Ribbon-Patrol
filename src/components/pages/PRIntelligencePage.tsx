@@ -100,12 +100,12 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
+      <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start sm:items-center gap-3.5">
             <button
               onClick={() => onNavigate('companion')}
-              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
               title="Return to Companion"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -115,23 +115,23 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                <h1 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
                   PR #{pr.number}: {pr.title}
                 </h1>
                 <span
                   className={`text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold capitalize ${
                     pr.reviewStatus === 'approved'
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700'
                       : pr.reviewStatus === 'changes_requested'
-                      ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                      : 'bg-amber-100 text-amber-800 border border-amber-300'
+                      ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700'
+                      : 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700'
                   }`}
                 >
                   {pr.reviewStatus.replace('_', ' ')}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-mono mt-0.5">
-                Opened by <span className="font-bold text-slate-800">{pr.author}</span> • {pr.branch} → {pr.baseBranch} • In review for {pr.waitingDays} days
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
+                Opened by <span className="font-bold text-slate-800 dark:text-slate-200">{pr.author}</span> • {pr.branch} → {pr.baseBranch} • In review for {pr.waitingDays} days
               </p>
             </div>
           </div>
@@ -141,9 +141,9 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
             {onExecutePRAction && (
               <button
                 onClick={() => onExecutePRAction('changelog')}
-                className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 shadow-2xs transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-2xl bg-purple-50 dark:bg-purple-950/60 hover:bg-purple-100 dark:hover:bg-purple-900/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 shadow-2xs transition-colors cursor-pointer"
               >
-                <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span>Generate PR Changelog</span>
               </button>
             )}
@@ -151,7 +151,7 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
             <button
               onClick={handleSquashAndMerge}
               disabled={merged}
-              className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-2xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white shadow-xs transition-all cursor-pointer"
             >
               <GitMerge className="w-3.5 h-3.5 text-emerald-400" />
               <span>{merged ? 'Merged into main 🎉' : 'Squash & Merge'}</span>
@@ -160,24 +160,24 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
         </div>
 
         {/* Review Approval Progress Meter */}
-        <div className="mt-6 pt-5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-            <span className="text-slate-500 block text-[11px]">Approvals</span>
-            <span className="text-sm font-bold text-slate-900 mt-1 block">
+        <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Approvals</span>
+            <span className="text-sm font-bold text-slate-900 dark:text-slate-100 mt-1 block">
               {pr.approvalsCount} approved ({pr.requestedChangesCount} changes requested)
             </span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-            <span className="text-slate-500 block text-[11px]">Review Turnaround</span>
-            <span className="text-sm font-bold text-amber-600 mt-1 block">
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Review Turnaround</span>
+            <span className="text-sm font-bold text-amber-600 dark:text-amber-400 mt-1 block">
               {pr.waitingDays} days waiting
             </span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-            <span className="text-slate-500 block text-[11px]">Merge Conflict State</span>
-            <span className="text-sm font-bold text-emerald-600 mt-1 block capitalize">
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Merge Conflict State</span>
+            <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-1 block capitalize">
               {pr.mergeability} status
             </span>
           </div>
@@ -185,14 +185,14 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
       </div>
 
       {/* Review Comments & Inline Response Deck */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-purple-600" />
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               Inline Review Comments & Threads ({pr.comments.length})
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Reviewer feedback requiring resolution before merge gate approval.
             </p>
           </div>
@@ -202,28 +202,28 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
           {pr.comments.map((c) => (
             <div
               key={c.id}
-              className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 space-y-3"
+              className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 space-y-3"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-purple-900">@{c.author}</span>
+                  <span className="text-xs font-bold text-purple-900 dark:text-purple-300">@{c.author}</span>
                   <span className="text-[11px] font-mono text-slate-400">
                     on {c.filePath}:{c.line}
                   </span>
                 </div>
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${c.resolved ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${c.resolved ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300'}`}>
                   {c.resolved ? 'Resolved' : 'Open'}
                 </span>
               </div>
 
-              <p className="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200/60 leading-relaxed font-mono">
+              <p className="text-xs text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700 leading-relaxed font-mono">
                 {c.commentText}
               </p>
 
               <div className="flex items-center justify-between pt-1">
                 <button
                   onClick={() => handleDraftAIReply(c.commentText)}
-                  className="text-xs font-semibold text-purple-700 hover:text-purple-900 flex items-center gap-1.5 cursor-pointer"
+                  className="text-xs font-semibold text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-200 flex items-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-purple-500" />
                   <span>Draft AI Resolution Response</span>
@@ -236,13 +236,13 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
           {replies.map((r) => (
             <div
               key={r.id}
-              className="p-3.5 rounded-2xl bg-purple-50/60 border border-purple-200 text-xs space-y-1 ml-6 animate-in fade-in"
+              className="p-3.5 rounded-2xl bg-purple-50/60 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-xs space-y-1 ml-6 animate-in fade-in"
             >
-              <div className="flex items-center justify-between font-mono text-[11px] text-purple-900 font-bold">
+              <div className="flex items-center justify-between font-mono text-[11px] text-purple-900 dark:text-purple-300 font-bold">
                 <span>{r.author}</span>
                 <span className="text-slate-400 font-normal">{r.timestamp}</span>
               </div>
-              <p className="text-slate-700 leading-relaxed">{r.text}</p>
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{r.text}</p>
             </div>
           ))}
 
@@ -253,7 +253,7 @@ export const PRIntelligencePage: React.FC<PRIntelligencePageProps> = ({
               placeholder="Post a reply or resolution comment to reviewers..."
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
-              className="flex-1 px-4 py-2.5 text-xs rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+              className="flex-1 px-4 py-2.5 text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
             />
             <button
               type="submit"

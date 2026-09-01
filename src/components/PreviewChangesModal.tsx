@@ -46,28 +46,28 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-2xs">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]"
+          className="relative w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]"
           role="dialog"
           aria-modal="true"
           aria-labelledby="preview-changes-title"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/80 shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 shrink-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold">
-                <ShieldCheck className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-lg bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center font-bold">
+                <ShieldCheck className="w-4 h-4 text-indigo-400" />
               </div>
               <div>
-                <h3 id="preview-changes-title" className="text-sm font-bold text-slate-900">
+                <h3 id="preview-changes-title" className="text-sm font-bold text-slate-900 dark:text-slate-100">
                   Pre-Action Impact & Diff Preview
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Inspect syntax-colored bounded changes before giving human approval
                 </p>
               </div>
@@ -75,7 +75,7 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Close preview modal"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -87,22 +87,22 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
             {(state.healthLevel === 'Unsafe' ||
               action.riskLevel === 'Hazard' ||
               state.destructiveRiskWarning) && (
-              <div className="p-4 rounded-xl bg-rose-50 border-2 border-rose-300 flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-rose-600 mt-0.5 shrink-0 animate-pulse" />
+              <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border-2 border-rose-300 dark:border-rose-800 flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 mt-0.5 shrink-0 animate-pulse" />
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-xs font-bold text-rose-950 uppercase tracking-wide">
+                    <h4 className="text-xs font-bold text-rose-950 dark:text-rose-200 uppercase tracking-wide">
                       Destructive Work-Loss Warning
                     </h4>
                     <span className="px-1.5 py-0.2 bg-rose-600 text-white rounded text-[10px] font-bold">
                       UNSAFE 0%
                     </span>
                   </div>
-                  <p className="text-xs text-rose-900 leading-relaxed font-medium">
+                  <p className="text-xs text-rose-900 dark:text-rose-300 leading-relaxed font-medium">
                     {state.destructiveRiskWarning ||
                       'Immediate work-loss risk: In-flight local modifications will be permanently destroyed if an automatic pull, merge, or hard reset is executed without safety isolation.'}
                   </p>
-                  <p className="text-[11px] text-rose-800">
+                  <p className="text-[11px] text-rose-800 dark:text-rose-400">
                     <strong>Recovery Guarantee:</strong> This action first snapshots your active files into a protected stash before performing any upstream reconciliation.
                   </p>
                 </div>
@@ -113,31 +113,31 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
             <div
               className={`p-3.5 rounded-xl border flex items-start gap-3 ${
                 state.healthLevel === 'Unsafe'
-                  ? 'bg-amber-50/80 border-amber-200'
-                  : 'bg-slate-50 border-slate-200/80'
+                  ? 'bg-amber-50/80 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800'
+                  : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200/80 dark:border-slate-700'
               }`}
             >
               <CheckCircle2
                 className={`w-4 h-4 mt-0.5 shrink-0 ${
-                  state.healthLevel === 'Unsafe' ? 'text-amber-700' : 'text-slate-800'
+                  state.healthLevel === 'Unsafe' ? 'text-amber-700 dark:text-amber-400' : 'text-slate-800 dark:text-slate-200'
                 }`}
               />
               <div className="min-w-0 flex-1">
                 <h4
                   className={`text-xs font-bold ${
-                    state.healthLevel === 'Unsafe' ? 'text-amber-950' : 'text-slate-900'
+                    state.healthLevel === 'Unsafe' ? 'text-amber-950 dark:text-amber-200' : 'text-slate-900 dark:text-slate-100'
                   }`}
                 >
                   {action.title}
                 </h4>
                 <p
                   className={`text-xs mt-0.5 ${
-                    state.healthLevel === 'Unsafe' ? 'text-amber-900/90' : 'text-slate-600'
+                    state.healthLevel === 'Unsafe' ? 'text-amber-900/90 dark:text-amber-300' : 'text-slate-600 dark:text-slate-300'
                   }`}
                 >
                   {action.summary}
                 </p>
-                <div className="mt-2 font-mono text-[11px] bg-white text-slate-900 px-2.5 py-1 rounded border border-slate-200 inline-block select-all max-w-full overflow-x-auto">
+                <div className="mt-2 font-mono text-[11px] bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-800 inline-block select-all max-w-full overflow-x-auto">
                   {action.command}
                 </div>
               </div>
@@ -145,16 +145,16 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
 
             {/* Branch Movement Visualizer */}
             <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+              <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                 <GitCommit className="w-3.5 h-3.5 text-slate-400" />
                 <span>Branch Pointer Trajectory</span>
               </h4>
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                   <div>
-                    <div className="font-semibold text-slate-800">Current HEAD</div>
-                    <div className="font-mono text-[11px] text-slate-500">
+                    <div className="font-semibold text-slate-800 dark:text-slate-200">Current HEAD</div>
+                    <div className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
                       {state.currentBranch.lastCommitHash} ({state.currentBranch.name})
                     </div>
                   </div>
@@ -163,8 +163,8 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   <div>
-                    <div className="font-semibold text-slate-800">Target Synchronized HEAD</div>
-                    <div className="font-mono text-[11px] text-slate-500">
+                    <div className="font-semibold text-slate-800 dark:text-slate-200">Target Synchronized HEAD</div>
+                    <div className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
                       {state.remoteCommitsBehind.length > 0
                         ? state.remoteCommitsBehind[0].shortHash
                         : state.currentBranch.lastCommitHash}{' '}
@@ -178,18 +178,18 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
             {/* 🔍 Syntax-Colored Affected Files & Diffs */}
             <div>
               <div className="flex items-center justify-between mb-2.5">
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-slate-400" />
                   <span>
                     Affected Files & Syntax-Colored Diffs ({state.workingTree.length})
                   </span>
                 </h4>
                 {state.workingTree.length > 1 && (
-                  <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[10px] font-semibold text-slate-600">
+                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[10px] font-semibold text-slate-600 dark:text-slate-300">
                     <button
                       onClick={() => setViewMode('tabs')}
                       className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
-                        viewMode === 'tabs' ? 'bg-white text-slate-900 shadow-2xs font-bold' : 'hover:text-slate-900'
+                        viewMode === 'tabs' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-2xs font-bold' : 'hover:text-slate-900 dark:hover:text-slate-100'
                       }`}
                     >
                       Tabbed View
@@ -197,7 +197,7 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
                     <button
                       onClick={() => setViewMode('all')}
                       className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
-                        viewMode === 'all' ? 'bg-white text-slate-900 shadow-2xs font-bold' : 'hover:text-slate-900'
+                        viewMode === 'all' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-2xs font-bold' : 'hover:text-slate-900 dark:hover:text-slate-100'
                       }`}
                     >
                       All Files Stack
@@ -207,7 +207,7 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
               </div>
 
               {state.workingTree.length === 0 ? (
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-xs flex items-center gap-2">
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                   <span>No uncommitted working tree file diffs for this metadata/branch operation.</span>
                 </div>
@@ -225,22 +225,22 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
                           onClick={() => setSelectedFilePath(file.path)}
                           className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2 transition-all cursor-pointer border ${
                             isSelected
-                              ? 'bg-slate-900 text-white border-slate-900 shadow-xs font-bold'
+                              ? 'bg-slate-900 dark:bg-slate-800 text-white border-slate-900 dark:border-slate-700 shadow-xs font-bold'
                               : isConflicted
-                              ? 'bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100'
-                              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800 hover:bg-rose-100 dark:hover:bg-rose-900/60'
+                              : 'bg-white dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
                           }`}
                         >
                           <FileCode className="w-3.5 h-3.5 opacity-80" />
                           <span className="font-mono text-[11px]">{file.path.split('/').pop()}</span>
                           <div className="flex items-center gap-1 font-mono text-[10px]">
                             {file.additions > 0 && (
-                              <span className={isSelected ? 'text-emerald-300 font-bold' : 'text-emerald-600 font-bold'}>
+                              <span className={isSelected ? 'text-emerald-300 font-bold' : 'text-emerald-600 dark:text-emerald-400 font-bold'}>
                                 +{file.additions}
                               </span>
                             )}
                             {file.deletions > 0 && (
-                              <span className={isSelected ? 'text-rose-300 font-bold' : 'text-rose-600 font-bold'}>
+                              <span className={isSelected ? 'text-rose-300 font-bold' : 'text-rose-600 dark:text-rose-400 font-bold'}>
                                 -{file.deletions}
                               </span>
                             )}
@@ -289,22 +289,22 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
 
             {/* Step-by-Step Sequence */}
             <div>
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
+              <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
                 Atomic Execution Plan
               </h4>
               <div className="space-y-2">
                 {action.steps.map((step, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-start gap-2.5"
+                    className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 flex items-start gap-2.5"
                   >
-                    <div className="w-5 h-5 rounded-full bg-slate-200 text-slate-800 font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5 font-mono">
+                    <div className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5 font-mono">
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs font-semibold text-slate-800">{step.label}</div>
-                      <div className="text-[11px] text-slate-500 mt-0.5">{step.details}</div>
-                      <div className="mt-1 font-mono text-[10px] bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200 inline-block">
+                      <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">{step.label}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{step.details}</div>
+                      <div className="mt-1 font-mono text-[10px] bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800 inline-block">
                         {step.command}
                       </div>
                     </div>
@@ -314,14 +314,14 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
             </div>
 
             {/* Reversible Guarantee */}
-            <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-start gap-2.5">
-              <RotateCcw className="w-4 h-4 text-amber-700 mt-0.5 shrink-0" />
+            <div className="p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 flex items-start gap-2.5">
+              <RotateCcw className="w-4 h-4 text-amber-700 dark:text-amber-400 mt-0.5 shrink-0" />
               <div>
-                <h5 className="text-xs font-bold text-amber-900">Reversal Guarantee</h5>
-                <p className="text-xs text-amber-800/90 mt-0.5">
+                <h5 className="text-xs font-bold text-amber-900 dark:text-amber-200">Reversal Guarantee</h5>
+                <p className="text-xs text-amber-800/90 dark:text-amber-300 mt-0.5">
                   If needed, this operation can be completely rolled back using:
                 </p>
-                <div className="mt-1 font-mono text-[11px] bg-white text-amber-950 px-2 py-0.5 rounded border border-amber-200 inline-block font-semibold">
+                <div className="mt-1 font-mono text-[11px] bg-white dark:bg-slate-950 text-amber-950 dark:text-amber-300 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800 inline-block font-semibold">
                   {action.reversalStep}
                 </div>
               </div>
@@ -329,10 +329,10 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-between px-6 py-3.5 border-t border-slate-100 bg-slate-50/80 shrink-0">
+          <div className="flex items-center justify-between px-6 py-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 shrink-0">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-200/60 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -345,7 +345,7 @@ export const PreviewChangesModal: React.FC<PreviewChangesModalProps> = ({
               className={`px-5 py-2.5 rounded-xl text-xs font-bold text-white shadow-sm flex items-center gap-2 transition-all cursor-pointer ${
                 state.healthLevel === 'Unsafe'
                   ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-500/20'
-                  : 'bg-slate-900 hover:bg-slate-800 shadow-slate-900/10'
+                  : 'bg-slate-900 dark:bg-indigo-600 hover:bg-slate-800 dark:hover:bg-indigo-700 shadow-slate-900/10'
               }`}
             >
               <CheckCircle2 className="w-4 h-4" />

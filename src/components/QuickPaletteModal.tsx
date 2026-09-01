@@ -23,6 +23,8 @@ import {
   FolderGit2,
   Zap,
   ShieldCheck,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { ScenarioPreset, ActivePageId } from '../types';
 
@@ -62,6 +64,8 @@ interface QuickPaletteModalProps {
   isAudioMuted: boolean;
   onToggleAudio: () => void;
   onPetByte: () => void;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
 }
 
 export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
@@ -87,6 +91,8 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
   isAudioMuted,
   onToggleAudio,
   onPetByte,
+  theme = 'light',
+  onToggleTheme,
 }) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -364,6 +370,22 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
       onSelect: onToggleAudio,
     });
 
+    if (onToggleTheme) {
+      actions.push({
+        id: 'theme_toggle',
+        title: theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+        description: theme === 'dark'
+          ? 'Switch to clean, bright daylight workspace theme'
+          : 'Switch to high-contrast dark mode for low-light focus',
+        category: 'Audio & Petting',
+        icon: theme === 'dark' ? Sun : Moon,
+        badge: theme === 'dark' ? 'Dark' : 'Light',
+        badgeColor: theme === 'dark' ? 'bg-amber-950/40 text-amber-300 border-amber-700/50' : 'bg-indigo-50 text-indigo-700 border-indigo-200',
+        keywords: ['dark', 'light', 'theme', 'mode', 'color', 'night', 'sun', 'moon', 'toggle'],
+        onSelect: onToggleTheme,
+      });
+    }
+
     actions.push({
       id: 'pet_mascot',
       title: 'Pet Byte Mascot',
@@ -457,13 +479,13 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -10 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
-          className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[80vh]"
+          className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[80vh]"
           role="dialog"
           aria-modal="true"
           aria-label="Quick Command Palette"
         >
           {/* Search Header */}
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100 bg-slate-50/50">
+          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/90">
             <Search className="w-5 h-5 text-slate-400 shrink-0" />
             <input
               ref={inputRef}
@@ -476,7 +498,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
               }}
               onKeyDown={handleKeyDown}
               placeholder="Type a command or search actions (e.g., conflict, drawer, live workspace)..."
-              className="flex-1 bg-transparent text-sm sm:text-base text-slate-900 placeholder-slate-400 outline-none font-medium"
+              className="flex-1 bg-transparent text-sm sm:text-base text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none font-medium"
               autoComplete="off"
               spellCheck="false"
             />
@@ -486,12 +508,12 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
                   setQuery('');
                   inputRef.current?.focus();
                 }}
-                className="text-xs text-slate-400 hover:text-slate-600 px-1.5 py-0.5 rounded-md hover:bg-slate-200/60"
+                className="text-xs text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-1.5 py-0.5 rounded-md hover:bg-slate-200/60 dark:hover:bg-slate-800"
               >
                 Clear
               </button>
             )}
-            <kbd className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-white text-slate-500 border border-slate-200 shadow-2xs">
+            <kbd className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shadow-2xs">
               ESC
             </kbd>
           </div>
@@ -499,13 +521,13 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
           {/* Action List */}
           <div
             ref={listRef}
-            className="flex-1 overflow-y-auto p-2 divide-y divide-slate-100/60"
+            className="flex-1 overflow-y-auto p-2 divide-y divide-slate-100/60 dark:divide-slate-800/60"
             style={{ maxHeight: 'calc(80vh - 110px)' }}
           >
             {filteredActions.length === 0 ? (
               <div className="py-12 text-center text-slate-400">
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-40 text-slate-400" />
-                <p className="text-sm font-medium text-slate-600">No actions matching "{query}"</p>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-300">No actions matching "{query}"</p>
                 <p className="text-xs text-slate-400 mt-1">
                   Try searching for "conflict", "drawer", "live workspace", or "clean"
                 </p>
@@ -522,8 +544,8 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
                       onMouseEnter={() => setSelectedIndex(idx)}
                       className={`w-full text-left px-3.5 py-2.5 rounded-xl flex items-center justify-between gap-3 transition-colors cursor-pointer ${
                         isSelected
-                          ? 'bg-indigo-50/80 text-indigo-950 ring-1 ring-indigo-300/70 shadow-2xs'
-                          : 'hover:bg-slate-50 text-slate-800'
+                          ? 'bg-indigo-50/80 dark:bg-indigo-950/60 text-indigo-950 dark:text-indigo-200 ring-1 ring-indigo-300/70 dark:ring-indigo-700/60 shadow-2xs'
+                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-800 dark:text-slate-200'
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
@@ -531,7 +553,7 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
                           className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
                             isSelected
                               ? 'bg-indigo-600 text-white border-indigo-700 shadow-2xs'
-                              : 'bg-slate-100 text-slate-600 border-slate-200/80'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-700'
                           }`}
                         >
                           <Icon className="w-4 h-4" />
@@ -544,14 +566,14 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
                             {action.badge && (
                               <span
                                 className={`text-[10px] font-bold px-1.5 py-0.2 rounded border leading-none ${
-                                  action.badgeColor || 'bg-slate-100 text-slate-600 border-slate-200'
+                                  action.badgeColor || 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                                 }`}
                               >
                                 {action.badge}
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-slate-500 truncate mt-0.5 leading-tight">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5 leading-tight">
                             {action.description}
                           </p>
                         </div>
@@ -559,11 +581,11 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
 
                       <div className="flex items-center gap-2 shrink-0">
                         {action.shortcut && (
-                          <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-slate-600 border border-slate-200 shadow-2xs">
+                          <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-2xs">
                             {action.shortcut}
                           </kbd>
                         )}
-                        {isSelected && <ArrowRight className="w-3.5 h-3.5 text-indigo-600" />}
+                        {isSelected && <ArrowRight className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
                       </div>
                     </button>
                   );
@@ -573,25 +595,25 @@ export const QuickPaletteModal: React.FC<QuickPaletteModalProps> = ({
           </div>
 
           {/* Footer Shortcuts Hint */}
-          <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-400">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.2 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-600">
+                <kbd className="px-1.5 py-0.2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-[10px] font-mono text-slate-600 dark:text-slate-300">
                   ↑
                 </kbd>
-                <kbd className="px-1.5 py-0.2 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-600">
+                <kbd className="px-1.5 py-0.2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-[10px] font-mono text-slate-600 dark:text-slate-300">
                   ↓
                 </kbd>
                 <span>to navigate</span>
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.2 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-600">
+                <kbd className="px-1.5 py-0.2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-[10px] font-mono text-slate-600 dark:text-slate-300">
                   ↵
                 </kbd>
                 <span>to select</span>
               </span>
               <span className="hidden sm:flex items-center gap-1">
-                <kbd className="px-1.5 py-0.2 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-600">
+                <kbd className="px-1.5 py-0.2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-[10px] font-mono text-slate-600 dark:text-slate-300">
                   ESC
                 </kbd>
                 <span>to close</span>

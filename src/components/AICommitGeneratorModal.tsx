@@ -173,7 +173,7 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh] z-10"
+            className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[85vh] z-10 text-slate-900 dark:text-slate-100"
           >
             {/* Modal Header */}
             <div className="p-5 bg-slate-900 text-white border-b border-slate-800 flex items-center justify-between">
@@ -196,20 +196,20 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
 
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Segment Tabs */}
-            <div className="flex items-center border-b border-slate-200 bg-slate-50 px-5 pt-2 gap-2 text-xs font-semibold">
+            <div className="flex items-center border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 px-5 pt-2 gap-2 text-xs font-semibold">
               <button
                 onClick={() => setActiveTab('commit')}
                 className={`pb-2.5 px-3 border-b-2 transition-colors flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'commit'
-                    ? 'border-purple-600 text-purple-700 font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-purple-600 text-purple-700 dark:text-purple-300 font-bold'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 <GitCommit className="w-3.5 h-3.5" />
@@ -220,8 +220,8 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                 onClick={() => setActiveTab('changelog')}
                 className={`pb-2.5 px-3 border-b-2 transition-colors flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'changelog'
-                    ? 'border-purple-600 text-purple-700 font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-purple-600 text-purple-700 dark:text-purple-300 font-bold'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 <ListChecks className="w-3.5 h-3.5" />
@@ -232,8 +232,8 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                 onClick={() => setActiveTab('release')}
                 className={`pb-2.5 px-3 border-b-2 transition-colors flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'release'
-                    ? 'border-purple-600 text-purple-700 font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-purple-600 text-purple-700 dark:text-purple-300 font-bold'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 <Tag className="w-3.5 h-3.5" />
@@ -246,9 +246,9 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
               {activeTab === 'commit' && (
                 <div className="space-y-5">
                   {/* Scope & Type Controls */}
-                  <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-xl space-y-3">
+                  <div className="p-4 bg-slate-50 dark:bg-slate-800/70 border border-slate-200/90 dark:border-slate-700 rounded-xl space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
                         Commit Generator Controls
                       </span>
                       <button
@@ -263,13 +263,13 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                        <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                           Commit Type
                         </label>
                         <select
                           value={selectedType}
                           onChange={(e) => setSelectedType(e.target.value as ConventionalCommitType)}
-                          className="w-full font-mono text-xs rounded-lg border border-slate-300 bg-white p-2 text-slate-800 font-semibold"
+                          className="w-full font-mono text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-2 text-slate-800 dark:text-slate-100 font-semibold"
                         >
                           <option value="feat">feat (New feature support)</option>
                           <option value="fix">fix (Bug resolution)</option>
@@ -282,7 +282,7 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                        <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                           Component Scope
                         </label>
                         <input
@@ -290,7 +290,7 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                           value={customScope}
                           onChange={(e) => setCustomScope(e.target.value)}
                           placeholder="e.g. auth, api, ui, cart"
-                          className="w-full font-mono text-xs rounded-lg border border-slate-300 bg-white p-2 text-slate-800 font-semibold"
+                          className="w-full font-mono text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-2 text-slate-800 dark:text-slate-100 font-semibold"
                         />
                       </div>
                     </div>
@@ -298,30 +298,30 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
 
                   {/* Suggestions List */}
                   <div className="space-y-3">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                      <Code2 className="w-4 h-4 text-purple-600" />
+                    <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                      <Code2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                       <span>Generated Conventional Commit Options</span>
                     </h3>
 
                     {suggestions.map((sug) => (
                       <div
                         key={sug.id}
-                        className="p-4 bg-white border border-slate-200 rounded-xl space-y-2.5 shadow-2xs hover:border-purple-300 transition-colors"
+                        className="p-4 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl space-y-2.5 shadow-2xs hover:border-purple-300 dark:hover:border-purple-600 transition-colors"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                          <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600">
                             {sug.formattedCommit}
                           </span>
 
                           <div className="flex items-center gap-1.5">
                             <button
                               onClick={() => handleCopy(sug.formattedCommit, sug.id)}
-                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                             >
                               {copiedId === sug.id ? (
-                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                               ) : (
-                                <Copy className="w-3.5 h-3.5 text-slate-500" />
+                                <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                               )}
                               <span>{copiedId === sug.id ? 'Copied' : 'Copy'}</span>
                             </button>
@@ -341,8 +341,8 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                           </div>
                         </div>
 
-                        <p className="text-xs text-slate-600 font-medium">{sug.body}</p>
-                        <div className="text-[11px] text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg font-mono">
+                        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">{sug.body}</p>
+                        <div className="text-[11px] text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-2.5 py-1 rounded-lg font-mono border border-purple-200/50 dark:border-purple-800/50">
                           🔍 Reasoning: {sug.reasoning}
                         </div>
                       </div>
@@ -354,14 +354,14 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
               {activeTab === 'changelog' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                      <FileText className="w-4 h-4 text-purple-600" />
+                    <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                      <FileText className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                       <span>Automated Repository Changelog ({changelog.version})</span>
                     </h3>
 
                     <button
                       onClick={() => handleCopy(changelog.formattedMarkdown, 'changelog-markdown')}
-                      className="px-3 py-1.5 rounded-lg bg-purple-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       {copiedId === 'changelog-markdown' ? (
                         <Check className="w-3.5 h-3.5" />
@@ -372,7 +372,7 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                     </button>
                   </div>
 
-                  <div className="p-4 bg-slate-900 text-slate-200 font-mono text-xs rounded-xl space-y-2 leading-relaxed">
+                  <div className="p-4 bg-slate-900 border border-slate-800 text-slate-200 font-mono text-xs rounded-xl space-y-2 leading-relaxed">
                     <pre className="whitespace-pre-wrap">{changelog.formattedMarkdown}</pre>
                   </div>
                 </div>
@@ -381,14 +381,14 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
               {activeTab === 'release' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                      <Share2 className="w-4 h-4 text-purple-600" />
+                    <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                      <Share2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                       <span>Synthesized Release Notes ({releaseNotes.version})</span>
                     </h3>
 
                     <button
                       onClick={() => handleCopy(releaseNotes.formattedMarkdown, 'release-markdown')}
-                      className="px-3 py-1.5 rounded-lg bg-purple-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       {copiedId === 'release-markdown' ? (
                         <Check className="w-3.5 h-3.5" />
@@ -399,7 +399,7 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
                     </button>
                   </div>
 
-                  <div className="p-4 bg-slate-900 text-slate-200 font-mono text-xs rounded-xl space-y-2 leading-relaxed">
+                  <div className="p-4 bg-slate-900 border border-slate-800 text-slate-200 font-mono text-xs rounded-xl space-y-2 leading-relaxed">
                     <pre className="whitespace-pre-wrap">{releaseNotes.formattedMarkdown}</pre>
                   </div>
                 </div>
@@ -407,14 +407,14 @@ Thank you to @lucas-whitaker, @sarah-chen, and @marcus-vance for their code cont
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 flex items-center justify-between text-xs">
+              <span className="text-slate-500 dark:text-slate-400 font-medium">
                 Standardized via Conventional Commits v1.0.0
               </span>
 
               <button
                 onClick={onClose}
-                className="px-4 py-1.5 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800 transition-colors"
+                className="px-4 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg font-bold hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
                 Close
               </button>

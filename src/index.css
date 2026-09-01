@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-ribbon-magenta: #BD006E;
   --color-ribbon-magenta-dark: #9E005B;
@@ -29,7 +31,7 @@
   /* Header & Navigation */
   --header-bg: #d0d7db;
   --header-text: #3F4349;
-  --content-bg: #FFFFFF;
+  --content-bg: #FAFAFB;
   --content-text: #3F4349;
   --toolbar-bg: #A7B1C2;
   --nav-bg: #3F4349;
@@ -55,11 +57,20 @@
   --alarm-purple-bg: #EECCFF;
 }
 
+.dark {
+  --header-bg: #0F172A;
+  --header-text: #F8FAFC;
+  --content-bg: #0B0F19;
+  --content-text: #F1F5F9;
+  --toolbar-bg: #1E293B;
+  --nav-bg: #0F172A;
+}
+
 @layer base {
   body {
     font-family: 'Roboto', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--content-text);
-    background-color: #FAFAFB;
+    background-color: var(--content-bg);
   }
   code, pre, kbd {
     font-family: 'JetBrains Mono', monospace;
@@ -138,9 +149,27 @@
   box-shadow: inset 0 2px 6px rgba(63, 67, 73, 0.12), inset 0 -1px 3px rgba(255, 255, 255, 0.9);
 }
 
+.dark .tamagotchi-screen {
+  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.98) 0%, rgba(2, 6, 23, 0.85) 100%);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), inset 0 -1px 3px rgba(255, 255, 255, 0.05);
+}
+
 .tamagotchi-lcd-grid {
   background-size: 8px 8px;
   background-image: 
     linear-gradient(to right, rgba(167, 177, 194, 0.08) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(167, 177, 194, 0.08) 1px, transparent 1px);
+}
+
+.dark .tamagotchi-lcd-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
