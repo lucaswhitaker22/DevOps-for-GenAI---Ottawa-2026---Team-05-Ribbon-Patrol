@@ -16,3 +16,5 @@
 * [Demo Integrity & Fidelity Notes](DEMO_NOTES.md)
 * [Software Bill of Materials (SBOM) & Supply Chain](SBOM_MANIFEST.md)
 * [Test Suite Execution & Verification Report](TEST_REPORT.md)
+* [Presentation Slide Content (12 Slides)](PRESENTATION_SLIDES.md)
+* [Speaker Notes & Presentation Playbook](SLIDE_NOTES.md)

@@ -1,203 +1,740 @@
-# GitPet Demo Presentation — Speaker Notes
+# GitPet Professional Presentation Deck: Complete Speaker Notes & Demo Playbook
 
 **Project:** GitPet — Ambient DevSecOps Repository Companion  
 **Team:** Ribbon Patrol (Team 05)  
 **Event:** DevOps for GenAI Hackathon 2026, Ottawa  
-**Estimated Duration:** 10–12 minutes  
-
-Each note below is written to sound natural when spoken — not read like slide text. Notes are aligned 1:1 with the 13 slides in `PRESENTATION_SLIDES.md`.
-
----
-
-## Slide 1: Title & Problem Hook
-
-GitPet is an ambient DevSecOps companion that turns repository, pipeline, review, and security signals into an expressive virtual pet named Byte. Byte helps developers notice problems, understand the evidence, and resolve issues safely — without giving an AI agent unrestricted control. We are Team 05, Ribbon Patrol: Aliasgar Husain, Lucas Whitaker, David Castetti, and Faris Nour.
-
-Before I show the solution, let me frame the three problems we set out to solve. First, context fragmentation: developers lose track of local versus remote drift, stash states, upstream divergence, and PR review comments until a pull or rebase fails catastrophically. Second, the excessive-agency dilemma: autonomous AI agents with shell execution can accidentally force-push, discard uncommitted changes, or trigger destructive rebases without the developer understanding the blast radius. Third, inaccessible telemetry: complex Git DAG topologies, detached HEADs, flaky test suites, and multi-file merge conflicts are intimidating and time-consuming to decipher through terminal logs alone.
-
-Keep this tight — 60 seconds max. The goal is to make judges feel the pain before showing the solution. Open on the Companion page with Byte visible.
+**Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (12 Slides)  
+**Target Duration:** 10 to 12 minutes (Target: ~11 minutes 15 seconds)  
+**Suggested Pacing:** Roughly 45 to 75 seconds per slide  
+**Primary Presenters:** Aliasgar Husain, Lucas Whitaker, David Castelli, Faris Nour  
+**Live Application Target:** `http://localhost:3004` (`npm run dev`)
 
 ---
 
-## Slide 2: The Solution — Notice, Understand, Resolve
+## Executive Presentation Overview
 
-GitPet follows a three-step loop: Notice, Understand, Resolve. First, Byte signals a problem through posture, aura colour, sound, and health score — 18 expressive symptom states map directly to Git and infrastructure conditions. Second, Gemini AI explains the condition in plain language with evidence citations, confidence ratings, 7-factor risk breakdowns, and reversal plans. Third, GitPet proposes a bounded, reversible action that the developer must review and approve in a preview modal before anything is written.
-
-Byte is therefore a live visualization of DevSecOps health, not only a mascot. The pet's posture isn't decorative — it's a real-time data representation of your repository's posture.
-
-Four core differentiators set GitPet apart. It is ambient and non-intrusive — it sits beside your editor with passive awareness. It enforces bounded AI agency — mandatory human-in-the-loop preview, pre-computed reversal commands, and a 2-layer safety engine with zero force-push. It integrates multimodal AI — Gemini Flash reasoning across three model tiers, Live Audio WebSocket streaming, Image avatar generation, and TTS speech synthesis. And it provides DevSecOps intelligence — a 7-factor risk score engine, interactive multi-lane Git DAG visualizer, CI/CD and PR intelligence drawers, and dual live and sandbox modes.
-
-Point to Byte on screen. Explain the health bar — for example, 68 percent HP with an amber aura means Attention. Emphasize that GitPet doesn't replace the developer's judgment — it augments it with visible telemetry and safe, reversible actions.
-
----
-
-## Slide 3: Live AI Chat & Multi-Persona Assistance
-
-GitPet offers four conversational personas so developers can choose the expertise they need. Byte Mascot provides friendly, approachable guidance with witty developer humour. Senior Architect focuses on deep DAG topology, rebase versus merge strategy, and branch architecture. Safety Auditor examines risk, rollback safety, stash verification, and clean resets. Git Tutor teaches Git internals — blobs, trees, commit objects, and the staging index.
-
-Three model tiers let developers balance speed and depth. The Fast tier uses gemini-3.1-flash-lite for instant status checks and one-liner answers. The General tier uses gemini-3.6-flash for standard chat, tutoring, and repository analysis. The Deep Reasoning tier uses gemini-3.7-flash for complex multi-branch conflicts and architecture guidance.
-
-Every AI response includes an evidence signals box citing concrete repo data — current branch, upstream divergence, dirty file list, conflict markers. It includes a confidence rating — High, Medium, or Low with a numeric percentage. It includes a risk badge — Safe, Caution, Protected, or Hazard. It includes a recommended safe action card with verified shell commands, syntax highlighting, one-click copy, expected outcome, and a pre-computed reversal command. And it includes a preview diff and scope button that opens the human-in-the-loop confirmation modal.
-
-Developers can also use categorized prompt chips for one-click access: status report and diagnostics, work-loss risk assessment, explain branch divergence, review PR and reviewer feedback, and CI/CD test failure diagnosis.
-
-This is the key demo moment. Switch to the Behind Main scenario using the Scenario Switcher. Watch Byte's posture change — pulling on leash, amber aura. Click the prompt chip for a status report. Show the AI response — evidence box, confidence score, recommended action card. Highlight the reversal command displayed alongside the action. Make sure the Gemini API key is configured so responses are live. If the API is unavailable, the fallback rule-based engine still produces a structured response — mention this resilience.
+| Slide # | Slide Title in Deck 11 | Primary Subject & Theme | Target Time | Cumulative Time | Presenter Lead |
+| :---: | :--- | :--- | :---: | :---: | :--- |
+| **01** | **GitPet (Title & Hook)** | 3 Core Dilemmas (Context, Agency, Telemetry) | 0:55 | 0:55 | Aliasgar Husain |
+| **02** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & Byte Companion | 1:05 | 2:00 | Aliasgar Husain |
+| **03** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, 3 Model Tiers, Structured Evidence | 1:15 | 3:15 | Faris Nour |
+| **04** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants & Tokenized Rejection | 1:10 | 4:25 | Lucas Whitaker |
+| **05** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Aware Preconditions & Reversals | 1:05 | 5:30 | Lucas Whitaker |
+| **06** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Topology, Diff Studio, Stash & Rollback | 1:00 | 6:30 | David Castelli |
+| **07** | **CI/CD (Failure to Remediation)** | 5-Stage Tracker, Flaky Test Quarantine, CVE Patching | 0:55 | 7:25 | Faris Nour |
+| **08** | **PULL REQUESTS (Review to Merge)** | PR #214, Turnaround Clock, AI Review Composer | 0:50 | 8:15 | Faris Nour |
+| **09** | **SCORING (Release Gate & Deployment)** | 5 Weighted Pillars, Blocker Analysis, Audit Exports | 0:50 | 9:05 | David Castelli |
+| **10** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Formula, 4-Tier Auras, Deep-Link Remediate | 0:50 | 9:55 | David Castelli |
+| **11** | **ARCHITECTURE (System & Gateway)** | React 19, Express Boundary, execFile, Gemini Cloud | 1:00 | 10:55 | Lucas Whitaker |
+| **12** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, Governance, Quickstart, Live Q&A | 0:45 | 11:40 | Team Ribbon Patrol |
 
 ---
 
-## Slide 4: The 2-Layer Safety Engine
+## Slide 1: GitPet (Title & Problem Hook)
 
-This is the most important slide for judges. Prompt instructions alone are not a security guarantee — the model is instructed to avoid unsafe commands, but that is guidance, not a guarantee. The safety engine is the boundary that actually holds. It is provider-agnostic — it behaves identically whether the command came from Gemini, the rule engine, or manual input.
+### Slide Header & Content in Deck 11
+```
+GitPet — Ambient DevSecOps Repository Companion
+DEVOPS FOR GENAI 2026 | TEAM 05
+"See risk. Understand evidence. Resolve safely."
+Aliasgar Husain • Lucas Whitaker • David Castelli • Faris Nour
+```
 
-Layer 1 is static rules — universal danger invariants that block operations at the code level. Force-push is blocked in favour of force-with-lease. Hard reset is blocked in favour of reset --keep. Clean, force-branch-delete, stash-destroy, remote-ref-delete, history rewriting via filter-branch or --filter-repo, checkout of paths that would overwrite uncommitted edits, and shell injection metacharacters are all rejected entirely. Non-git commands like sudo, rm, and curl are blocked — git is the only binary on the whitelist.
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “Hello judges, fellow engineers, and guests. We are Team 05, **Ribbon Patrol**: Aliasgar Husain, Lucas Whitaker, David Castelli, and Faris Nour. Today, we are thrilled to present **GitPet**—an ambient DevSecOps repository companion built on a foundational promise: *See risk. Understand evidence. Resolve safely.*
+>
+> Modern software development has three major points of friction:
+>
+> 1. **Fragmented Context & Cognitive Overload:** Repository health is scattered across terminal outputs, CI/CD portals, pull request threads, and security dashboards. Developers discover upstream branch drift, detached HEADs, uncommitted stash debt, or stale reviews only when a pull, rebase, or release fails.
+> 2. **The 'Excessive Agency' Dilemma in AI Coding Assistants:** Unbounded AI agents with direct shell execution can generate syntactically valid but catastrophic operations—like force-pushes, hard resets, or destructive file wipes—without explaining blast radius or planning rollbacks. Prompt instructions alone are not security boundaries.
+> 3. **Inaccessible Git & Pipeline Telemetry:** Non-linear DAG topologies, merge base divergence, flaky test regressions, and supply-chain CVEs are technically recorded, but they remain buried in thousands of lines of raw terminal logs.
+>
+> GitPet solves this by bringing live repository telemetry directly into an ambient virtual companion named **Byte**. Byte keeps developers aware of repository state, explains problems through grounded Gemini reasoning, and guides teams through bounded, reversible actions.”
 
-Layer 2 is contextual lints — working-tree aware checks that evaluate live repository state. If you try to stash while untracked files exist, it suggests stash push -u. If you try to push while behind upstream, it tells you to pull or rebase first. If you try to pull or merge with a dirty tree and nothing preserving your changes, it warns you. If conflicts are unresolved, it blocks further operations until they are resolved. If a fast-forward pull is attempted on a diverged branch, it suggests rebase instead. If an operation like a rebase or merge is in progress, only continue, skip, and abort are permitted. If you try to pop an empty stash, it warns against it.
+### Live Demonstration Cues & Screen Actions
+- **Screen State:** Start on the main **Ambient Companion** view (`http://localhost:3004#companion`) with Byte visible in the center stage.
+- **Presenter Action:** Point out Byte's ambient avatar and idle floating animation. Do not trigger complex actions yet—focus entirely on framing the problem and setting the stage.
+- **Keyboard Shortcut:** Keep hands relaxed near `⌘K` / `Ctrl+K` for the upcoming scenario shift.
 
-Execution uses two modes. Dry-run mode is the default — it validates syntax, checks blast radius, and simulates outcome with zero disk writes. Verified write mode requires explicitly setting GITPET_ALLOW_WRITES to true. Even then, commands execute via child_process.execFile with argv arrays — never shell pass-through — with a 60-second hard timeout. Every action is paired with a pre-computed reversal command: stash push reverses with stash pop, pull rebase reverses with rebase abort, merge reverses with merge abort, commit reverses with reset soft HEAD tilde 1, and checkout new branch reverses with checkout dash.
+### Key Technical Talking Points & Judge Anchors
+- Frame GitPet not as a decorative chatbot, but as an **ambient DevSecOps visualization layer** and an **authoritative safety proxy**.
+- Emphasize the core thesis: *AI should augment human judgment through grounded evidence, never replace it with unbounded autonomous execution.*
 
-Verification includes 31 automated Vitest tests across security, executor, and markdown suites. Tests validate secret masking, prompt injection blocking, destructive command rejection, contextual lints, human approval gates, and markdown XSS defense. The CI pipeline runs TypeScript lint, Vitest, Gitleaks secret scan, npm audit, and build verification.
+### Transition to Slide 2
+> “So how does GitPet transform this fragmented telemetry into a seamless, safe developer workflow?”
 
-For the demo: click Preview Changes on the recommended action from Slide 3. Show the preview modal — exact command, blast radius, affected files, reversal step. Say: even if the AI hallucinated a git push force, the safety engine would hard-block it at the code level. Optionally run npm test in the terminal to show 31 tests passing live. The AI is guidance; this module is the guarantee.
-
----
-
-## Slide 5: Repository DAG Graph & Diffs
-
-The repository workspace makes Git history and working-tree state easier to understand. The multi-lane DAG visualizer renders commit lineage across parallel visual lanes — a main trunk lane tracking upstream origin commits, a local feature lane tracking local branch commits, and secondary lanes for diverged branches and forks. Commit roles are colour-coded: HEAD, upstream HEAD, local ahead, remote behind, merge base, fork point, detached, conflicted, hazard, sync clean, and collapsed run. An interactive inspector lets you click any commit node to view hash, author, message, parent hashes, and timestamp. The SVG topology engine uses cubic bezier spline paths with animated HEAD pulsing and double-ring merge base highlights.
-
-The working tree and side-by-side diffs viewer provides a file search filter for real-time dirty changeset search, checkbox file staging for selective staging and unstaging, and status indicators — modified in amber, staged in green, untracked in slate, and conflicted in red. The syntax-highlighted diff viewer shows line-by-line unified diffs with addition and deletion counts and line gutters. The AI Commit Generator integrates directly to draft Conventional Commits from active diffs.
-
-Stash stack management provides a snapshot inventory with stash index, message, timestamp, and file count, plus one-click restore to working tree with toast confirmation. An immutable audit trail records every executed command with timestamp, description, and shell command, with one-click rollback that executes the pre-computed safe reversal — and a safeguard that verifies the working tree is clean or stashed before executing.
-
-The DAG visualizer is technically impressive — it computes lane indices from branch topology and renders bezier spline curves. Don't go too deep on the math; focus on the visual impact and how it makes Git topology intuitive. For the demo: navigate to the Repository page, show the DAG graph with diverged branches, point out HEAD, merge base, local ahead, and remote behind. Click a commit node to show the inspector panel. Switch to the Working Tree and Diffs tab to show dirty files with staging checkboxes and the diff viewer. Switch to the Stashes tab to show the stash snapshot inventory.
-
----
-
-## Slide 6: CI/CD Pipeline Telemetry
-
-The CI/CD workspace follows pipeline stages from linting through staging verification. Stage 1 is Lint and Format — code style enforcement. Stage 2 is Unit Tests — test suite execution. Stage 3 is Security Audit — supply chain vulnerability checking. Stage 4 is Deploy Staging — pre-deployment health check. Each stage shows status indicators — success in green, failed in red pulse, pending in slate, warning in amber — with duration metrics and expandable terminal logs showing line-by-line build output.
-
-Flaky test suite diagnostics surface tests that pass and fail intermittently without source changes. GitPet shows failure telemetry including pass rate percentage, failures over the last 10 runs, and the last failing commit SHA. A quarantine action lets you click to isolate flaky tests from blocking deployment.
-
-Supply chain security and CVE scanning identifies known vulnerabilities in third-party packages. Each vulnerability includes severity scoring — High, Critical, Medium, or Low — the affected version, a recommended safe target version, and an option to draft a Dependabot patch for automated dependency bumping.
-
-Keep this to 45 seconds. The CI/CD page is visually rich but self-explanatory. Focus on the flaky test quarantine and CVE remediation — those are unique features judges won't have seen elsewhere. For the demo: switch to the CI/CD Build Failure scenario, navigate to the CI/CD page, show the failed pipeline stage and click to expand terminal logs. Point to the flaky test diagnostics panel with 70 percent pass rate. Point to the CVE scan panel showing CVE-2026-8819 at High Severity.
-
----
-
-## Slide 7: Pull Request Intelligence
-
-The pull request workspace combines review status, approval thresholds, turnaround time, mergeability, and inline comments into one view. PR telemetry tracks metadata — PR number, title, author, source branch to target branch, and review status. Approval counting shows current approvals versus the required threshold — for example, 1 of 2 required. A review turnaround clock highlights bottlenecks — for example, 3 days waiting. Mergeability assessment shows real-time clean, conflicted, or blocked status.
-
-Inline review threads link reviewer comments to specific files and line numbers — for example, src/auth/authService.ts line 42. Comments carry status tags — open or resolved — and reviewer identity tags with author handles.
-
-The AI resolution response draft composer is the highlight. With one click, Byte generates a professional reply detailing code adjustments and added unit tests. The interactive reply box lets you edit the drafted response or type a custom reply, then click Reply to append to the thread. Once checks, approvals, and conflicts are resolved, the squash-and-merge action becomes available — it triggers a simulated merge with celebration feedback. GitPet can also generate a PR changelog producing conventional release notes summarizing features, fixes, and breaking changes.
-
-45 seconds. For the demo: switch to the PR 214 Changes Requested scenario, navigate to the PR Intelligence page. Show review metrics — 1 of 2 approvals, 3 days waiting, changes requested. Show inline review comments linked to file and line. Click Draft AI Resolution Response to show the AI-generated reply. The AI resolution reply drafting shows Gemini understanding review context and generating a professional developer response.
+### Anticipated Judge Q&A for Slide 1
+- **Q: Why create an ambient pet rather than another IDE sidebar plugin?**  
+  *A: Traditional dashboards require active polling and context switching. Byte uses peripheral awareness—subtle posture, glowing auras, and chiptune audio cues—to communicate repository health at a glance without interrupting flow.*
 
 ---
 
-## Slide 8: Release Gate & 7-Factor Risk Score
+## Slide 2: SOLUTION (Notice · Understand · Resolve)
 
-GitPet combines two scoring systems into one health model. The Release Gate uses five weighted pillars to evaluate deployment readiness. Tests passing carries 25 percent weight with a target of 100 percent passing. Code coverage carries 20 percent weight with a target of at least 80 percent line coverage. Vulnerabilities carries 25 percent weight with a target of zero High or Critical CVEs. PR approvals carries 15 percent weight with a target of at least 2 peer approvals. Branch freshness carries 15 percent weight with a target of zero commits behind.
+### Slide Header & Content in Deck 11
+```
+SOLUTION
+Notice • Understand • Resolve
+Byte turns repository telemetry into an actionable DevSecOps loop.
 
-Status classification has three tiers. Ready to Ship in green requires a score of at least 85 percent with zero blockers and zero warnings — the Sign Off Release button becomes armed. Caution or Review in amber covers scores from 70 to 84 percent or when non-critical warnings are present. Blocked in red covers scores below 70 percent or when any blocker is active — a failing build, high CVE, or pending PR changes. Every blocker links to a remediation workflow, and teams can export both a readable Markdown summary and a machine-readable JSON artifact.
+1. NOTICE: Byte's posture, mood aura, and chiptune audio cues reflect repository health at a glance.
+   8 expressive symptoms map 1:1 to Git status, CI/CD pipeline states, PR bottlenecks, and cloud infrastructure alerts.
+2. UNDERSTAND: Multimodal Gemini reasoning explains issues in plain language.
+   Surfaces concrete evidence signals (branch divergence, dirty files, conflict markers, CVE IDs).
+   Delivers explicit confidence ratings (%), 4-tier risk badges, and deterministic reversal steps.
+3. RESOLVE: Bounded, reversible Git actions with mandatory human-in-the-loop preview.
+   Zero blind execution: modal diff preview reveals blast radius, affected files, and exact argv parameters.
+   One-click rollback restores working tree state safely using pre-computed undo commands.
+```
 
-The 7-Factor Risk Scorecard aggregates into the Health Pool. Branch divergence and drift can deduct up to 35 points. Failed and flaky tests can deduct up to 28. Secrets and security policies can deduct up to 30. Open vulnerabilities can deduct up to 22. Code smells and debt can deduct up to 15. Unreviewed commits and PR lag can deduct up to 15. Large PR size can deduct up to 8. The formula is simple: calculated score equals max of 0 or 100 minus the sum of deductions. That score controls Byte's visual state — Healthy at 80 to 100 HP in green, Attention at 45 to 79 HP in amber, Blocked below 45 HP or when conflicts are detected in orange, and Unsafe at 0 HP or when a destructive hazard is detected in grayscale.
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “GitPet organizes developer interaction into an intuitive 3-stage loop: **Notice, Understand, and Resolve.**
+>
+> **Stage 1 is NOTICE:**  
+> Byte turns complex repository telemetry into ambient, real-time awareness. Byte's posture, glowing mood aura, and Web Audio chiptune cues change dynamically with repository health. In the slide, we highlight 8 core expressive symptoms—while our complete engine supports 18 symptoms across Git topology, pipeline failures, PR roadblocks, and cloud security alerts. When the repository is clean, Byte is cheerful with an emerald aura; when divergence occurs, Byte tethers on a leash with an amber glow; and during merge conflicts or build failures, Byte enters blocked or hazardous states.
+>
+> **Stage 2 is UNDERSTAND:**  
+> When an issue arises, GitPet uses multimodal Google Gemini models to explain what happened in plain, developer-friendly language. Crucially, responses are grounded in verified repository facts: active branch name, ahead/behind commit counts, modified file paths, and CVE identifiers. Every response includes a quantitative confidence rating and a 4-tier risk badge.
+>
+> **Stage 3 is RESOLVE:**  
+> GitPet suggests bounded, reversible Git operations. Before anything touches disk, a modal diff preview shows the exact tokenized arguments, blast radius, affected files, and a pre-computed reversal command. Zero blind execution occurs—the developer is always the mandatory approval gate.”
 
-The key insight is that Byte's visual health state is directly computed from these 7 factors. The mascot and the detailed scorecard always represent the same underlying data. For the demo: navigate to the Release Gate page and show the 5-pillar grid, overall score, and active blockers. Navigate to the Risk Scorecard page and show the 7-factor breakdown, HP gauge, and category filters. Click a factor's Remediate with Byte to show it jumping back to the Companion with a pre-filled prompt.
+### Live Demonstration Cues & Screen Actions
+- **Screen State:** Companion View (`#companion`).
+- **Presenter Action:** Point to Byte’s health bar (e.g., 68 HP) and the glowing amber aura.
+- **Audio Cue:** If sound is unmuted, trigger Byte’s subtle interaction or press `Spacebar` to showcase the Web Audio synthesizer purr and heart particle animation.
+- **Callout:** Show the status chip below Byte displaying *Behind Upstream (6 behind)*.
 
----
+### Key Technical Talking Points & Judge Anchors
+- **4-Tier Dynamic Aura System:** Healthy (80–100 HP, Emerald), Attention (45–79 HP, Amber), Blocked (<45 HP, Orange), Critical Hazard (0 HP, Grayscale).
+- **Grounded AI Principles:** The AI model is strictly conditioned on live repository state injected into the prompt context, eliminating hallucinations.
 
-## Slide 9: Multimodal AI — Voice & Image Studio
+### Transition to Slide 3
+> “Once Byte alerts the developer to a problem, how does the developer interact with the AI to investigate the root cause?”
 
-Developers can interact with Byte through text, live voice, speech synthesis, and avatar generation — and each mode includes a fallback so the application remains functional if an external AI service is unavailable.
-
-Live voice and vision streaming uses the Gemini Live API with gemini-3.1-flash-live-preview for bidirectional 16kHz PCM audio streaming over WebSocket. Real-time text transcription lets you see Byte's responses as text while audio streams. An animated audio waveform provides a visual equalizer reflecting active audio input levels. Security controls are strict: the microphone is inactive by default with an explicit permission gate, pulsating visual recording indicators alert when streaming, closing the modal instantly severs the WebSocket and releases media tracks, and zero cloud recording means audio frames are processed ephemerally and never persisted. The fallback is the Web Speech API.
-
-The Pet Avatar Studio uses gemini-3.1-flash-image for custom mascot avatar generation and iterative editing. It is text-prompt driven — describe your custom pet and generate pixel-art sprites. An ephemeral asset registry enforces a 30-minute preview TTL before explicit approval to the active set. An aesthetic SVG fallback generator guarantees offline image generation if the remote service is unavailable. Endpoints include generate, edit, and approve.
-
-Text-to-speech synthesis uses gemini-3.1-flash-tts-preview with the Zephyr voice. The fallback is the browser SpeechSynthesis API.
-
-Multi-tier model fallback chains ensure resilience across all tiers. Fast falls back from gemini-3.1-flash-lite to gemini-3.6-flash to gemini-flash-latest. General falls back from gemini-3.6-flash to gemini-3.5-flash to gemini-flash-latest. Deep falls back from gemini-3.7-flash to gemini-3.6-flash to gemini-flash-latest. Image falls back to the offline SVG generator. Live Voice falls back to the Web Speech API. TTS falls back to browser SpeechSynthesis.
-
-This is the wow-factor moment. If you can do a live voice conversation, do it — it's the most memorable part of the demo. If not, at least show the UI and explain the WebSocket streaming architecture. Emphasize the zero-recording privacy stance. For the demo: click the microphone icon to open the Live Voice Modal and show the audio waveform visualization. If comfortable, speak a brief question to Byte and show the transcription. Open the Image Studio from the avatar menu and show the prompt input and generation interface. Mention that every modality has a fallback — the app never breaks if an API is unavailable.
-
----
-
-## Slide 10: Architecture & Tech Stack
-
-GitPet is built on a production-shaped architecture. A React 19 and TypeScript frontend connects to an Express gateway server through REST and WebSocket interfaces. The gateway manages AI access, secret redaction, validation, audit events, safety checks, and repository execution. This separation is critical — it prevents an AI response from directly becoming a shell command. The AI can suggest, but only the safety engine and executor can act.
-
-The technology stack is modern and deliberate. The frontend uses React 19, TypeScript, Vite, TailwindCSS v4, Motion (Framer Motion), Lucide Icons, react-markdown with remark-gfm, and Canvas Confetti. The backend uses Node.js, Express, WebSocket, tsx for development, and esbuild for production bundling. AI integration uses the Google Gemini SDK for chat, live audio, image, and TTS. Testing uses Vitest with 31 automated tests. CI/CD runs on GitHub Actions with lint, test, Gitleaks, npm audit, build, and SBOM generation.
-
-The application is organized as a 6-page workspace architecture. The Ambient Companion page provides the pet stage, chat stream, and telemetry quick deck. The Repository and DAG page provides the DAG graph, diffs, stashes, and audit trail. The CI/CD Pipelines page provides the pipeline tracker, flaky tests, and CVE scans. The PR Intelligence page provides review metrics, inline comments, AI replies, and merge. The Release Gate page provides the 5-pillar scorecard, blockers, and artifact export. The Risk Scorecard page provides the 7-factor breakdown, HP gauge, and remediation links.
-
-Backend API routes cover health monitoring, audit logs, live Git status, public GitHub fixture scanning, preview-action dry-run analysis, execute-action for human-approved commands, AI chat, structured repo analysis, image generation and editing, TTS, and the WebSocket live audio endpoint. All API keys are managed server-side with TLS 1.3 and zero data retention.
-
-45 seconds. Don't read every API route aloud — just point to the slide. The architecture slide is for judges who want to verify production-grade engineering. Emphasize the separation of concerns: the gateway sits between the AI and the Git CLI, and the safety engine is the boundary that holds regardless of what the AI suggests.
-
----
-
-## Slide 11: Security, Governance & Production Readiness
-
-GitPet applies least privilege across four trust boundaries: the browser, the gateway, the repository, and the AI provider. The STRIDE threat model is addressed comprehensively. Spoofing is mitigated by strict CORS, local origin isolation, schema validation, and optional Basic Auth. Tampering is mitigated by input sanitization, role-delimited system prompts, and a regex injection detector. Repudiation is mitigated by a real-time FIFO audit log capturing timestamp, action, AI rationale, and approval status. Information disclosure is mitigated by a runtime token redactor that masks GitHub PATs, AWS keys, Google API keys, and Bearer tokens before transmission. Denial of service is mitigated by token ceilings, model fallback chains, WebSocket rate-limiting, and inactivity disconnect. Elevation of privilege is mitigated by zero shell pass-through, argv arrays only, and destructive flags blocked.
-
-OWASP LLM Top 10 coverage is complete across all 10 categories. Prompt injection is addressed with hardened system prompts, a pre-flight sanitizer, and 31 adversarial tests. Sensitive information disclosure is addressed with regex credential masking and Gitleaks in CI. Supply chain is addressed with pinned dependencies, SBOM generation, and npm audit. Data and model poisoning is addressed with ephemeral context windows and grounded Git CLI evidence. Improper output and XSS is addressed with react-markdown, GFM, and strict HTML escaping. Excessive agency is addressed with the human-in-the-loop invariant, preview modal, and reversal commands. System prompt leakage, vector embedding weakness, hallucinations, and unbounded consumption all have dedicated defenses.
-
-AI governance aligns with NIST AI RMF 1.0 across all nine areas: purpose and scope, risk classification, data governance, human oversight, transparency, model traceability, monitoring, change management, and incident response — all marked as MET.
-
-The 5-tier human-in-the-loop oversight matrix escalates from passive observation to hard-blocked. Level 0 is read-only Git status and pet health display. Level 1 is AI explanations and recommendations with confidence scores. Level 2 is avatar studio generation with a 30-minute preview TTL. Level 3 is safe Git writes requiring a mandatory approver — modal diff preview plus explicit confirm. Level 4 is force-push, hard reset, and branch delete — hard rejection by the safety engine.
-
-Production readiness evidence includes 31 automated tests at 100 percent pass rate, a CI/CD pipeline with TypeScript lint, Vitest, Gitleaks, npm audit, and build verification, a CycloneDX-compatible SBOM, an SRE runbook with health endpoints and disaster recovery procedures, observability through the health and audit-logs endpoints, and SLO targets of 99.9 percent uptime, sub-800ms telemetry latency, and zero unintended data mutations. All 15 participant guidelines and all 20 submission checklist items are marked as MET.
-
-This slide is dense — don't read it all. Highlight three things: STRIDE and OWASP LLM Top 10 coverage, the 5-tier human oversight matrix, and 31 tests passing. Judges who want deeper evidence can reference the docs folder. For the demo: if time permits, run npm test in the terminal to show 31 tests passing, or run curl against the health endpoint to show live server status. Point to the compliance matrix — all guidelines and submission items MET.
+### Anticipated Judge Q&A for Slide 2
+- **Q: Does the application require internet access for Byte’s ambient postures to work?**  
+  *A: No. All 18 symptom state evaluations, aura mappings, Web Audio synthesis, and local Git telemetry checks run 100% locally and deterministically inside the browser and gateway.*
 
 ---
 
-## Slide 12: Demo Integrity & Live Workspace Mode
+## Slide 3: AI ASSISTANCE (Talk to Byte: Multi-Persona Guidance)
 
-Transparency is key for P-15 compliance. GitPet clearly separates its sandbox and live modes. The sandbox is the default and contains 18 deterministic DevSecOps scenarios across four categories. Git workflows include remote sync divergence, merge conflict, detached HEAD, stale branch, unpushed work, clean healthy, and unsafe destructive loss hazard. CI/CD pipelines include build failure, flaky tests, security vulnerability, and deployment success. PR reviews include changes requested, pending review, merge conflicts, and approved ready. Cloud infrastructure includes lost map for Terraform state lock, smoke cloud for Pod CrashLoopBackOff, and shield cracked for S3 anonymous read access.
+### Slide Header & Content in Deck 11
+```
+AI ASSISTANCE
+Talk to Byte: multi-persona guidance
+Four roles, three model tiers, and structured responses tied to repository evidence.
 
-Live Workspace mode reads actual repository state. It has two data sources. The local host repository endpoint runs read-only git status, rev-parse, log, and stash list to compute real branch divergence, detached HEAD, uncommitted diffs, and in-progress operations. The public GitHub fixture endpoint connects to a real repository with live branch switching across main, feature/cart, fix/checkout-tax, refactor/auth-v2, and feature/oauth-login.
+MODEL TIERS:
+• Fast: instant status checks
+• General: chat and repository analysis
+• Deep: multi-branch conflicts and architecture
 
-Writes remain disabled by default. Enabling writes requires explicit configuration with GITPET_ALLOW_WRITES set to true, plus a 4-layer safety defense: static rule interception at the code level, contextual lint inspection of the live working tree, dry-run preview simulation before prompting the user, and mandatory human confirmation with zero automated execution. Even then, execution uses execFile with argv arrays — never shell — with a fail-stop parameter approach.
+EVERY RESPONSE INCLUDES:
+• Evidence signals and confidence
+• Risk badge and expected impact
+• Safe action, reversal, preview and approval
+```
 
-Graceful fallback mechanisms ensure the app never breaks. A deterministic rule-based engine provides structured responses without a Gemini API key. Multi-tier model cascades recover from 404 and 429 errors through the fallback chain. An in-memory SVG avatar canvas provides offline image generation. The Web Speech API provides browser-native voice fallback.
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “GitPet’s AI assistance is engineered for technical precision, offering four specialized personas and three reasoning tiers.
+>
+> Developers can tailor Byte’s perspective to the task at hand:
+> - The **Byte Mascot** persona offers concise, friendly daily workflow tips and status summaries.
+> - The **Senior Architect** analyzes complex branch topology, merge-base ancestry, and architectural trade-offs like rebase versus merge.
+> - The **Safety Auditor** operates with zero trust, analyzing work-loss hazards, stash safety, and rollback verification.
+> - The **Git Tutor** explains underlying Git mechanics—such as blobs, trees, commit objects, and index pointers.
+>
+> We support three Gemini model tiers: **Fast** for rapid status summaries, **General** for standard repository chat, and **Deep** for complex multi-branch conflict resolution.
+>
+> Look at the structure of every AI response:
+> 1. **Evidence Signals Box:** Concrete repository facts extracted directly from Git state.
+> 2. **Confidence Rating:** A quantitative assessment of factual certainty (e.g., 96% Confidence).
+> 3. **Risk Classification Badge:** Categorized as SAFE (Green), CAUTION (Amber), PROTECTED (Blue), or HAZARD (Red).
+> 4. **Safe Action Card:** Formatted command, expected outcome, and an automatic pre-computed reversal command (`git rebase --abort`).
+> 5. **Preview Button:** Opens the human-in-the-loop preview modal.
+>
+> In our live demo, we select the *Behind Main* scenario. Byte flags the 6-commit divergence, provides a structured diagnostic, recommends `git pull --rebase origin main`, and arms `git rebase --abort` as the immediate safety net.”
 
-Be explicit about what's sandboxed versus live. Judges appreciate honesty about demo boundaries — it builds credibility. For the demo: toggle the Live Workspace switch in the top bar to show the mode change. Point out the transcript flag indicating sandbox versus live mode. Mention that even in live mode, writes are disabled by default — you must explicitly opt in with GITPET_ALLOW_WRITES equals true.
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  1. Press `⌘K` or click the top scenario dropdown to select **Behind Main** (or *Branch Drift*).
+  2. Point out Byte’s changed posture (pulling on a leash, amber aura).
+  3. Click the prompt chip: *“Status report & diagnostics”*.
+  4. Walk judges through the returned structured card:
+     - Evidence box: `branch: feature/auth-jwt`, `behind: 6`, `ahead: 1`.
+     - Confidence score: `96% Confidence`.
+     - Risk badge: `CAUTION`.
+     - Safe Action card: `git pull --rebase origin main`.
+     - Reversal command box: `git rebase --abort`.
+  5. Click **Preview Diff & Scope** to open the safety confirmation modal, but *do not execute yet*.
+
+### Key Technical Talking Points & Judge Anchors
+- **Offline Deterministic Fallback:** If the Gemini API key is omitted or rate-limited, GitPet automatically falls back to an internal rule-based inference engine, ensuring 100% demo reliability without breaking.
+- **Structured Schema Enforcement:** The backend enforces JSON schema validation on model outputs to guarantee evidence, confidence, and reversal fields are always populated.
+
+### Transition to Slide 4
+> “Grounded explanations are vital, but AI recommendations cannot be blindly trusted. The true security boundary begins in our safety engine.”
+
+### Anticipated Judge Q&A for Slide 3
+- **Q: How do you prevent the AI model from hallucinating Git commands?**  
+  *A: The system prompt injects strict repository telemetry, requires structured JSON outputs with evidence citations, and passes every proposed command to our deterministic Layer 1 and Layer 2 safety engine before execution.*
 
 ---
 
-## Slide 13: Team & Closing
+## Slide 4: SAFETY (Layer 1: Static Rules — The Code-Level Guarantee)
 
-GitPet makes DevSecOps health ambient, explainable, and safely actionable. It connects repository history, local changes, pipelines, pull requests, release readiness, security, voice, and image generation in one experience.
+### Slide Header & Content in Deck 11
+```
+SAFETY
+Bounded agency: the code-level guarantee
+The model can suggest. The safety engine decides what is allowed.
+LAYER 1 — STATIC RULES
 
-We are Team Ribbon Patrol: Aliasgar Husain as Project Lead, Lucas Whitaker, David Castetti, and Faris Nour.
+Table of 9 Threat Codes:
+• force-push: git push --force, -f -> Hard-rejected by regex tokenizer -> git push --force-with-lease
+• hard-reset: git reset --hard -> Destructive working tree wipe blocked -> git reset --keep / git stash
+• clean-wipe: git clean -fdx -> Permanent file deletion blocked -> Stash or manual file review
+• force-branch-delete: git branch -D -> Unmerged branch deletion blocked -> git branch -d (safe check)
+• stash-destroy: git stash drop, clear -> History destruction blocked -> Explicit stash pop/apply only
+• remote-ref-delete: git push origin --delete -> Remote branch deletion blocked -> Handled via PR web interface
+• history-rewrite: filter-branch, filter-repo -> Repository history mutation blocked -> Protected Git operations
+• shell-injection: ;, |, &, >, <, $(), ` -> Metacharacters stripped/rejected -> Argv array tokenization
+• non-git-binary: sudo, rm, curl, sh -> Binary whitelist (git only) -> Rejected at gateway router
+```
 
-For AI usage transparency per guideline P-06: our runtime AI integration uses Google Gemini 3.6 Flash and 3.7 Flash for LLM inference, gemini-3.1-flash-image for avatar generation, and the Gemini Live API with gemini-3.1-flash-live-preview for bidirectional audio streaming. During development, we used Google AI Studio for prompt prototyping, Antigravity with Gemini for pair-programming, Claude Code for Vitest tests and safety sanitizer refinement, and Microsoft Copilot for code completions and documentation. All AI-suggested code, safety filters, and test boundaries were fully reviewed, audited, and approved by the team.
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “This slide presents the core technical philosophy of GitPet: *The model can suggest. The safety engine decides what is allowed.*
+>
+> We reject the idea that system prompts are a sufficient security guarantee. Prompt instructions fail against hallucinations, jailbreaks, context dilution, and indirect prompt injection. In GitPet, safety is enforced in compiled TypeScript and Node.js code.
+>
+> **Layer 1 enforces 9 deterministic Static Rules:**
+> 1. **Force-Push Prevention:** Unconditional `git push --force` and `-f` flags are hard-rejected by our regex tokenizer to protect remote history.
+> 2. **Hard-Reset Block:** `git reset --hard` is blocked to prevent wiping uncommitted working tree modifications.
+> 3. **Clean-Wipe Protection:** `git clean -fdx` is blocked to prevent permanent file loss.
+> 4. **Force-Branch-Delete Guard:** `git branch -D` is blocked; only safe `-d` deletion of fully merged branches is permitted.
+> 5. **Stash Destruction Shield:** `git stash drop` and `clear` are blocked.
+> 6. **Remote Ref Deletion Block:** `git push origin --delete` is blocked.
+> 7. **History Rewrite Shield:** `filter-branch` and `filter-repo` are blocked.
+> 8. **Shell Injection Defense:** Semicolons, pipes, ampersands, backticks, and subshells are stripped and rejected at the gateway.
+> 9. **Binary Whitelist:** Only the `git` binary is permitted. Any invocation of `sudo`, `rm`, `curl`, or shell wrappers is rejected immediately.
+>
+> This layer is completely provider-agnostic. Whether a command originates from Gemini, a custom prompt, or direct input, it hits the same immutable code boundary.”
 
-Five key takeaways. First, ambient awareness — Byte makes repository health visible without terminal hunting. Second, bounded agency — the 2-layer safety engine guarantees zero destructive operations. Third, multimodal AI — text, voice, and image generation with graceful fallbacks. Fourth, DevSecOps intelligence — 7-factor risk scoring, DAG visualization, CI/CD and PR telemetry. Fifth, production-grade — 31 tests, STRIDE threat model, NIST AI RMF governance, SBOM, and an SRE runbook.
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  - Keep the **Preview Changes Modal** open on screen.
+  - Highlight the exact parsed arguments (`git`, `pull`, `--rebase`, `origin`, `main`).
+  - Point to the **Risk Assessment:** `CAUTION (Branch synchronization)`.
+  - Point to **Estimated Blast Radius:** `6 commits to replay, 0 working tree conflicts`.
+  - Show that execution is disarmed until the human developer explicitly clicks **Approve & Execute**.
 
-Most importantly, GitPet does not replace developer judgment. GitPet makes the evidence visible and keeps the developer in control.
+### Key Technical Talking Points & Judge Anchors
+- Quote for Judges: *“AI guidance is advisory. The deterministic safety engine is authoritative.”*
+- Reference the **31 automated Vitest test suite**, highlighting that 9 dedicated unit tests in `tests/security.test.ts` continuously validate that all 9 threat codes are blocked with 100% pass rates.
 
-You can try it yourself: clone the repo, install dependencies, add your Gemini API key, and run npm run dev to open localhost port 3004. If no API key is provided, the application falls back to robust rule-based responses — you can still navigate the full interface.
+### Transition to Slide 5
+> “Static rules stop universally dangerous commands. But what happens when a command is syntactically safe, but dangerous in the current repository state? That is what Layer 2 solves.”
 
-Close strong. Thank the judges, mention the GitHub repo URL, and invite them to try it live. If there's Q&A, be ready for: safety engine implementation details, sandbox versus live mode, model fallback chains, and how the 7-factor risk score is computed.
+### Anticipated Judge Q&A for Slide 4
+- **Q: What if a developer genuinely needs to force-push their own feature branch?**  
+  *A: GitPet enforces safer alternatives like `--force-with-lease`, ensuring you never overwrite remote commits you haven’t seen, while delegating true destructive operations to explicit terminal workflows.*
 
 ---
 
-## Suggested Presentation Timing
+## Slide 5: SAFETY (Layer 2: Contextual Lints & Reversible Execution)
 
-| Segment | Slides | Duration |
+### Slide Header & Content in Deck 11
+```
+SAFETY
+Bounded agency: the code-level guarantee
+The model can suggest. The safety engine decides what is allowed.
+LAYER 2 — CONTEXTUAL LINTS
+
+Table of 6 Contextual Lints:
+• stash-misses-untracked: Working tree contains untracked files -> Untracked files left behind on stash -> Suggests git stash push -u
+• push-while-behind: Branch is behind remote (behind >= 1) -> Remote rejects non-fast-forward push -> Suggests git pull --rebase first
+• diverged-pull-needs-rebase: Local and remote branches diverged -> Unintended merge commit pollution -> Suggests git pull --rebase origin main
+• operation-in-progress: Active rebase/merge lock files present -> Corrupted intermediate Git state -> Limits commands to --continue, --skip, --abort
+• stash-pop-empty: Stash stack length == 0 -> Confusing "No stash entries found" error -> Blocks empty stash pop
+• dirty-tree-checkout: Uncommitted edits on branch switch -> Accidental overwrite of active work -> Prompts to stash or commit first
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “Layer 2 evaluates proposed Git commands against the live working tree, staging index, and repository locks.
+>
+> A Git command might look completely harmless in isolation, but cause chaos depending on repository state:
+> - If you run `git stash` with untracked files present, standard Git leaves them behind. GitPet detects untracked files and upgrades the command to `git stash push -u`.
+> - If you try to push while behind upstream, GitPet blocks the inevitable non-fast-forward rejection and recommends synchronizing first.
+> - If branches have diverged, GitPet warns against accidental merge commit pollution and recommends an explicit rebase.
+> - If a rebase or merge is already in progress, GitPet locks down execution to only valid control flags: `--continue`, `--skip`, or `--abort`.
+> - If the stash stack is empty, it blocks confusing `git stash pop` errors.
+> - If uncommitted edits exist during a branch switch, it halts execution before dirty files can be overwritten or polluted across branches.
+>
+> Once both layers validate the operation, GitPet executes the command safely using Node.js `execFile` with tokenized argument arrays—never string shell execution.
+>
+> Furthermore, every executed action is logged to an immutable FIFO audit ring buffer, and assigned a deterministic rollback command—such as `git stash pop`, `git rebase --abort`, or `git reset --soft HEAD~1`—giving developers complete confidence.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  - In the modal, demonstrate the dry-run simulation toggle.
+  - Click **Approve & Execute**.
+  - Show the real-time execution animation and success toast: *“Synchronized feature/auth-jwt with origin/main via rebase.”*
+  - Point to Byte’s health restoring from 68 HP (Amber) to 100 HP (Emerald, Healthy posture).
+  - Open the **Audit History Drawer** to show the immutable log entry with timestamp, command, and the armed **Rollback** button.
+
+### Key Technical Talking Points & Judge Anchors
+- **Safe Subprocess Spawning:** Using `child_process.execFile('git', args)` completely eliminates command injection vectors like `git checkout $(calc.exe)`.
+- **Working Tree Precondition Guards:** The rollback runner checks `git status --porcelain` before executing any reversal, preventing accidental clobbering of newly authored code.
+
+### Transition to Slide 6
+> “Now that we’ve established our two-layer safety engine, let’s explore the visual repository workspace where developers inspect topology, diffs, and stashes.”
+
+### Anticipated Judge Q&A for Slide 5
+- **Q: How does the system handle merge conflicts during an approved rebase?**  
+  *A: GitPet detects the `.git/rebase-merge` lock file, shifts Byte into the tangled yarn 'Conflicted' posture, and provides one-click `--abort` or guided conflict resolution.*
+
+---
+
+## Slide 6: REPOSITORY (Multi-Lane DAG, Diff Studio & History)
+
+### Slide Header & Content in Deck 11
+```
+REPOSITORY
+See Git topology, diffs, stashes, and history
+The repository workspace makes branch state and file changes understandable.
+MULTI-LANE DAG | WORKING TREE
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “The Repository page turns complex Git history and working-tree changes into an interactive inspection studio.
+>
+> On the left side, you see our custom **Multi-Lane SVG DAG (Directed Acyclic Graph)**. Instead of dense terminal ASCII trees, GitPet assigns commits to discrete topological lanes—such as upstream trunk, local feature branches, and forks—connecting parent-child relationships with smooth cubic bezier curves.
+>
+> The DAG identifies 11 distinct commit roles:
+> - Active `HEAD` with an emerald pulsing ring.
+> - Upstream `origin/main` pointers.
+> - Local ahead and remote behind nodes.
+> - Highlighted `merge_base` ancestry nodes, fork points, and conflicted states.
+>
+> Clicking any commit node opens the interactive Commit Inspector, displaying SHA-1, author, timestamp, parent hashes, commit messages, and branch pointers.
+>
+> On the right side, the **Working Tree Diff Viewer** provides complete control over dirty files:
+> - Real-time search filtering across modified files.
+> - Color-coded status badges for modified, staged, untracked, and conflicted changes.
+> - Line-by-line syntax-highlighted diffs with addition/deletion counters.
+> - Selective single-file checkboxes and bulk Stage All / Unstage All controls.
+> - An integrated **AI Commit Generator** that drafts standardized Conventional Commits (`feat:`, `fix:`, `refactor:`) directly from staged diffs.
+>
+> Below the diffs, developers can inspect their **Stash Stack** with one-click safe restoration, and review the session **Audit Trail** for rollback safety.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  1. Navigate to the **Repository** page (`#repository` or press `⌘B` / `Ctrl+B`).
+  2. Point out the multi-lane SVG DAG layout.
+  3. Click a commit node (e.g., `feat(auth): add refresh token handler`) to open the commit inspector popover.
+  4. Point to the merge-base indicator showing divergence from `main`.
+  5. In the right panel, filter files by typing `auth`.
+  6. Click a staged file to reveal the syntax-highlighted unified diff.
+  7. Click **Generate Commit Message** to show the AI-drafted Conventional Commit modal.
+  8. Point to the Stash Stack card showing `stash@{0}: WIP on auth middleware`.
+
+### Key Technical Talking Points & Judge Anchors
+- **Custom Topological Layout Engine:** The DAG layout algorithm calculates branch lane allocation and merge-base ancestry entirely on the client side using pure SVG and React 19.
+- **Developer Ergonomics:** Bridges visual Git GUIs with strict safety policies—developers never have to guess what files are staged.
+
+### Transition to Slide 7
+> “Repository state is only one part of the delivery cycle. Let’s look at how GitPet connects local Git health with CI/CD pipeline intelligence.”
+
+### Anticipated Judge Q&A for Slide 6
+- **Q: Can this handle large enterprise repositories with thousands of commits?**  
+  *A: Yes. The DAG engine supports windowed virtual scrolling, commit node collapsing (`collapsed_run`), and loads recent active branch history dynamically.*
+
+---
+
+## Slide 7: CI/CD (From Pipeline Failure to Remediation)
+
+### Slide Header & Content in Deck 11
+```
+CI/CD
+From pipeline failure to remediation
+Track stages, inspect logs, quarantine flaky tests, and address vulnerable dependencies.
+
+EXPANDABLE LOGS:
+FAIL auth.spec.ts | token refresh timeout | 1 test failed in 48s
+
+FLAKY TESTS:
+• Pass rate and recent failures
+• Last failing commit
+• Quarantine & Analyze
+
+SUPPLY CHAIN:
+• CVE severity and version
+• Exact safe target version
+• Draft Dependabot patch
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “The CI/CD workspace connects pipeline execution directly to automated failure diagnosis and supply-chain remediation.
+>
+> At the top, GitPet tracks the delivery pipeline across 5 standard stages: `Lint & Format`, `Unit Tests`, `CVE Scan`, `Build`, and `Staging Verification`. Each stage displays live status badges, execution durations, and expandable line-by-line terminal logs.
+>
+> When a stage fails—as seen in our authentication test timeout—GitPet doesn't just display a red icon. It surfaces two high-value DevSecOps workflows:
+>
+> **1. Flaky Test Suite Diagnostics & Quarantine:**  
+> GitPet computes historical test reliability across recent runs. In this scenario, `auth.spec.ts` shows a 70% pass rate with 3 intermittent timeout failures. Rather than letting a known flaky test block an urgent production hotfix, developers can trigger **1-Click Quarantine & Analyze**. This isolates the flaky test in CI telemetry, opens an investigation ticket, and prevents unnecessary pipeline blockages.
+>
+> **2. Supply Chain Security & CVE Remediation:**  
+> The supply-chain panel pinpoints vulnerable dependencies detected during security scans—for instance, CVE-2026-8819 in `jsonwebtoken@9.0.0`. GitPet highlights the CVSS severity, identifies the exact safe target version (`9.0.2`), and arms **1-Click Draft Dependabot Patch** to generate an automated remediation PR branch with verified package manifests.
+>
+> This bridges four fragmented steps: failure detection, root cause log analysis, test quarantine, and dependency patching.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  1. Navigate to the **CI/CD** page (`#cicd`).
+  2. Switch scenario to **Build Failure** (or *Flaky Test Regression*).
+  3. Expand the failed `02. Unit Tests` stage to show terminal output: `FAIL tests/auth.spec.ts: token refresh timeout after 48s`.
+  4. Point to the **Flaky Test Diagnostics Card** showing 70% reliability.
+  5. Hover over the **Quarantine & Analyze** button.
+  6. Point to the **Supply Chain Security Card** highlighting CVE-2026-8819 and the **Draft Dependabot Patch** CTA.
+
+### Key Technical Talking Points & Judge Anchors
+- **Closed-Loop DevSecOps:** Moves beyond passive monitoring by providing concrete remediation pathways directly from CI/CD telemetry.
+- **Security Posture:** Complies with OpenSSF and NIST supply chain guidelines by recommending non-breaking semver updates.
+
+### Transition to Slide 8
+> “Once pipeline checks pass, the next common delivery bottleneck is human code review.”
+
+### Anticipated Judge Q&A for Slide 7
+- **Q: Does quarantining a flaky test create tech debt by hiding broken tests?**  
+  *A: No. Quarantined tests remain highlighted with an alert banner on the CI/CD and Release Gate pages, actively deducting points until permanently resolved.*
+
+---
+
+## Slide 8: PULL REQUESTS (From Blocked Review to Merge Readiness)
+
+### Slide Header & Content in Deck 11
+```
+PULL REQUESTS
+From blocked review to merge readiness
+Unify approvals, turnaround, inline threads, and AI-assisted resolution.
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “The Pull Request Intelligence workspace unifies review metrics, approval thresholds, line-anchored comments, and AI-assisted resolutions into a single developer view.
+>
+> In our demonstration, we are inspecting **PR #214: Add JWT Authentication Middleware**.
+>
+> At the top of the drawer:
+> - The **Approval Threshold Meter** shows `1 of 2 required peer approvals`, making readiness instantly obvious.
+> - The **Review Turnaround Clock** tracks wait time (`3 days in review`), spotlighting organizational delivery bottlenecks.
+> - The **Mergeability Diagnostic** checks branch conflict status, CI test status, and pending change requests.
+>
+> Below the metrics, GitPet renders inline review comments anchored directly to the exact file and line number (`src/auth/authService.ts:42`).
+>
+> **The highlight of this page is the AI Resolution Composer:**  
+> When a reviewer requests changes—such as adding exponential backoff to token refreshes—Byte analyzes the comment, the surrounding code diff, and project architecture to draft a professional, context-rich developer response.
+>
+> The draft details the code changes made, explains the technical rationale, and cites the newly added unit tests.
+>
+> Crucially, the draft is never auto-posted. The developer can inspect, edit, and refine the text before appending it to the thread.
+>
+> Once all approvals and checks turn green, the **Squash & Merge** action unlocks, complete with an automated Conventional Changelog generator.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  1. Navigate to the **Pull Requests** page (`#pr`).
+  2. Open **PR #214**.
+  3. Point out the `1 of 2 Approvals` badge and the `3 days waiting` turnaround clock.
+  4. Scroll to the line-anchored review thread on `src/auth/authService.ts:42` from reviewer `@sarah-dev`.
+  5. Click **Draft AI Resolution Response**.
+  6. Show the generated markdown response in the interactive text area.
+  7. Show that the text is fully editable by typing a quick adjustment.
+  8. Point to the locked **Squash & Merge** button, noting that it arms only when all review and CI policies are satisfied.
+
+### Key Technical Talking Points & Judge Anchors
+- **Human-in-the-Loop Communication:** Reinforces that AI generates technical drafts to save developer time, but human engineers maintain full ownership of all team communication.
+- **End-to-End Traceability:** Connects review comments directly to the commit diff and subsequent verification tests.
+
+### Transition to Slide 9
+> “With repository state, CI pipelines, and pull requests unified, how do teams make the ultimate deployment decision: is this build ready to ship?”
+
+### Anticipated Judge Q&A for Slide 8
+- **Q: Does the AI Resolution Composer post directly to GitHub via API?**  
+  *A: In Live Workspace Mode, it can post approved responses to GitHub PR threads using the configured personal access token; in Sandbox Mode, it provides full interactive simulated drafting.*
+
+---
+
+## Slide 9: SCORING (Release Gate & Deployment Readiness)
+
+### Slide Header & Content in Deck 11
+```
+SCORING
+Release Gate + Deployment
+Deployment readiness and repository health stay aligned with Byte’s visual state.
+
+HEALTH FACTORS:
+• Branch divergence • Failed and flaky tests • Secrets and security policies
+• Open vulnerabilities • Code smells and debt • Unreviewed commits and PR lag • Large PR size
+
+68 ATTENTION HP
+Score = max(0, 100 − deductions)
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “GitPet provides a deterministic **5-Pillar Release Gate** that calculates deployment readiness and prevents premature releases.
+>
+> The Release Gate evaluates five weighted pillars:
+> 1. **Tests Passing (25% weight):** Requires a 100% clean test suite pass rate.
+> 2. **Code Coverage (20% weight):** Enforces a minimum threshold of 80% line coverage.
+> 3. **Vulnerability Status (25% weight):** Enforces zero open High or Critical CVEs.
+> 4. **PR Approvals (15% weight):** Requires satisfying peer review thresholds with zero unresolved change requests.
+> 5. **Branch Freshness (15% weight):** Requires 0 commits behind upstream main.
+>
+> The overall score maps directly to three release readiness tiers:
+> - **Ready to Ship (≥90%):** Green status, sign-off button armed.
+> - **Caution (70–89%):** Amber status, requires team review.
+> - **Blocked (<70%):** Red status, release sign-off locked.
+>
+> The Release Gate does not just display a percentage. It pinpoints active release blockers with direct remediation deep links—such as jumping straight into CVE patching or rebase synchronization.
+>
+> Teams can also export compliance artifacts in one click: a formatted **Markdown Summary** for release notes or a machine-readable **JSON Audit Artifact** for compliance records.
+>
+> Notice that Byte’s 68 Attention HP on screen directly reflects these underlying release deductions.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  1. Navigate to the **Release Gate** page (`#release`).
+  2. Point out the overall readiness score gauge (e.g., `68% - CAUTION / BLOCKED`).
+  3. Walk across the 5 pillar progress bars:
+     - Tests Passing (Failing test flag).
+     - Code Coverage (78% vs 80% target).
+     - Vulnerabilities (1 High CVE detected).
+     - PR Approvals (1 of 2 satisfied).
+     - Branch Freshness (6 commits behind).
+  4. Point to the **Active Blockers List** at the bottom.
+  5. Click **Export JSON Artifact** or **Export Markdown Summary** to showcase compliance readiness.
+
+### Key Technical Talking Points & Judge Anchors
+- **Objective Release Governance:** Eliminates subjective 'feels ready' deployment decisions by establishing transparent, reproducible release scorecards.
+- **Audit-Ready Compliance:** Generates verifiable JSON release manifests containing full test, coverage, and security metadata.
+
+### Transition to Slide 10
+> “To understand the exact mathematical breakdown behind Byte’s 68 HP score, let’s look at our 7-Factor Risk Analysis engine.”
+
+### Anticipated Judge Q&A for Slide 9
+- **Q: Can release pillar weights and coverage thresholds be customized per team?**  
+  *A: Yes. The scoring parameters are defined in a structured configuration schema, allowing teams to adjust coverage targets, required approvals, and CVE tolerance.*
+
+---
+
+## Slide 10: SCORING (Dynamic Weighted Risk Analysis)
+
+### Slide Header & Content in Deck 11
+```
+SCORING
+Risk Analysis
+Dynamic weighted risk assessment
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “The Risk Analysis page provides the mathematical engine behind Byte’s health pool.
+>
+> Repository health is computed dynamically using a 7-factor deduction formula:
+> $$\text{Health Score (HP)} = \max\left(0, 100 - \sum \text{Deductions}\right)$$
+>
+> **The 7 Risk Dimensions are:**
+> 1. **Branch Drift & Divergence (0 to -35 pts):** Deducts points based on behind-commit count.
+> 2. **Failed & Flaky Tests (0 to -28 pts):** Deducts points for failing CI runs and intermittent test flakes.
+> 3. **Secrets & Security Policies (0 to -30 pts):** High-impact deduction for exposed credentials or open cloud storage policies.
+> 4. **Open CVE Vulnerabilities (0 to -22 pts):** Deducts points for unpatched dependencies.
+> 5. **Code Smells & Uncommitted Debt (0 to -15 pts):** Deducts points for dirty working trees with >8 modified files.
+> 6. **Unreviewed PR Lag (0 to -15 pts):** Deducts points for stale pull requests waiting >3 days.
+> 7. **Oversized PR Scope (0 to -12 pts):** Deducts points for massive PRs (>400 lines or >15 files) that increase blast radius.
+>
+> This score maps directly to Byte’s 4-tier visual aura: **Healthy (80–100 HP)**, **Attention (45–79 HP)**, **Blocked (<45 HP)**, and **Critical Hazard (0 HP)**.
+>
+> Every factor card includes an interactive **'Remediate with Byte'** button. Clicking it deep-links the developer back to the Companion with a pre-populated diagnostic prompt, closing the loop from detection to safe resolution.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  1. Navigate to the **Risk Score** page (`#risk`).
+  2. Point to the top health score meter displaying `68 HP (Attention)`.
+  3. Show the category filter tabs: `All Factors`, `Hazards`, `Warnings`, `Healthy`.
+  4. Scroll down to show the specific factor deductions:
+     - Branch Drift: `-18 pts` (6 commits behind).
+     - CVE Vulnerabilities: `-14 pts` (1 High severity package).
+  5. Click **Remediate with Byte** on the Branch Drift card.
+  6. Show how the application seamlessly navigates back to the Companion page with the diagnostic prompt pre-filled in the chat input.
+
+### Key Technical Talking Points & Judge Anchors
+- **Closed-Loop Remediation:** Shows how GitPet connects analytical risk scoring directly to actionable AI guidance and bounded execution.
+- **Predictable, Bounded Formula:** Guarantees that HP never drops below 0 and provides transparent accounting for every lost point.
+
+### Transition to Slide 11
+> “Now let’s examine the underlying architecture that keeps AI reasoning, safety policies, and Git execution strictly separated.”
+
+### Anticipated Judge Q&A for Slide 10
+- **Q: Why separate Release Gate scoring from Risk Scorecard HP?**  
+  *A: The Release Gate focuses strictly on binary deployment criteria for a specific build artifact, while the Risk Scorecard monitors broader continuous repository hygiene and developer working habits.*
+
+---
+
+## Slide 11: ARCHITECTURE (React 19 + Express Gateway + Gemini Services)
+
+### Slide Header & Content in Deck 11
+```
+ARCHITECTURE
+React 19 + Express gateway + Gemini services
+A production-shaped separation between interface, policy, execution, and external services.
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “GitPet uses a clean, production-shaped architecture designed around a strict separation of authority:
+>
+> 1. **Frontend SPA Layer:** Built with React 19, TypeScript, Vite, TailwindCSS v4, and Motion. It hosts our 6 core pages, the Web Audio chiptune synthesizer, and the SVG DAG topology engine.
+> 2. **Express Gateway Layer (Port 3004):** The central security trust boundary. It handles request validation, prompt sanitization, automated secret redaction, safety policy routing, and WebSocket telemetry streaming.
+> 3. **Safety Engine & Subprocess Boundary:** Contains our Layer 1 static tokenizer and Layer 2 contextual linter. Approved commands are executed strictly via `child_process.execFile` with separate argv arrays—completely bypassing system shell interpreters.
+> 4. **External Gemini Cloud Services:** Communicates over secure TLS 1.3 with Google Gemini models for structured text reasoning, Gemini Live Audio for low-latency voice, and Imagen 3 for avatar personalization. All API keys remain safely guarded behind the backend gateway.
+>
+> **The Key Architectural Principle is Separation of Authority:**
+> - The **AI Model** has authority to explain, analyze, and *suggest*.
+> - The **Safety Engine** has authority to *allow or reject*.
+> - The **Human Developer** has authority to *approve*.
+> - The **Constrained Executor** has authority to run *only the verified Git operation*.
+>
+> This guarantees that an AI model can never directly execute a shell command on a developer's machine.”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  - Point to the architecture flow diagram on the slide.
+  - Trace the path of an action: `User Request` → `Gemini Reasoning` → `Gateway Secret Redactor` → `2-Layer Safety Gate` → `Human Preview Modal` → `execFile Subprocess Execution` → `Audit Buffer`.
+  - Highlight the backend gateway running on `http://localhost:3004`.
+
+### Key Technical Talking Points & Judge Anchors
+- **Defense-in-Depth:** Aligns with OWASP LLM Top 10 (LLM01 Prompt Injection, LLM02 Sensitive Information Disclosure, LLM08 Excessive Agency) and NIST AI RMF 1.0 standards.
+- **Secret Redaction:** The gateway scans prompts and outputs for GitHub tokens, AWS keys, and private SSH keys, redacting them before they can be sent to external models or saved to logs.
+
+### Transition to Slide 12
+> “To conclude, let’s review what makes GitPet unique and open the floor for questions.”
+
+### Anticipated Judge Q&A for Slide 11
+- **Q: What happens if the Express gateway goes down?**  
+  *A: The frontend detects gateway disconnection, displays an offline warning banner, and switches gracefully to local sandbox mode so developers can still inspect local DAG topology and diffs.*
+
+---
+
+## Slide 12: CLOSING (Ambient DevSecOps + Live Launch)
+
+### Slide Header & Content in Deck 11
+```
+GitPet makes DevSecOps health ambient, explainable, and safely actionable.
+
+AMBIENT AWARENESS: No terminal hunting
+BOUNDED AGENCY: Safety enforced in code
+MULTIMODAL AI: Text, voice, image, TTS
+DEVSECOPS INTELLIGENCE: DAG, CI/CD, PR, release
+PRODUCTION READY: Tests, governance, SBOM, runbook
+
+Team Ribbon Patrol: Aliasgar Husain • Lucas Whitaker • David Castelli • Faris Nour
+PRESS P FOR IN-APP DECK (Deck reference available)
+npm run dev  →  http://localhost:3004
+```
+
+### Spoken Speaker Script (Verbatim Rehearsal)
+> “In summary, **GitPet makes DevSecOps health ambient, explainable, and safely actionable.**
+>
+> Here are the 5 core takeaways:
+> 1. **Ambient Awareness:** Byte eliminates terminal hunting by making repository health continuously visible through posture, auras, and sound.
+> 2. **Bounded Agency:** Safety is enforced in code. With our two-layer safety engine, mandatory previews, and pre-computed rollbacks, the human developer always retains ultimate control.
+> 3. **Multimodal AI:** Seamlessly integrates Google Gemini text reasoning, Gemini Live voice streaming, and Imagen avatar personalization with offline fallbacks.
+> 4. **DevSecOps Intelligence:** Unifies multi-lane DAG topology, working tree diffs, CI/CD pipeline telemetry, flaky test quarantine, PR review intelligence, and 5-pillar release readiness in one cohesive experience.
+> 5. **Production Readiness:** Backed by 31 automated Vitest tests (100% pass), a comprehensive STRIDE threat model, NIST AI RMF governance system cards, CycloneDX SBOM inventory, and an SRE runbook.
+>
+> We are Team 05, **Ribbon Patrol**: Aliasgar Husain, Lucas Whitaker, David Castelli, and Faris Nour.
+>
+> You can run the application right now with `npm run dev` at `http://localhost:3004`.
+>
+> Thank you for your time, and we welcome your questions or live scenario requests!”
+
+### Live Demonstration Cues & Screen Actions
+- **Presenter Action:** 
+  - Return to the live application at `http://localhost:3004`.
+  - Leave Byte on screen in the center stage.
+  - Invite the judges to pick any scenario from the Quick Palette (`⌘K` / `Ctrl+K`), test a custom Git command, or ask Byte an architectural question.
+
+### Key Technical Talking Points & Judge Anchors
+- Thank the hackathon organizers and Google Gemini team.
+- Highlight team collaboration, clear division of responsibilities, and thorough documentation suite.
+
+---
+
+## Presentation Timing & Pacing Reference Table
+
+```
++---------+----------------------------------------------+----------+-----------------+
+| Slide # | Slide Title & Core Topic                     | Duration | Cumulative Time |
++---------+----------------------------------------------+----------+-----------------+
+| 01      | GitPet Title & 3 Core Dilemmas               | 00:55    | 00:55           |
+| 02      | SOLUTION: Notice · Understand · Resolve      | 01:05    | 02:00           |
+| 03      | AI ASSISTANCE: 4 Personas & Evidence Cards   | 01:15    | 03:15           |
+| 04      | SAFETY: Layer 1 Static Rules (9 Threats)     | 01:10    | 04:25           |
+| 05      | SAFETY: Layer 2 Context Lints & Reversals    | 01:05    | 05:30           |
+| 06      | REPOSITORY: Multi-Lane DAG & Diff Studio     | 01:00    | 06:30           |
+| 07      | CI/CD: 5-Stage Tracker & Flaky Quarantine    | 00:55    | 07:25           |
+| 08      | PULL REQUESTS: PR #214 & AI Resolution Draft | 00:50    | 08:15           |
+| 09      | SCORING: 5-Pillar Release Gate & Exports     | 00:50    | 09:05           |
+| 10      | SCORING: 7-Factor HP Formula & Remediate     | 00:50    | 09:55           |
+| 11      | ARCHITECTURE: Express Gateway & execFile     | 01:00    | 10:55           |
+| 12      | CLOSING: 5 Core Pillars & Live Launch        | 00:45    | 11:40           |
++---------+----------------------------------------------+----------+-----------------+
+| TOTAL   | Full Presentation & Demonstration            | 11m 40s  | (Budget: 12m)   |
++---------+----------------------------------------------+----------+-----------------+
+```
+
+---
+
+## High-Priority Messages to Preserve Under Time Pressure
+
+If the judges or moderators issue a 2-minute or 5-minute warning, compress the presentation while strictly preserving these four foundational claims:
+
+1. **Byte is a Live Telemetry Visualization, Not Just a Mascot:**  
+   Byte's 18 postures, 4 health auras, and chiptune audio directly reflect live Git status, pipeline states, and security posture.
+2. **AI Reasoning is Grounded in Concrete Repository Evidence:**  
+   Every Gemini response cites live branch divergence, dirty files, and CVE IDs with quantitative confidence scores.
+3. **The Model Can Suggest; The Safety Engine Decides:**  
+   Safety is enforced at the code level through 9 static rules and 6 contextual lints. Commands run via tokenized `execFile`, never free-form shell execution.
+4. **Every Action is Previewed, Bounded, and Reversible:**  
+   Zero blind execution. The developer sees the blast radius and reversal plan before confirming any state-changing operation.
+
+---
+
+## Live Demo Keyboard Shortcuts & Quick Reference
+
+| Shortcut | Scope | Action Triggered |
 | :--- | :--- | :--- |
-| Opening & Problem | Slides 1–2 | ~1.5 minutes |
-| Live AI Chat Demo | Slide 3 | ~1.5 minutes |
-| Safety Engine | Slide 4 | ~1.5 minutes |
-| Feature Walkthrough | Slides 5–9 | ~4 minutes |
-| Architecture & Security | Slides 10–11 | ~1.5 minutes |
-| Demo Integrity | Slide 12 | ~1 minute |
-| Team & Closing | Slide 13 | ~1 minute |
-| **Total** | **13 slides** | **~10–12 minutes** |
+| `Spacebar` | Global | Pet Byte (synthesizes purring audio + spawns heart particles) |
+| `⌘K` / `Ctrl+K` | Global | Open Quick Command Palette (scenario switcher, navigation, settings) |
+| `⌘B` / `Ctrl+B` | Global | Toggle between Companion Page (`#companion`) and Repository Page (`#repository`) |
+| `Esc` | Global | Close active modal, preview drawer, or command palette |
 
-**Q&A Backup Slides:** Slides 5 through 12 can be expanded with deeper detail if judges ask about specific features. The appendix in `PRESENTATION_SLIDES.md` provides keyboard shortcuts, npm scripts, and a documentation index for quick reference.
+---
+
+## Documentation Cross-Reference Matrix
+
+| Documentation File | Key Content Aligned with Slide Notes |
+| :--- | :--- |
+| `docs/PRESENTATION_SLIDES.md` | Slide-by-slide markdown transcript matching `GitPet_Professional_Deck 11.pptx` (12 slides). |
+| `docs/PROJECT_OVERVIEW.md` | Executive summary, elevator pitch, 3 core dilemmas, and target user personas. |
+| `docs/README.md` | Complete functional specification, feature inventory, API reference, and setup guide. |
+| `docs/ARCHITECTURE.md` | System architecture, C4 container diagrams, Express gateway trust boundary, and data flows. |
+| `docs/SECURITY_THREAT_MODEL.md` | STRIDE analysis, 9 static threat rules, 6 contextual lints, secret redactor specifications. |
+| `docs/AI_GOVERNANCE.md` | NIST AI RMF 1.0 system card, 5-tier human-in-the-loop matrix, and AI transparency disclosures. |
+| `docs/RUNBOOK.md` | Operational guide, health check endpoints (`/api/health`), disaster recovery, and troubleshooting. |
+| `docs/TEST_REPORT.md` | 31 automated Vitest tests (security, executor, markdown) and test execution logs. |
+| `docs/SBOM_MANIFEST.md` | CycloneDX-compatible software bill of materials and dependency license audit. |
+| `docs/DEMO_NOTES.md` | Component fidelity classification, sandbox vs. live workspace mode data mapping. |
+| `docs/USER_GUIDE.md` | Comprehensive manual covering all 6 application pages and interactive workflows. |
+| `docs/GUIDELINES_COMPLIANCE.md` | Participant guidelines verification matrix (P-01 through P-15). |
+| `docs/CHECKLIST.md` | Hackathon submission checklist verification matrix (Items 1 through 20). |
