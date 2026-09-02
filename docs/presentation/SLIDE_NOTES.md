@@ -2,12 +2,12 @@
 
 **Project:** GitPet — Ambient DevSecOps Repository Companion  
 **Team:** Ribbon Patrol (Team 05) — Lucas Whitaker & David Castelli  
-**Event:** DevOps for GenAI Hackathon 2026, Ottawa  
-**Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (12 Slides)  
-**Target Duration:** 10 to 12 Minutes (Target: ~11 minutes 30 seconds)  
-**Presentation Format:** Authoritative, high-impact slide-deck presentation explaining the core problem landscape, system architecture, 6 dedicated full-page workspaces, 2-layer safety policy engine, scoring algorithms, and governance model to judges and technical evaluators.  
+**Event:** [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) — DevOps for GenAI Hackathon  
+**Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (13 Slides)  
+**Target Duration:** 10 to 12 Minutes (Target: ~11 minutes 50 seconds)  
+**Presentation Format:** Authoritative, high-impact slide-deck presentation explaining the core problem landscape, event challenge, system architecture, 6 dedicated full-page workspaces, 2-layer safety policy engine, scoring algorithms, and governance model to judges and technical evaluators.  
 **Presenters:**  
-- **Lucas Whitaker** (Lead Presenter — Majority: Problem Framing, Core Loop, AI Engine, 2-Layer Safety Policy, Release Gate, Risk Health Pool, Production Architecture, Closing)  
+- **Lucas Whitaker** (Lead Presenter — Majority: Problem Framing, Event Mission, Core Loop, AI Engine, 2-Layer Safety Policy, Release Gate, Risk Health Pool, Production Architecture, Closing)  
 - **David Castelli** (Workspaces Presenter: Repository DAG & Diff Studio, CI/CD Pipeline Telemetry & Flaky Quarantine, PR Intelligence & AI Reply Composer, Shared Closing)  
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
@@ -18,25 +18,26 @@
 
 | Slide # | Slide Title in Deck 11 | Core Architectural & Feature Topic | Target Time | Cumulative | Presenter Lead |
 | :---: | :--- | :--- | :---: | :---: | :--- |
-| **01** | **GitPet (Title & Hook)** | The 3 Developer Crises (Context Blindness, AI Agency, Buried Telemetry) | 0:55 | 0:55 | **Lucas Whitaker** |
-| **02** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms Taxonomy | 1:05 | 2:00 | **Lucas Whitaker** |
-| **03** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Grounded Evidence | 1:10 | 3:10 | **Lucas Whitaker** |
-| **04** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants, Zero Force-Push & Pure Argv Execution | 1:05 | 4:15 | **Lucas Whitaker** |
-| **05** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Aware Lints, Untracked Stash Fix (`-u`) & Rollback Anchors | 1:05 | 5:20 | **Lucas Whitaker** |
-| **06** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diff Studio, Checkbox Staging & Stashes | 1:00 | 6:20 | **David Castelli** |
-| **07** | **CI/CD (Failure to Remediation)** | 5-Stage Tracker, Logs, Flaky Test Quarantine & CVE Patching | 0:55 | 7:15 | **David Castelli** |
-| **08** | **PULL REQUESTS (Review to Merge)** | PR #214, Turnaround Clock, Inline Threads & AI Reply Composer | 0:50 | 8:05 | **David Castelli** |
-| **09** | **SCORING (Release Gate & Deployment)** | Automated 5-Pillar Scorecard, AI Executive Verdict & Compliance Exports | 0:55 | 9:00 | **Lucas Whitaker** |
-| **10** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Deep-Link Remediation | 0:50 | 9:50 | **Lucas Whitaker** |
-| **11** | **ARCHITECTURE (System & Gateway)** | React 19, Express Gateway, Secret Redactor, Pure Argv Execution | 1:00 | 10:50 | **Lucas Whitaker** |
-| **12** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, 31 Vitest Tests, Live Launch on Port 3004 & Q&A | 0:45 | 11:35 | **Lucas & David (Shared)** |
+| **01** | **GitPet (Title & Hook)** | The 3 Developer Crises (Context Blindness, AI Agency, Buried Telemetry) | 0:50 | 0:50 | **Lucas Whitaker** |
+| **02** | **EVENT & MISSION (AWS Community Day)** | AWS Community Day Ottawa 2026 & The DevOps for GenAI Challenge | 0:50 | 1:40 | **Lucas Whitaker** |
+| **03** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms Taxonomy | 1:00 | 2:40 | **Lucas Whitaker** |
+| **04** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Grounded Evidence | 1:05 | 3:45 | **Lucas Whitaker** |
+| **05** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants, Zero Force-Push & Pure Argv Execution | 1:00 | 4:45 | **Lucas Whitaker** |
+| **06** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Aware Lints, Untracked Stash Fix (`-u`) & Rollback Anchors | 1:00 | 5:45 | **Lucas Whitaker** |
+| **07** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diff Studio, Checkbox Staging & Stashes | 1:00 | 6:45 | **David Castelli** |
+| **08** | **CI/CD (Failure to Remediation)** | 5-Stage Tracker, Logs, Flaky Test Quarantine & CVE Patching | 0:55 | 7:40 | **David Castelli** |
+| **09** | **PULL REQUESTS (Review to Merge)** | PR #214, Turnaround Clock, Inline Threads & AI Reply Composer | 0:50 | 8:30 | **David Castelli** |
+| **10** | **SCORING (Release Gate & Deployment)** | Automated 5-Pillar Scorecard, AI Executive Verdict & Compliance Exports | 0:55 | 9:25 | **Lucas Whitaker** |
+| **11** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Deep-Link Remediation | 0:50 | 10:15 | **Lucas Whitaker** |
+| **12** | **ARCHITECTURE (System & Gateway)** | React 19, Express Gateway, Secret Redactor, Pure Argv Execution | 1:00 | 11:15 | **Lucas Whitaker** |
+| **13** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, 31 Vitest Tests, Live Launch on Port 3004 & Q&A | 0:45 | 12:00 | **Lucas & David (Shared)** |
 
 ---
 
 ## Slide 1: GitPet (Title & Problem Hook)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 55 seconds  
+**Target time:** 50 seconds  
 **Visual Focus on Slide 1:** Product branding, team credentials, and the three developer problem cards: *Context Blindness*, *Unchecked AI Agency*, and *Buried Telemetry*.  
 
 ### Verbatim Spoken Presentation:
@@ -48,10 +49,10 @@
 >
 > *See risk. Understand evidence. Resolve safely.*
 >
-> To understand why we built GitPet, we have to examine the three major friction points confronting modern software teams:
+> Modern software delivery suffers from three critical points of friction:
 >
-> 1. **First, Context Blindness and Cognitive Overload.** Developers spend up to 30 percent of their working hours context-switching between terminal windows, CI/CD portals, pull request queues, and security dashboards. Critical repository conditions—like upstream branch drift, detached HEADs, uncommitted stash debt, or broken test suites—are discovered late, usually when a merge or staging release fails.
-> 2. **Second, the 'Excessive Agency' Dilemma in AI Coding Assistants.** Autonomous coding agents with unrestricted shell access can generate syntactically valid commands that carry catastrophic blast radius—such as blind force-pushes, hard resets, or destructive file wipes. Prompt instructions alone are not security boundaries.
+> 1. **First, Context Blindness and Cognitive Overload.** Developers spend up to 30 percent of their working day switching between terminal windows, CI/CD portals, pull request queues, and security dashboards. Critical repository conditions—like upstream branch drift, detached HEADs, uncommitted stash debt, or broken test suites—are discovered late, usually when a merge or staging release fails.
+> 2. **Second, the 'Excessive Agency' Dilemma in AI Coding Assistants.** Autonomous coding agents with direct shell access can generate syntactically valid commands that carry catastrophic blast radius—such as blind force-pushes, hard resets, or destructive file wipes. Prompt instructions alone are not security boundaries.
 > 3. **Third, Buried Telemetry.** Non-linear branch divergence, merge conflicts, flaky test regressions, and supply-chain CVEs are technically logged, but remain buried inside thousands of lines of raw terminal output.
 >
 > GitPet solves this by translating live repository telemetry directly into an ambient virtual companion named **Byte**. Byte reflects repository health through continuous peripheral awareness, explains supporting evidence using Google Gemini, and guides developers through bounded, human-verified, and reversible actions.”
@@ -62,15 +63,43 @@
 - Emphasize the core thesis: *GitPet augments human judgment through grounded evidence rather than replacing it with unchecked AI execution.*
 
 ### Verbal Transition to Slide 2:
-> “Let’s look at how GitPet converts this fragmented telemetry into an intuitive, continuous developer workflow on Slide 2.”
+> “To understand why we designed GitPet this way, let’s look at the mission behind this project at AWS Community Day Ottawa 2026 on Slide 2.”
 
 ---
 
-## Slide 2: SOLUTION (Notice · Understand · Resolve)
+## Slide 2: The Event & The Mission — AWS Community Day Ottawa 2026
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 5 seconds  
-**Visual Focus on Slide 2:** The 3-stage DevSecOps loop diagram, the 18 physical symptoms taxonomy, and the bottom principle: *“Human judgment remains the approval gate.”*  
+**Target time:** 50 seconds  
+**Visual Focus on Slide 2:** [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) banner, the DevOps for GenAI Hackathon challenge statement, and the three-stage evolution: DevOps Reality → GenAI Opportunity → GitPet Innovation.  
+
+### Verbatim Spoken Presentation:
+> “GitPet was conceived, architected, and built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)), competing in the **DevOps for GenAI Hackathon**.
+>
+> AWS Community Day brings together cloud architects, DevOps practitioners, and AI researchers across Canada’s capital region. The hackathon challenged us with a fundamental industry question:
+>
+> *How can Generative AI transform DevOps, Continuous Integration, and Repository Governance from reactive, high-friction toil into intelligent, ambient, and bulletproof delivery workflows?*
+>
+> In evaluating modern cloud delivery, we recognized a crucial disconnect:
+>
+> Modern cloud platforms give us unprecedented pipeline power, but the developer interface remains fragmented and reactive. Meanwhile, generative AI gives us remarkable reasoning power over complex diffs and logs, but unregulated AI agency creates severe data-loss and compliance risks.
+>
+> Team 05 set out to build the definitive answer for AWS Community Day 2026: a platform that combines the peripheral awareness of an ambient companion, the reasoning depth of Google Gemini, and the deterministic safety guarantees demanded by enterprise cloud pipelines.”
+
+### Slide Delivery Cues:
+- Acknowledge AWS Community Day Ottawa 2026 and highlight the Hackathon's mission to bridge Cloud-Native DevOps with Generative AI.
+- Emphasize that GitPet is built as a complete, production-grade application for this competition.
+
+### Verbal Transition to Slide 3:
+> “Now let’s look at how GitPet operationalizes this vision into a continuous developer loop on Slide 3.”
+
+---
+
+## Slide 3: SOLUTION (Notice · Understand · Resolve)
+
+**Presenter:** **Lucas Whitaker**  
+**Target time:** 1 minute 0 seconds  
+**Visual Focus on Slide 3:** The 3-stage DevSecOps loop diagram, the 18 physical symptoms taxonomy, and the bottom principle: *“Human judgment remains the approval gate.”*  
 
 ### Verbatim Spoken Presentation:
 > “GitPet organizes the entire developer experience into a continuous 3-stage loop: **Notice, Understand, and Resolve.**
@@ -90,16 +119,16 @@
 - Highlight the 4-tier health aura model: **Healthy** (80–100 HP, Green), **Attention** (45–79 HP, Amber), **Blocked** (1–44 HP, Red), and **Critical Hazard** (0 HP, Grayscale).
 - Emphasize that Byte is not decorative art—it is an authoritative ambient telemetry visualizer.
 
-### Verbal Transition to Slide 3:
-> “Now let’s examine how Byte adapts its reasoning to different developer roles and task complexities on Slide 3.”
+### Verbal Transition to Slide 4:
+> “Now let’s examine how Byte adapts its reasoning to different developer roles and task complexities on Slide 4.”
 
 ---
 
-## Slide 3: AI ASSISTANCE (Talk to Byte)
+## Slide 4: AI ASSISTANCE (Talk to Byte)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 10 seconds  
-**Visual Focus on Slide 3:** The 4 specialized personas matrix, the 3 model speed tiers (`@google/genai` v2.4.0), and the structured anatomy of an AI response.  
+**Target time:** 1 minute 5 seconds  
+**Visual Focus on Slide 4:** The 4 specialized personas matrix, the 3 model speed tiers (`@google/genai` v2.4.0), and the structured anatomy of an AI response.  
 
 ### Verbatim Spoken Presentation:
 > “Not every developer requires the same type of guidance. A junior developer learning Git needs clear mental models; a platform architect diagnosing a complex rebase conflict needs topological rigor; and a release engineer needs strict compliance verification.
@@ -122,16 +151,16 @@
 ### Slide Delivery Cues:
 - Point out the Evidence Signals Box and explain how it prevents model hallucinations by anchoring generation in verified repository data.
 
-### Verbal Transition to Slide 4:
-> “Reasoning quality is essential, but reasoning alone is not a security boundary. On Slide 4, let’s look at how GitPet enforces safety at the code level.”
+### Verbal Transition to Slide 5:
+> “Reasoning quality is essential, but reasoning alone is not a security boundary. On Slide 5, let’s look at how GitPet enforces safety at the code level.”
 
 ---
 
-## Slide 4: SAFETY (Layer 1: Static Rules)
+## Slide 5: SAFETY (Layer 1: Static Rules)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 5 seconds  
-**Visual Focus on Slide 4:** The blocked threat codes table, safe alternatives mapping, and pure argv child process execution guarantees.  
+**Target time:** 1 minute 0 seconds  
+**Visual Focus on Slide 5:** The blocked threat codes table, safe alternatives mapping, and pure argv child process execution guarantees.  
 
 ### Verbatim Spoken Presentation:
 > “In any AI-enabled developer system, prompt engineering is guidance—it is not a security boundary. If an LLM hallucinates a dangerous command, receives prompt injection, or misinterprets repository state, relying on system instructions alone will fail.
@@ -155,19 +184,19 @@
 - Point out the clear contrast between blocked red commands and green safe alternatives.
 - Highlight that Layer 1 is backed by 19 automated executor tests in Vitest.
 
-### Verbal Transition to Slide 5:
-> “Static syntax checks catch universally dangerous commands. But what happens when a command is syntactically valid yet dangerous in the current working directory? That brings us to Slide 5.”
+### Verbal Transition to Slide 6:
+> “Static syntax checks catch universally dangerous commands. But what happens when a command is syntactically valid yet dangerous in the current working directory? That brings us to Slide 6.”
 
 ---
 
-## Slide 5: SAFETY (Layer 2: Contextual Lints)
+## Slide 6: SAFETY (Layer 2: Contextual Lints)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 5 seconds  
-**Visual Focus on Slide 5:** The untracked-file stash scenario, the `stash-misses-untracked` auto-correction (`-u`), and rollback anchor state.  
+**Target time:** 1 minute 0 seconds  
+**Visual Focus on Slide 6:** The untracked-file stash scenario, the `stash-misses-untracked` auto-correction (`-u`), and rollback anchor state.  
 
 ### Verbatim Spoken Presentation:
-> “On Slide 5, we present **Layer 2: Contextual Safety Lints**.
+> “On Slide 6, we present **Layer 2: Contextual Safety Lints**.
 >
 > Layer 2 compares proposed commands against the live working tree, staging index, branch relationships, stash stack, and any Git operation currently in progress.
 >
@@ -195,22 +224,22 @@
 - Point directly to the missing `-u` in the model suggestion versus the corrected command.
 - Emphasize the core takeaway: *“Valid syntax, unsafe context.”*
 
-### Presenter Handoff to Slide 6:
-- **Lucas:** *“With our safety foundation established, David will now take us through our dedicated developer workspaces, starting with the Repository and Topological DAG Graph on Slide 6.”*
+### Presenter Handoff to Slide 7:
+- **Lucas:** *“With our safety foundation established, David will now take us through our dedicated developer workspaces, starting with the Repository and Topological DAG Graph on Slide 7.”*
 
 ---
 
-## Slide 6: REPOSITORY (DAG & Working Tree)
+## Slide 7: REPOSITORY (DAG & Working Tree)
 
 **Presenter:** **David Castelli**  
 **Target time:** 1 minute 0 seconds  
-**Visual Focus on Slide 6:** The Multi-Lane SVG Topological DAG Graph layout, commit role badges, the Working Tree Diff Studio, and stash restoration.  
+**Visual Focus on Slide 7:** The Multi-Lane SVG Topological DAG Graph layout, commit role badges, the Working Tree Diff Studio, and stash restoration.  
 
 ### Presenter Handoff:
 - **David:** *“Thank you, Lucas.”*
 
 ### Verbatim Spoken Presentation:
-> “Slide 6 showcases our dedicated **Repository Details & DAG Graph Workspace (`#repository`)**.
+> “Slide 7 showcases our dedicated **Repository Details & DAG Graph Workspace (`#repository`)**.
 >
 > On the left, our **Interactive Multi-Lane DAG Visualizer** translates complex Git histories into an intuitive SVG topological graph.
 >
@@ -226,19 +255,19 @@
 - Point to the cubic bezier spline curves and the distinct Merge Base double-ring node on the DAG diagram.
 - Highlight how the diff studio connects working tree changes directly to the commit generator and safety preview.
 
-### Verbal Transition to Slide 7:
-> “Repository state is only one part of delivery health. Let’s look at how GitPet connects source code to CI/CD pipeline telemetry on Slide 7.”
+### Verbal Transition to Slide 8:
+> “Repository state is only one part of delivery health. Let’s look at how GitPet connects source code to CI/CD pipeline telemetry on Slide 8.”
 
 ---
 
-## Slide 7: CI/CD (Failure to Remediation)
+## Slide 8: CI/CD (Failure to Remediation)
 
 **Presenter:** **David Castelli**  
 **Target time:** 55 seconds  
-**Visual Focus on Slide 7:** The 5-stage pipeline progression tracker, expandable terminal execution logs, flaky test suite diagnostics, and supply chain CVE scan.  
+**Visual Focus on Slide 8:** The 5-stage pipeline progression tracker, expandable terminal execution logs, flaky test suite diagnostics, and supply chain CVE scan.  
 
 ### Verbatim Spoken Presentation:
-> “On Slide 7, we explore the **CI/CD Pipeline Telemetry Workspace (`#cicd`)**, which bridges local development with continuous integration and deployment pipelines.
+> “On Slide 8, we explore the **CI/CD Pipeline Telemetry Workspace (`#cicd`)**, which bridges local development with continuous integration and deployment pipelines.
 >
 > Our **5-Stage Pipeline Progression Tracker** monitors:
 > 1. *Lint & Static Analysis*
@@ -260,19 +289,19 @@
 ### Slide Delivery Cues:
 - Point out the progression from the failing test log to the flaky test diagnostic card and the supply chain CVE card.
 
-### Verbal Transition to Slide 8:
-> “Once the pipeline is understood, the next delivery bottleneck is often peer code review. Let’s look at Pull Request Intelligence on Slide 8.”
+### Verbal Transition to Slide 9:
+> “Once the pipeline is understood, the next delivery bottleneck is often peer code review. Let’s look at Pull Request Intelligence on Slide 9.”
 
 ---
 
-## Slide 8: PULL REQUESTS (Review to Merge)
+## Slide 9: PULL REQUESTS (Review to Merge)
 
 **Presenter:** **David Castelli**  
 **Target time:** 50 seconds  
-**Visual Focus on Slide 8:** PR #214 review metadata, approval threshold meter, review turnaround clock, inline comment threads, and the AI Resolution Response composer.  
+**Visual Focus on Slide 9:** PR #214 review metadata, approval threshold meter, review turnaround clock, inline comment threads, and the AI Resolution Response composer.  
 
 ### Verbatim Spoken Presentation:
-> “In the **Pull Request Intelligence Workspace (`#pr`)** on Slide 8, GitPet accelerates code review cycles and eliminates review bottlenecks.
+> “In the **Pull Request Intelligence Workspace (`#pr`)** on Slide 9, GitPet accelerates code review cycles and eliminates review bottlenecks.
 >
 > The workspace surfaces critical review telemetry:
 > - **Approval Ratio:** Real-time ratio comparing peer approvals against branch protection rules (`1 of 2 required`).
@@ -290,22 +319,22 @@
 ### Slide Delivery Cues:
 - Highlight the review turnaround clock (3 days waiting) and the 1-click AI resolution response composer.
 
-### Presenter Handoff to Slide 9:
-- **David:** *“Repository health, CI results, and pull request status all feed into our final production deployment decision: the GitPet Release Gate. Lucas will walk us through our scoring engines and production architecture.”*
+### Presenter Handoff to Slide 10:
+- **David:** *“Repository health, CI results, and pull request status all feed into our final production deployment decision: the GitPet Release Gate. Lucas will walk us through our scoring engines and production architecture on Slide 10.”*
 
 ---
 
-## Slide 9: SCORING (Release Gate & Deployment)
+## Slide 10: SCORING (Release Gate & Deployment)
 
 **Presenter:** **Lucas Whitaker**  
 **Target time:** 55 seconds  
-**Visual Focus on Slide 9:** The 5-pillar deployment scorecard gauge (78% score, Caution/Review status), the active blocker inventory, and compliance artifact exports.  
+**Visual Focus on Slide 10:** The 5-pillar deployment scorecard gauge (78% score, Caution/Review status), the active blocker inventory, and compliance artifact exports.  
 
 ### Presenter Handoff:
 - **Lucas:** *“Thank you, David.”*
 
 ### Verbatim Spoken Presentation:
-> “On Slide 9, we present the **Release Gate Workspace (`#release`)**, which turns delivery telemetry into an automated, defensible production sign-off.
+> “On Slide 10, we present the **Release Gate Workspace (`#release`)**, which turns delivery telemetry into an automated, defensible production sign-off.
 >
 > GitPet evaluates **five weighted pillars** defined in `releaseReadiness.ts`:
 > 1. **Tests Passing (25% Weight):** Evaluates CI pass rate (Target: 100%).
@@ -325,19 +354,19 @@
 ### Slide Delivery Cues:
 - Point out the 5 weighted pillar bars, the circular gauge (78%), and the active blocker cards.
 
-### Verbal Transition to Slide 10:
-> “While the release score governs production deployment gates, Byte’s day-to-day health pool uses a broader 7-factor risk model on Slide 10.”
+### Verbal Transition to Slide 11:
+> “While the release score governs production deployment gates, Byte’s day-to-day health pool uses a broader 7-factor risk model on Slide 11.”
 
 ---
 
-## Slide 10: SCORING (Dynamic Risk Analysis)
+## Slide 11: SCORING (Dynamic Risk Analysis)
 
 **Presenter:** **Lucas Whitaker**  
 **Target time:** 50 seconds  
-**Visual Focus on Slide 10:** The 7-factor risk deduction breakdown table, the 0–100 HP health pool gauge (68 HP), and category filtering.  
+**Visual Focus on Slide 11:** The 7-factor risk deduction breakdown table, the 0–100 HP health pool gauge (68 HP), and category filtering.  
 
 ### Verbatim Spoken Presentation:
-> “On Slide 10, we examine the **Risk Scorecard & Health Pool Workspace (`#risk`)**, which demonstrates that Byte’s health is not an arbitrary mood—it is a deterministic calculation based on live telemetry.
+> “On Slide 11, we examine the **Risk Scorecard & Health Pool Workspace (`#risk`)**, which demonstrates that Byte’s health is not an arbitrary mood—it is a deterministic calculation based on live telemetry.
 >
 > GitPet begins with a base score of 100 Health Points (HP) and applies deductions across **7 weighted DevSecOps dimensions**:
 > 1. **Branch Divergence (0 to -35 pts):** Ahead/behind drift, detached HEAD, work-loss hazards.
@@ -356,19 +385,19 @@
 - Emphasize the mathematical formula: $\text{Health Score} = \max(0, 100 - \sum \text{Deductions})$.
 - Highlight how clicking *Remediate with Byte* turns diagnostic assessment directly into action.
 
-### Verbal Transition to Slide 11:
-> “Now let’s look under the hood at the system boundaries and production architecture that make these capabilities possible on Slide 11.”
+### Verbal Transition to Slide 12:
+> “Now let’s look under the hood at the system boundaries and production architecture that make these capabilities possible on Slide 12.”
 
 ---
 
-## Slide 11: ARCHITECTURE (System & Gateway)
+## Slide 12: ARCHITECTURE (System & Gateway)
 
 **Presenter:** **Lucas Whitaker**  
 **Target time:** 1 minute 0 seconds  
-**Visual Focus on Slide 11:** The C4 container architecture diagram, trust boundaries, Express gateway on port 3004, secret redactor, and execution pipeline.  
+**Visual Focus on Slide 12:** The C4 container architecture diagram, trust boundaries, Express gateway on port 3004, secret redactor, and execution pipeline.  
 
 ### Verbatim Spoken Presentation:
-> “On Slide 11, we detail GitPet’s production architecture, designed with strict separation of concerns across deliberate trust boundaries:
+> “On Slide 12, we detail GitPet’s production architecture, designed with strict separation of concerns across deliberate trust boundaries:
 >
 > 1. **On the left is the React 19 Frontend SPA:** Built with TypeScript 5.8, Vite 6, TailwindCSS 4, Motion, and the Web Audio API for rich ambient aesthetics. The browser never executes Git commands directly.
 > 2. **All sensitive operations pass through our Node.js Express Gateway (port 3004):** The gateway handles REST and WebSocket communication, automatically redacts secret token patterns (`AIza...`, `ghp_...`, `sk-...`, `Bearer...`), maintains an in-memory FIFO audit ring buffer (max 200 events), hosts our 30-minute ephemeral Pet Image Studio asset registry, and provides constant-time HTTP Basic Auth.
@@ -384,16 +413,16 @@
 - Trace the flow from left to right on the C4 diagram: React client → Express gateway → Safety engine → Git CLI subprocess and Gemini Cloud.
 - Emphasize the core judge takeaway: *The external AI service cannot directly execute a command in the local repository.*
 
-### Presenter Handoff to Slide 12:
-- **Lucas:** *“David and I will now bring our core pillars together for the closing on Slide 12.”*
+### Presenter Handoff to Slide 13:
+- **Lucas:** *“David and I will now bring our core pillars together for the closing on Slide 13.”*
 
 ---
 
-## Slide 12: CLOSING (Ambient DevSecOps + Live Launch)
+## Slide 13: CLOSING (Ambient DevSecOps + Live Launch)
 
 **Presenters:** **Lucas Whitaker & David Castelli (Shared Closing, Lucas Lead)**  
 **Target time:** 45 seconds  
-**Visual Focus on Slide 12:** The 5 core pillars summary, test verification badges (31 Vitest tests, 100% pass), local launch command (`npm run dev`), repository link, and Q&A invitation.  
+**Visual Focus on Slide 13:** The 5 core pillars summary, test verification badges (31 Vitest tests, 100% pass), local launch command (`npm run dev`), repository link, and Q&A invitation.  
 
 ### Verbatim Spoken Presentation:
 
@@ -411,7 +440,7 @@
 >
 > You can launch the platform locally right now with `npm run dev` on port 3004.
 >
-> On behalf of Team 05, **Ribbon Patrol**, thank you for your time. We welcome your questions!”
+> On behalf of Team 05, **Ribbon Patrol**, thank you for your time at AWS Community Day Ottawa 2026. We welcome your questions!”
 
 ---
 
