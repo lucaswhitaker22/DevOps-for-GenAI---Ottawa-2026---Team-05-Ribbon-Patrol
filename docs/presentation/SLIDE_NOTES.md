@@ -5,28 +5,28 @@
 **Event:** DevOps for GenAI Hackathon 2026, Ottawa  
 **Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (12 Slides)  
 **Target Duration:** 10 to 12 Minutes (Target: ~11 minutes 35 seconds)  
-**Presenters:** **Lucas Whitaker** (Safety, Architecture, Backend, DevSecOps Engine) & **David Castelli** (Frontend, UI/UX, DAG Visualizer, CI/CD, PRs, Scoring)  
+**Presenters:** **Lucas Whitaker** (Lead Presenter — Majority: Problem, Core Loop, AI Engine, Safety, Scoring, Architecture, Closing) & **David Castelli** (Workspaces Presenter: Repository DAG, CI/CD Telemetry, PR Intelligence, Shared Closing)  
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
 
 ---
 
-## ⏱️ Executive Presentation Schedule & 2-Presenter Split
+## ⏱️ Executive Presentation Schedule & 2-Presenter Split (Lucas Majority)
 
 | Slide # | Slide Title in Deck 11 | Primary Subject & Core Message | Target Time | Cumulative | Presenter Lead |
 | :---: | :--- | :--- | :---: | :---: | :--- |
 | **01** | **GitPet (Title & Hook)** | The 3 Developer Crises (Context, Agency, Telemetry) | 0:55 | 0:55 | **Lucas Whitaker** |
 | **02** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & Byte Companion Engine | 1:05 | 2:00 | **Lucas Whitaker** |
-| **03** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Evidence | 1:10 | 3:10 | **David Castelli** |
+| **03** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Evidence | 1:10 | 3:10 | **Lucas Whitaker** |
 | **04** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants & Zero Force-Push | 1:05 | 4:15 | **Lucas Whitaker** |
 | **05** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Aware Lints & Untracked Stash Fix | 1:05 | 5:20 | **Lucas Whitaker** |
 | **06** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diffs, Stashes & Rollback | 1:00 | 6:20 | **David Castelli** |
 | **07** | **CI/CD (Failure to Remediation)** | 5-Stage Tracker, Flaky Test Quarantine, CVE Patch | 0:55 | 7:15 | **David Castelli** |
 | **08** | **PULL REQUESTS (Review to Merge)** | PR #214, Turnaround Clock, AI Review Composer | 0:50 | 8:05 | **David Castelli** |
-| **09** | **SCORING (Release Gate & Deployment)** | 5-Pillar Scorecard, AI Executive Verdict, Exports | 0:55 | 9:00 | **David Castelli** |
-| **10** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Deep-Link Remediate | 0:50 | 9:50 | **David Castelli** |
+| **09** | **SCORING (Release Gate & Deployment)** | 5-Pillar Scorecard, AI Executive Verdict, Exports | 0:55 | 9:00 | **Lucas Whitaker** |
+| **10** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Deep-Link Remediate | 0:50 | 9:50 | **Lucas Whitaker** |
 | **11** | **ARCHITECTURE (System & Gateway)** | React 19, Express Gateway, Token Redactor, Gemini | 1:00 | 10:50 | **Lucas Whitaker** |
-| **12** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, 31 Tests, Live Demo & Q&A | 0:45 | 11:35 | **David & Lucas (Shared)** |
+| **12** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, 31 Tests, Live Demo & Q&A | 0:45 | 11:35 | **Lucas & David (Shared)** |
 
 ---
 
@@ -94,19 +94,16 @@
 - Highlight the 4-tier health aura: **Healthy** (80–100 HP, Green), **Attention** (45–79 HP, Amber), **Blocked** (1–44 HP, Red), and **Critical Hazard** (0 HP, Grayscale).
 - Press `Spacebar` to pet Byte, demonstrating floating hearts and synthesized purring audio.
 
-### Presenter Handoff to Slide 3:
-- **Lucas:** *“David will now demonstrate how Byte adapts its guidance through our multi-persona conversational engine.”*
+### Verbal Transition to Slide 3:
+> “Let's look at how developers interact with Byte through our multi-persona conversational engine.”
 
 ---
 
 ## Slide 3: AI ASSISTANCE (Talk to Byte)
 
-**Presenter:** **David Castelli**  
+**Presenter:** **Lucas Whitaker**  
 **Target time:** 1 minute 10 seconds  
 **Visual focus:** Four personas, three model tiers (`@google/genai` v2.4.0), and evidence-first responses  
-
-### Presenter Handoff:
-- **David:** *“Thank you, Lucas.”*
 
 ### Verbatim Spoken Script:
 > “Not every developer needs the same type of explanation.
@@ -135,8 +132,8 @@
 - Click the prompt chip: *“Status report & diagnostics”*.
 - Point out the structured response: Evidence signals box, confidence rating (95%), risk badge, recommended action block (`git pull --rebase origin feature/cart`), and pre-computed reversal command (`git rebase --abort`).
 
-### Presenter Handoff to Slide 4:
-- **David:** *“Reasoning quality is essential, but reasoning alone is not a security boundary. Lucas will explain how GitPet constrains AI agency in code.”*
+### Verbal Transition to Slide 4:
+> “Reasoning quality is essential, but reasoning alone is not a security boundary. Let's look at how GitPet constrains AI agency in code.”
 
 ---
 
@@ -145,9 +142,6 @@
 **Presenter:** **Lucas Whitaker**  
 **Target time:** 1 minute 5 seconds  
 **Visual focus:** Blocked commands, safe alternatives, and pure argv child process execution  
-
-### Presenter Handoff:
-- **Lucas:** *“Thank you, David.”*
 
 ### Verbatim Spoken Script:
 > “In an AI-enabled developer tool, prompt engineering is guidance—it is not a security boundary.
@@ -215,7 +209,7 @@
 - Emphasize the phrase: *“Valid syntax, unsafe context.”*
 
 ### Presenter Handoff to Slide 6:
-- **Lucas:** *“With the safety foundation established, David will now take us through our dedicated workspaces, starting with the Repository and Topological DAG Graph.”*
+- **Lucas:** *“With our safety foundation established, David will now take us through our dedicated developer workspaces, starting with the Repository and Topological DAG Graph.”*
 
 ---
 
@@ -314,16 +308,19 @@
 - Show the inline comment thread on `src/services/currency.ts:42`.
 - Click **Draft AI Resolution Response** to demonstrate Gemini generating the response draft.
 
-### Transition to Slide 9:
-> “Repository health, CI results, and pull request status all feed into the final production deployment decision: the GitPet Release Gate.”
+### Presenter Handoff to Slide 9:
+- **David:** *“Repository health, CI results, and pull request status all feed into the final production deployment decision: the GitPet Release Gate. Lucas will walk us through our scoring engines and architecture.”*
 
 ---
 
 ## Slide 9: SCORING (Release Gate & Deployment)
 
-**Presenter:** **David Castelli**  
+**Presenter:** **Lucas Whitaker**  
 **Target time:** 55 seconds  
 **Visual focus:** 5-pillar scorecard, 78% score, active blocker inventory, and compliance artifact exports  
+
+### Presenter Handoff:
+- **Lucas:** *“Thank you, David.”*
 
 ### Verbatim Spoken Script:
 > “The **Release Gate** workspace (`#release`) turns delivery telemetry into an automated, defensible production sign-off.
@@ -356,7 +353,7 @@
 
 ## Slide 10: SCORING (Dynamic Risk Analysis)
 
-**Presenter:** **David Castelli**  
+**Presenter:** **Lucas Whitaker**  
 **Target time:** 50 seconds  
 **Visual focus:** 68 HP health pool gauge, deduction breakdown, category filters, and deep links  
 
@@ -381,8 +378,8 @@
 - Apply the *Warnings* filter tab.
 - Click *“Remediate with Byte”* on the *Branch Divergence* card to demonstrate instant deep-link routing back to the companion chat stream.
 
-### Presenter Handoff to Slide 11:
-- **David:** *“Lucas will now show the system boundaries and production architecture that make these capabilities possible.”*
+### Transition to Slide 11:
+> “Now let's examine the system boundaries and production architecture that make these capabilities safe and production-shaped.”
 
 ---
 
@@ -391,9 +388,6 @@
 **Presenter:** **Lucas Whitaker**  
 **Target time:** 1 minute 0 seconds  
 **Visual focus:** Frontend SPA, Express gateway, safety engine, local Git CLI, and Google Gemini cloud services  
-
-### Presenter Handoff:
-- **Lucas:** *“Thank you, David.”*
 
 ### Verbatim Spoken Script:
 > “GitPet is divided into deliberate trust boundaries:
@@ -419,7 +413,7 @@
 
 ## Slide 12: CLOSING (Ambient DevSecOps + Live Launch)
 
-**Presenters:** **David Castelli & Lucas Whitaker (Shared 2-Presenter Closing)**  
+**Presenters:** **Lucas Whitaker & David Castelli (Shared 2-Presenter Closing, Lucas Lead)**  
 **Target time:** 45 seconds  
 **Visual focus:** 5 core pillars, live launch command, repository link, and Q&A  
 
@@ -449,7 +443,7 @@
 * **Answer (Lucas):** *“GitPet never treats LLM output as executable code. All suggested commands pass through our 2-layer safety policy in `safety.ts`. Layer 1 statically blocks dangerous patterns like `git push --force`, `git reset --hard`, `git clean -fdx`, and shell metacharacters. Layer 2 verifies working tree state. Commands are tokenized into argv arrays and executed via `child_process.execFile`—never a shell. Even if an LLM is completely compromised, it cannot execute destructive commands.”*
 
 ### Q2: What happens if the Gemini API key is missing or quota is exhausted (HTTP 429)?
-* **Answer (David):** *“GitPet is built with 100% offline resilience. If `GEMINI_API_KEY` is missing or returns 429 quota exhaustion, our deterministic rule engine (`generateRuleBasedAction`) immediately activates. It evaluates the exact same repository state, computes 7-factor risk scores, and generates verified, safe Git actions with evidence citations and reversal commands.”*
+* **Answer (Lucas):** *“GitPet is built with 100% offline resilience. If `GEMINI_API_KEY` is missing or returns 429 quota exhaustion, our deterministic rule engine (`generateRuleBasedAction`) immediately activates. It evaluates the exact same repository state, computes 7-factor risk scores, and generates verified, safe Git actions with evidence citations and reversal commands.”*
 
 ### Q3: How does the DAG visualizer scale with large commit histories?
 * **Answer (David):** *“The DAG normalizer (`gitDagNormalizer.ts`) uses topological sorting and lane assignment algorithms that bound the render window to active branch lineages (default: 12–25 recent commits). It detects merge bases, collapses linear commit runs when needed, and renders smooth cubic bezier splines with zero layout thrashing.”*
