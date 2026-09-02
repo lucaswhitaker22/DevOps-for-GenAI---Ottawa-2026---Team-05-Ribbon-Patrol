@@ -7,67 +7,90 @@ The **Risk Scorecard & Health Pool** workspace provides a granular, deterministi
 ## 🌟 Key Functional Capabilities
 
 ```
-+--------------------------------------------------------------------------------+
-| [Header] 7-Factor Repository Risk Scorecard • Attention (68% HP)               |
-| Actions: [📋 Copy Scorecard]                                                   |
-+--------------------------------------------------------------------------------+
-| [Repository Health Pool Gauge]                                                 |
-| 68 / 100 HP  [=======================-----------------]                        |
-+--------------------------------------------------------------------------------+
-| [Filter Tabs] (•) All Factors (7)  ( ) Hazards (0)  ( ) Warnings (3)  ( ) Healthy|
-+--------------------------------------------------------------------------------+
-| [Factor Cards Grid]                                                            |
-| • Branch Divergence & Drift (-15 pts) [Warning]                                |
-| • Failed & Flaky Tests (0 pts) [Healthy]                                       |
-| • Secrets & Security Policies (0 pts) [Healthy]                                |
-| • Open Vulnerabilities (-10 pts) [Warning]                                     |
-| • Code Smells & Debt (-6 pts) [Warning]                                        |
-| • Unreviewed Commits & PR Review Lag (0 pts) [Healthy]                         |
-| • Large PR Size (0 pts) [Healthy]                                              |
-+--------------------------------------------------------------------------------+
+┌────────────────────────────────────────────────────────────────────────────────────┐
+│ [Header] 7-Factor Repository Risk Scorecard • Attention (68 HP / 100 HP)           │
+│ Actions: [📋 Copy Scorecard Assessment]                                            │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│ [Repository Health Pool Gauge]                                                     │
+│ 68 / 100 HP  [=======================-----------------] Moderate Risk              │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│ [Filter Tabs] (•) All Factors (7)   ( ) Hazards (0)   ( ) Warnings (3)   ( ) Healthy│
+├────────────────────────────────────────────────────────────────────────────────────┤
+│ [Factor Cards Grid]                                                                │
+│                                                                                    │
+│ ⚠️ 1. Branch Divergence & Drift (-15 pts) [Warning]                                │
+│    3 commits behind upstream tracking branch. Stash before sync.                   │
+│    [🛠️ Remediate with Byte]                                                        │
+│                                                                                    │
+│ ✓  2. Failed & Flaky Tests (0 pts) [Healthy]                                       │
+│    All CI/CD test suites and build checks passed cleanly.                          │
+│                                                                                    │
+│ ✓  3. Secrets & Security Policies (0 pts) [Healthy]                                │
+│    No plaintext secrets or permissive storage policies detected.                   │
+│                                                                                    │
+│ ⚠️ 4. Open Vulnerabilities (-12 pts) [Warning]                                     │
+│    1 dependency vulnerability flagged in package-lock.json.                        │
+│    [🛠️ Remediate with Byte]                                                        │
+│                                                                                    │
+│ ⚠️ 5. Code Smells & Debt (-6 pts) [Warning]                                        │
+│    2 uncommitted files in working tree — moderate context switching risk.          │
+│    [🛠️ Remediate with Byte]                                                        │
+│                                                                                    │
+│ ✓  6. Unreviewed Commits & PR Lag (0 pts) [Healthy]                                │
+│    All active branch changes have peer reviews and approvals.                      │
+│                                                                                    │
+│ ✓  7. Large PR Size (0 pts) [Healthy]                                              │
+│    PR size is small and easy to review (< 300 lines changed).                      │
+└────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 1. The 7-Factor Risk Scoring Architecture
+---
 
-GitPet implements an automated, multi-factor risk assessment model defined in `computeRepositoryHealth()`:
+## 1. The 7-Factor Risk Scoring Architecture
 
-| Factor ID | Risk Factor Name | Impact Range | Status Criteria | Remediation Strategy |
-| :--- | :--- | :--- | :--- | :--- |
-| `branch_divergence` | **Branch Divergence & Drift** | 0 to -35 pts | `critical` if >= 6 behind, `warning` if > 0 behind, `good` if 0 | Pull upstream commits into local branch using `git pull --rebase origin main` |
-| `failed_tests` | **Failed & Flaky Tests** | 0 to -28 pts | `critical` if build failed or pod crashed; `warning` if flaky specs detected | Quarantine flaky specs or inspect container build logs |
-| `secrets_detected` | **Secrets & Security Policies** | 0 to -30 pts | `critical` if anonymous storage access or exposed API tokens found | Revoke compromised tokens and enforce cloud security policies |
-| `vulnerabilities` | **Open Vulnerabilities** | 0 to -22 pts | `critical` if high/critical CVEs exist; `warning` if low/medium | Bump dependencies using automated Dependabot patches |
-| `code_smells` | **Code Smells & Debt** | 0 to -15 pts | `warning` if > 8 uncommitted files or excessive TODO tags | Stage and commit in small, focused atomic commits |
-| `unreviewed_commits` | **Unreviewed Commits & PR Lag**| 0 to -15 pts | `warning` if review changes requested or waiting > 3 days | Address reviewer comments and request team re-review |
-| `large_pr_size` | **Large PR Size & Blast Radius** | 0 to -12 pts | `warning` if changeset > 400 lines or > 15 files | Split changeset into stacked pull requests to speed up reviews |
+GitPet computes repository health dynamically using `computeRepositoryHealth()`:
+
+| Factor ID | Risk Factor Name | Max Impact | Status Criteria & Triggers | Recommended Remediation |
+| :--- | :--- | :---: | :--- | :--- |
+| `branch_divergence` | **Branch Divergence** | **-35 pts** | Hazard: -35 | Conflicts: -25 | Detached: -18 | Behind+Dirty: -22 | Behind: -15 | Ahead: -10 | Fast-forward pull, rebase, or stash |
+| `failed_tests` | **Failed & Flaky Tests** | **-28 pts** | Deployment crash: -28 | Build fail: -25 | Flaky suite: -14 | Fix compilation errors / quarantine flaky specs |
+| `secrets_detected` | **Secrets & Security Policies** | **-30 pts** | Public cloud bucket: -30 | Leaked secret: -15/each | Revoke tokens & enforce private cloud policies |
+| `vulnerabilities` | **Open Vulnerabilities** | **-22 pts** | High/Critical CVE: -22 | Low/Medium: -12 | Bump dependencies with automated patches |
+| `code_smells` | **Code Smells & Debt** | **-15 pts** | High smell count: -15 | Dirty sprawl (>8 files): -6 | Stage and commit in small atomic units |
+| `unreviewed_commits`| **Unreviewed Commits & PR Lag**| **-15 pts** | Changes requested: -15 | Stale PR (>3 days): -10 | Address review comments & nudge reviewers |
+| `large_pr_size` | **Large PR Size** | **-8 pts** | Changeset > 400 lines or > 15 files: -8 | Split into smaller stacked PRs |
 
 ---
 
-### 2. Health Score Aggregation Formula
+## 2. Health Score Aggregation Formula
 
-The Health Pool score is computed dynamically:
-$$\text{Calculated Score} = \max\left(0, 100 - \sum \text{Deductions}\right)$$
+The Health Pool score is calculated by subtracting total deductions from base 100:
 
-#### Classification Thresholds:
-* **Healthy (90–100% HP, Low Risk)**: All 7 factors in `good` standing. Green ambient glow.
-* **Attention (60–89% HP, Moderate Risk)**: Minor divergence, uncommitted churn, or small PR review delay. Amber aura.
-* **Blocked (30–59% HP, High Risk)**: Active merge conflicts, failed build, or test deduction >= 25. Orange aura.
-* **Critical Hazard (0–29% HP, Critical Risk)**: Work-loss hazard, destructive upstream force-push, or score drops to 0. Grayed out turtle posture.
+$$\text{Health Score} = \max\left(0, \min\left(100, 100 - \sum \text{Deductions}\right)\right)$$
+
+### Health Level Classifications:
+* **Healthy (80–100 HP, Low Risk)**: All 7 factors in `good` standing. Green ambient glow.
+* **Attention (45–79 HP, Moderate Risk)**: Minor divergence, uncommitted churn, or PR review lag. Amber warning aura.
+* **Blocked (1–44 HP, High Risk)**: Active merge conflicts, failed builds, or high-severity CVEs. Crimson alert barrier.
+* **Unsafe / Hazard (0 HP, Critical Risk)**: Work-loss hazard (upstream force-push over dirty tree). Frozen grayscale state.
 
 ---
 
-### 3. Interactive Category Filters
-* **All Factors**: Displays the full 7-factor diagnostic matrix.
-* **Critical Hazards**: Isolates high-risk blockers requiring emergency intervention.
-* **Warnings**: Filters for medium-severity items (e.g. branch drift, uncommitted files).
+## 3. Interactive Category Filters
+
+* **All Factors (7)**: Displays the full 7-factor diagnostic scorecard.
+* **Hazards (Critical)**: Isolates high-risk blockers requiring emergency developer intervention.
+* **Warnings**: Filters for medium-severity items (e.g. branch drift, uncommitted files, PR lag).
 * **Healthy**: Displays green factors currently satisfying repository hygiene standards.
 
 ---
 
-### 4. 1-Click Remediation Deep Links
-* Clicking **Remediate with Byte** on any factor card opens the companion chat with a pre-populated prompt asking Byte for exact shell commands to remediate that specific factor.
+## 4. 1-Click Remediation Deep Links
+
+Clicking **Remediate with Byte** on any factor card opens the companion chat stream with a pre-populated prompt asking Byte for step-by-step shell commands to resolve that specific factor.
 
 ---
 
-### 5. Formatted Scorecard Export
-* Clicking **Copy Scorecard** copies the complete structured diagnostic assessment to the clipboard for standup notes, incident reports, or team reviews.
+## 5. Formatted Scorecard Export
+
+Clicking **Copy Scorecard Assessment** copies the complete structured diagnostic report to the clipboard for standup notes, incident triage, or release audits.

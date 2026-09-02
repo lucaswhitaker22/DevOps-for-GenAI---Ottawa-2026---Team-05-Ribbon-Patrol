@@ -1,71 +1,82 @@
 # 🐕 Feature 01: Ambient Companion (`#companion`)
 
-The **Ambient Companion** workspace represents the emotional and operational mission control center of GitPet. It translates cold Git and infrastructure telemetry into expressive physical postures, ambient lighting auras, interactive sound cues, and multi-turn conversational guidance powered by Google Gemini.
+The **Ambient Companion** workspace serves as the operational and emotional mission control center of GitPet. It translates repository drift, pipeline state, and infrastructure telemetry into expressive physical postures, ambient lighting auras, interactive sound cues, and multi-turn conversational guidance powered by Google Gemini.
 
 ---
 
 ## 🌟 Key Functional Capabilities
 
 ```
-+------------------------------------+-------------------------------------------+
-| [🐕 Pixel Mascot Canvas]           | [Multi-Turn Gemini Companion]             |
-| Status: Attention • Uneasy & Alert | Role: Byte Mascot | Architect | Auditor   |
-| Health: 68% HP [========------]    | Model: Fast | General | Deep Reasoning    |
-| Speech: "Behind remote by 3!"      |                                           |
-| Actions: [🐾 Pet] [☕ Fuel] [💬 Ask]| "Hello! I'm Byte. Behind by 3 commits.    |
-|                                    | Stash your work before pulling!"          |
-+------------------------------------+-------------------------------------------+
-| [4-Card Live Telemetry Quick Deck] | [Recommended Safe Action Card]            |
-| 🌲 Branch Drift  | ⚡ CI/CD Health  | Command: `git stash && git pull ...`      |
-| 🔀 PR Intelligence | 🚀 Release Gate| [Preview Diff]  [Confirm Safe Fix]        |
-+------------------------------------+-------------------------------------------+
+┌────────────────────────────────────────┬───────────────────────────────────────────┐
+│ [🐕 Pixel Mascot Stage (PetStage.tsx)] │ [Multi-Turn Gemini Companion Stream]      │
+│ Status: Attention • Uneasy & Alert     │ Persona: Byte | Architect | Auditor | Tutor│
+│ Health: 68 HP [========------] 68%     │ Tier: Fast (Lite) | General | Deep Flash  │
+│ Dialogue: "Branch is 3 commits behind! │                                           │
+│ Stash local files before pulling."     │ "Hello! I noticed origin/main advanced by │
+│                                        │ 3 commits. Let's inspect the diff!"       │
+│ Actions: [🐾 Pet] [☕ Fuel] [🎩 Outfit] │                                           │
+├────────────────────────────────────────┴───────────────────────────────────────────┤
+│ [4-Card Live Telemetry Mission Control Deck]                                       │
+│ 🌲 Branch Drift: ↑0 ↓3 | ⚡ CI/CD: Passing (100%) | 🔀 PR #214: Waiting 3d | 🚀 Release: 88%│
+├────────────────────────────────────────────────────────────────────────────────────┤
+│ [Recommended Safe Action Card]                                                     │
+│ Command: `git stash push -u -m "wip" && git pull --rebase origin feature/cart`     │
+│ Confidence: High (95%) • Risk: Caution • Reversal: `git rebase --abort`            │
+│ [🔍 Preview Diff & Scope]  [⚡ Confirm & Execute Action]                           │
+└────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 1. Pixel Mascot Graphic & 18 Symptom Auras (`PixelPetGraphic.tsx`)
-Byte dynamically maps repository health and DevSecOps events into 18 physical symptom states:
+---
 
-| Symptom Key | Trigger Condition | Visual Appearance & Aura | Emotional Mood |
+## 1. Pixel Mascot Graphic & 18 Physical Symptoms (`PixelPetGraphic.tsx`)
+
+Byte dynamically renders 18 distinct physical symptoms based on observed repository, CI/CD, pull request, and cloud infrastructure telemetry:
+
+| Symptom Key | Trigger Condition | Visual Appearance & Accessories | Emotional Mood |
 | :--- | :--- | :--- | :--- |
-| `healthy` | 100% synchronized, clean working tree | Smiling expression, green halo glow | Relaxed & Playful |
-| `behind_remote` | Commits behind upstream origin | Backpack posture, looking over shoulder | Uneasy & Alert |
-| `local_uncommitted` | Modified or untracked files in tree | Carrying stacked papers, amber aura | Busy & Watchful |
-| `conflict` | Unresolved merge conflict markers | Tangled in yarn ball, spiral eyes | Distressed & Tangled |
-| `hazard_unsafe` | Work-loss hazard (pulling over dirty tree) | Shielded turtle shell, grayscale contrast | Guarded & Defensive (0% HP) |
-| `failed_build` | CI/CD build step exited with non-zero | Sick thermometer expression, fever blush | Distressed & Ill |
-| `flaky_tests` | Intermittent test failures in spec suites | Dizzy eyes, spinning stars | Confused & Dizzy |
-| `vulnerability` | High/critical CVEs in dependencies | Defective armor shield, pulsing beacon | Shielded & Cautious |
-| `pr_changes_requested` | Reviewer requested code changes | Holding notepad and pencil | Patient & Waiting |
-| `pr_pending_review` | PR waiting on approvals | Looking at hourglass | Patient |
-| `pr_conflicted` | PR branch conflicts with base | Tangled ribbon | Blocked |
-| `pr_approved` | All PR checks green & approvals met | Party hat, celebration sparkles | Joyful & Triumphant |
-| `lost_map` | Terraform state backend lock unavailable | Broken compass, lost expression | Disoriented |
-| `smoke_cloud` | Kubernetes pod crash or missing env vars | Coughing expression, smoke cloud | Choked & Alarmed |
-| `shield_cracked` | Cloud security policy deviation | Shattered blue shield | Security Alert |
+| `clean_sync` | 0 commits ahead/behind, clean working tree | Playful wagging tail, vibrant green halo aura | Relaxed & Cheerful |
+| `behind_remote` | Local branch behind upstream tracking branch | Pulling forward on leash, looking over shoulder | Uneasy & Alert |
+| `unpushed_work` | Local commits ahead of upstream | Heavy backpack with commit stars | Focused & Burdened |
+| `merge_conflict` | Conflicting markers in working tree | Tangled in red & gray yarn, spiral eyes | Distressed & Tangled |
+| `stale_branch` | Merged feature branch inactive >30 days | Sleepy nightcap, dusty cobwebs | Drowsy & Inactive |
+| `detached_head` | HEAD checked out directly to commit hash | Wandering compass & floating question mark | Lost & Inquiring |
+| `destructive_hazard`| Upstream force-push with dirty working tree | Frozen grayscale avatar, crimson alert barrier | **Guarded & Unsafe (0 HP)** |
+| `failed_build` | CI/CD build step exited with non-zero code | Sick bot with fever thermometer, flushed cheeks | Distressed & Ill |
+| `flaky_tests` | Intermittent test failures in test specs | Trembling companion with sweat drops | Confused & Shaking |
+| `vulnerability_risk`| High/Critical CVE flagged in package lock | Shielded metallic armor with pulsing beacon | Armored & Cautious |
+| `deploy_success` | CD pipeline deployed cleanly to production | Party hat with confetti particles & fireworks | Triumphant & Celebrating |
+| `pr_changes_requested`| Reviewer requested code changes on PR | Review clipboard with red indicator mark | Attentive & Reviewing |
+| `pr_pending_review` | PR waiting >3 days for initial peer review | Tapping foot with animated hourglass timer | Patient & Waiting |
+| `pr_conflicted` | PR branch has merge conflicts with base | Warning signposts with jagged ribbon | Blocked & Concerned |
+| `pr_approved_ready` | PR has required approvals & green CI | Golden approval stamp & green ribbon badge | Confident & Ready |
+| `lost_map` | Terraform remote state lock stuck/unavailable | Holding upside-down map, walking in circles | Disoriented & Searching |
+| `smoke_cloud` | Kubernetes pod CrashLoopBackOff / missing env | Running through smoke with soot marks | Choked & Alarmed |
+| `shield_cracked` | Cloud storage bucket allows anonymous access | Cracked blue shield in defensive posture | Security Alerted |
 
-#### Autonomous Physical Loops:
-* **Natural Blinking**: Eyes automatically blink every 3.2 to 5.2 seconds with a 160ms animation window.
-* **Cursor Tracking**: Mascot pupils and head position follow mouse coordinates across the container (`handleMouseMove`).
-* **Grayscale Safety Interlock**: If health drops to `0%` or status is `Unsafe`, the pet automatically desaturates to indicate high danger.
-
----
-
-### 2. Interactive Action Dock
-
-Located directly at the base of the avatar canvas:
-* **🐾 Pet Mascot (`Spacebar`)**: Synthesizes purring audio, produces floating heart particles, and boosts mascot mood.
-* **☕ Fuel Mascot**: Hands Byte a steaming coffee mug, playing coffee slurping audio and applying a `+100 Energy` boost.
-* **🎩 Outfit Customizer**: Cycles through wearable accessories:
-  * *Classic Bot* (Standard pixel mascot)
-  * *Dev Headphones* (Noise-canceling gaming headset)
-  * *AR Cyber Visor* (Neon cybernetic sunglasses)
-  * *Hot Coffee Mug* (Handheld thermal mug)
-  * *Patrol Badge* (Ribbon DevSecOps gold star badge)
-  * *Git Wizard Hat* (Pointed magical hat)
-* **💬 Ask Quip**: Prompts Byte to cycle through quick developer pro-tips regarding atomic commits, linear history, and stash hygiene.
+### Autonomous Physical Loops:
+* **Natural Eye Blinking**: Eyes automatically blink every 3.2 to 5.2 seconds with a 160ms animation window.
+* **Dynamic Cursor Tracking**: Pupils and head orientation follow mouse coordinates across the container viewport (`handleMouseMove`).
+* **Grayscale Safety Interlock**: When health reaches `0 HP` (`destructive_hazard`), the canvas automatically desaturates to indicate high hazard.
 
 ---
 
-### 3. Live Telemetry Mission Control Quick Deck
+## 2. Interactive Action Dock
+
+Positioned directly beneath the companion stage:
+* **🐾 Pet Mascot (`Spacebar` shortcut)**: Synthesizes purring Web Audio cues, triggers floating heart particles, and boosts mascot mood.
+* **☕ Fuel Mascot**: Hands Byte a steaming coffee mug, playing slurping audio and applying a `+100 Energy` boost.
+* **🎩 Outfit Customizer**: Cycles through 6 collectible accessories:
+  1. *Classic Bot* (Standard pixel mascot)
+  2. *Dev Headphones* (Noise-canceling gaming headset)
+  3. *AR Cyber Visor* (Neon cybernetic visor)
+  4. *Hot Coffee Mug* (Handheld thermal mug)
+  5. *Patrol Badge* (Ribbon DevSecOps gold badge)
+  6. *Git Wizard Hat* (Pointed magical hat)
+* **💬 Ask Quip**: Prompts Byte to cycle through witty, educational repository hygiene pro-tips.
+
+---
+
+## 3. Live Telemetry Mission Control Quick Deck
 
 Directly underneath the mascot stage, 4 interactive telemetry cards provide real-time status and instant navigation into full pages:
 1. **🌲 Branch Drift & Tree**: Displays `↑ ahead` / `↓ behind` commit counts and dirty file counts. Clicking navigates to `#repository`.
@@ -75,52 +86,27 @@ Directly underneath the mascot stage, 4 interactive telemetry cards provide real
 
 ---
 
-### 4. Multi-Turn Gemini Conversational Stream (`ChatStream.tsx`)
+## 4. Multi-Turn Gemini Conversational Stream (`ChatStream.tsx`)
 
-A dedicated conversational stream providing evidence-based repository advice and verified safe Git actions:
+The companion chat stream provides contextual reasoning, evidence citations, and safe execution triggers:
 
-* **Role Personas**:
-  * **Byte Mascot**: Friendly, encouraging, ambient companion with witty developer humor.
-  * **Senior Architect**: Deep DAG topology, merge-base analysis, and long-term branching strategies.
-  * **Safety Auditor**: Zero data loss compliance, strict reversal commands, and blast radius auditing.
-  * **Git Tutor**: Pedagogical mental models explaining Git internals (blobs, trees, commit objects, index).
-* **Model Speed & Depth Tiers**:
-  * **Fast**: Instant responses powered by `gemini-2.5-flash`.
-  * **General**: Balanced latency and reasoning depth.
-  * **Deep Reasoning**: Complex structural analysis powered by `gemini-2.5-pro`.
-* **Evidence Signals Box**: Every diagnosis cites concrete repository data points (current branch, upstream divergence, dirty file list, conflicting markers).
-* **Recommended Safe Action Card**:
-  * Formats verified shell commands with syntax highlighting.
-  * 1-Click terminal copy button with visual confirmation.
-  * Displays expected outcome and pre-computed safe reversal command.
-  * **Preview Diff & Scope Button**: Opens the human-in-the-loop preview confirmation modal.
-  * **Confirm & Execute Button**: Executes the verified bounded action.
-* **Categorized Prompt Chips**: Instant 1-click prompts for common developer questions:
-  * `📊 Status report & diagnostics`
-  * `🚨 Work-loss risk assessment`
-  * `🌲 Explain branch divergence`
-  * `🔀 Review PR & reviewer feedback`
-  * `⚡ CI/CD test failure diagnosis`
+### 1. The 4 Role Personas
+* **Byte (Mascot)**: Friendly, energetic companion dog who speaks with developer humor and warmth.
+* **Senior Architect**: Principal Git & Infrastructure Architect analyzing DAG topologies, merge base ancestors, and rebase strategies.
+* **Safety Auditor**: Compliance auditor focusing on 100% data loss prevention, stash preservation, and rollback readiness.
+* **Git Tutor**: Interactive teacher explaining Git's internal object model (blobs, trees, commit objects, staging index).
 
----
+### 2. Multi-Tier Model Selection
+* **Fast Tier (`gemini-3.1-flash-lite`)**: Ultra-fast status checks, one-liner queries, and commit message suggestions.
+* **General Tier (`gemini-3.6-flash`)**: Standard chat, tutoring, and repository analysis.
+* **Deep Tier (`gemini-3.7-flash`)**: Deep rebase conflict resolution, DAG analysis, and release sign-offs.
 
-### 5. Scenario Switcher & Anomaly Sandbox (`ScenarioSwitcher.tsx`)
-* **Dual Operating Mode Toggle**: Toggle between pre-configured incident presets and your real local workspace.
-* **18 Incident Scenarios**: Grouped by Git Workflows, CI/CD Pipelines, PR Reviews, and Cloud Infrastructure.
-* **Quick Anomaly Injectors**:
-  * `+1 Remote`: Adds an upstream commit to origin without pulling, immediately triggering branch drift.
-  * `+1 Edit`: Creates an uncommitted modification in the working tree, testing dirty tree handling.
-  * `Conflict`: Simulates merge conflict markers in active files.
-  * `Clean`: Resets repository state to a clean 100% health baseline.
+### 3. Structured Evidence Signals
+Every AI recommendation surfaces verified repository data points (current branch, upstream tracking branch, dirty file list, conflicting markers, commit drift).
 
----
-
-### 6. Web Audio API Ambient Sound Engineering (`audioEffects.ts`)
-GitPet features zero-dependency, synthesized audio effects via the browser's native `AudioContext`:
-* `playPetChirpSound()`: Ascending two-tone chirp (523Hz -> 659Hz) on mascot interaction.
-* `playPurrSound()`: Modulated low-frequency vibrato (120Hz carrier with 25Hz AM) while being petted.
-* `playCoffeeSlurpSound()`: Pitch slide liquid resonance simulating coffee drinking.
-* `playAccessoryEquipSound()`: High chime (880Hz) on equipping hats or accessories.
-* `playSyncSuccessSound()`: C-Major chord arpeggio (C5 -> E5 -> G5) on verified safe synchronization.
-* `playConflictAlertSound()`: Dissonant warning tritone alert (440Hz + 622Hz) on conflict detection.
-* **Persistent Mute Toggle**: State preserved in global header controls.
+### 4. Recommended Safe Action Card
+* **Syntax Highlighting**: Formatted shell command block with 1-click copy action.
+* **Confidence & Blast Radius**: High/Medium/Low confidence ratings and expected outcome.
+* **Pre-Computed Reversal Step**: Clear reversal command (e.g. `git stash pop`, `git rebase --abort`).
+* **Preview Diff & Scope Button**: Opens the human-in-the-loop preview confirmation modal.
+* **Confirm & Execute Button**: Executes the bounded action via pure argv child process.

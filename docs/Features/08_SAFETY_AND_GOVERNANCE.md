@@ -1,6 +1,6 @@
 # 🛡️ Feature 08: Safety & DevSecOps Governance
 
-GitPet bridges agentic automation and strict DevSecOps safety protocols through a **2-Layer Safety Verification Engine**, guaranteed reversibility, and secret redaction.
+GitPet bridges agentic automation and strict DevSecOps safety protocols through a **2-Layer Safety Verification Engine**, pure argv execution, guaranteed reversibility, automated secret redaction, and NIST AI RMF governance.
 
 ---
 
@@ -16,79 +16,90 @@ sequenceDiagram
     participant Runner as Safe Executor (executor.ts)
     participant Git as Git CLI Subprocess
 
-    Dev->>UI: Clicks "Run Safe Action"
-    UI->>BE: POST /api/git/execute-action { command, targetFiles, expectedRisk }
-    BE->>Guard: evaluateCommand(command, stateContext)
-    alt Destructive / Force Push Detected
-        Guard-->>BE: REJECT: Policy violation (e.g. force push prohibited)
-        BE-->>UI: 400 Bad Request { error, policyViolation: true }
+    Dev->>UI: Clicks "Confirm & Run Action"
+    UI->>BE: POST /api/git/execute-action { command }
+    BE->>Guard: evaluateCommand(command, liveContext)
+    alt Layer 1 or Layer 2 Policy Violation (e.g. force-push, untracked stash)
+        Guard-->>BE: VERDICT: block { findings, suggestions }
+        BE-->>UI: 400 Bad Request { error: "Refused by safety policy" }
         UI-->>Dev: Alert: Action blocked by safety boundary
     else Safe / Bounded Command
-        Guard-->>BE: ACCEPT: Command verified
-        BE->>Runner: executeApprovedCommand(command)
+        Guard-->>BE: VERDICT: allow / warn { commands }
+        BE->>Runner: executeApprovedCommand(command, workspaceRoot, context)
         alt GITPET_ALLOW_WRITES == 'true'
-            Runner->>Git: execFile('git', argv, { timeout: 10000 })
-            Git-->>Runner: stdout / stderr
-            Runner-->>BE: { success: true, stdout }
+            Runner->>Git: execFile('git', argv, { timeout: 60000 })
+            Git-->>Runner: { stdout, stderr, exitCode }
+            Runner-->>BE: { success: true, headBefore, headAfter }
         else Dry-Run Mode (Default)
-            Runner-->>BE: { success: true, simulated: true, output: "[Dry-run verified]" }
+            Runner-->>BE: { success: true, dryRun: true, writesDisabled: true }
         end
-        BE-->>UI: 200 OK { executionResult, newHealthPercentage }
-        UI-->>Dev: Green checkmark + Sound + Reversal step logged
+        BE-->>UI: 200 OK { executionResult, state }
+        UI-->>Dev: Green confirmation + Web Audio + Audit trail logged
     end
 ```
 
 ---
 
-### 1. The 2-Layer Safety Policy Engine (`safety.ts`)
+## 1. The 2-Layer Safety Policy Engine (`src/server/safety.ts`)
 
-#### Layer 1: Static Rule Verification (Deterministic)
-* **Zero Force-Push Policy**: Prohibits destructive commands including:
-  * `git push --force` or `git push -f`
-  * `git push origin +branch`
-  * `git reset --hard` (unless preceded by a verified safety stash)
-  * `git clean -fdx`
-  * `git branch -D`
-* **Command Whitelisting**: Restricts execution strictly to bounded, non-destructive Git operations:
-  * `git stash push`, `git stash pop`, `git stash apply`
-  * `git fetch origin`, `git pull --rebase`
-  * `git commit -m`, `git add`
-  * `git checkout -b`, `git switch`
-  * `git rebase --abort`, `git merge --abort`
+### Layer 1: Static Safety Rules (Syntax-Level Rejection)
+Evaluates commands independent of repository state to block dangerous operations:
 
-#### Layer 2: Contextual Lints
-* Evaluates current repository context before approving commands:
-  * Verifies working tree is clean or stashed before permitting a branch switch or rebase.
-  * Blocks pulls if local modifications conflict with upstream patches.
+* **`force-push`**: Blocks un-leased force pushes (`git push --force` / `-f`); suggests `--force-with-lease`.
+* **`remote-ref-delete`**: Blocks remote branch deletion (`git push --delete` / `-d`).
+* **`hard-reset`**: Blocks destructive resets (`git reset --hard`); suggests `--keep`.
+* **`clean`**: Blocks permanent untracked file deletion (`git clean`).
+* **`force-branch-delete`**: Blocks unmerged branch deletion (`git branch -D`); suggests `-d`.
+* **`stash-destroy`**: Blocks stash drops (`git stash drop` / `git stash clear`).
+* **`history-rewrite`**: Blocks history rewrites (`filter-branch`, `--filter-repo`).
+* **`checkout-paths`**: Blocks uncommitted file overwrites (`git checkout -- <paths>`).
+* **`shell-metacharacters`**: Rejects shell control characters (`;`, `|`, `` ` ``, `$`, `>`, `<`, `&&` inside unquoted segments).
 
----
+### Layer 2: Contextual Safety Lints (State Mismatch Rejection)
+Compares proposed commands against observed working tree and repository state:
 
-### 2. Pre-Computed Reversal Commands
-Every suggested action is paired with an immutable, deterministic safe reversal command:
-
-| Proposed Action | Reversal Command |
-| :--- | :--- |
-| `git stash push -m "gitpet_backup"` | `git stash pop` |
-| `git pull --rebase origin main` | `git rebase --abort` |
-| `git merge origin/main` | `git merge --abort` |
-| `git commit -m "feat: ..."` | `git reset --soft HEAD~1` |
-| `git checkout -b feature/new` | `git checkout -` |
+* **`stash-misses-untracked`**: Warns when `git stash` is proposed while untracked files exist; suggests `git stash push -u`.
+* **`stash-pop-empty`**: Warns when popping from an empty stash list.
+* **`pull-dirty-tree`**: Warns when pulling or merging with dirty uncommitted files without `--autostash`.
+* **`unresolved-conflicts`**: Blocks operations while conflict markers remain in the working tree.
+* **`operation-in-progress`**: Restricts commands to `--continue`, `--skip`, `--abort`, staging, or read-only queries during paused rebase/merge.
+* **`ff-only-on-diverged`**: Blocks `git pull --ff-only` on diverged branches (ahead > 0 and behind > 0); suggests `--rebase`.
+* **`push-while-behind`**: Warns when pushing while commits are behind upstream.
 
 ---
 
-### 3. Automated Secret Token Redaction
-* Automatically scans prompt inputs, diff snippets, and terminal output for high-entropy secrets:
-  * GitHub Personal Access Tokens (`ghp_`, `github_pat_`)
-  * AWS Access Keys (`AKIA[0-9A-Z]{16}`)
-  * Google Cloud API Keys (`AIza[0-9A-Za-z-_]{35}`)
-  * Private SSH Keys (`-----BEGIN OPENSSH PRIVATE KEY-----`)
-* Redacts detected secrets with `[REDACTED_SECRET]` before transmission to generative AI models.
+## 2. Safe Execution Engine (`src/server/executor.ts`)
+
+* **Pure Argv Execution**: Commands are tokenized and executed via `child_process.execFile('git', args)` without shell interpolation, neutralizing command injection attacks.
+* **Write Opt-In Control**: Mutations are disabled by default; requires `GITPET_ALLOW_WRITES=true` in environment to execute writes.
+* **Atomic Step Execution**: Multi-step command chains halt immediately on the first non-zero exit code.
+* **Recovery Commit Anchors**: Records `headBefore` and `headAfter` commit hashes for 1-click rollback recovery.
 
 ---
 
-### 4. Bounded Agency Execution Modes
-* **Dry-Run Mode (Default)**:
-  * Validates command syntax, checks blast radius, and simulates outcome without writing to the disk.
-* **Verified Write Mode (`GITPET_ALLOW_WRITES=true`)**:
-  * Executes approved commands using `child_process.execFile` with argument arrays to prevent shell injection vulnerabilities.
-  * Enforces a 10,000ms hard execution timeout.
+## 3. Automated Secret Token Redaction
+
+GitPet automatically sanitizes prompt inputs, diff snippets, and telemetry before transmitting context to LLMs:
+
+* **Google Cloud API Keys**: `AIza[0-9A-Za-z-_]{35}` → `[REDACTED_SECRET]`
+* **GitHub Personal Access Tokens**: `ghp_[0-9a-zA-Z]{36}` → `[REDACTED_SECRET]`
+* **Generic / OpenAI API Keys**: `sk-[0-9a-zA-Z]{32,}` → `[REDACTED_SECRET]`
+* **HTTP Bearer Tokens**: `bearer [A-Za-z0-9\-\._~\+\/]+=*` → `[REDACTED_SECRET]`
+
+---
+
+## 4. Optional Basic Authentication (`src/server/auth.ts`)
+
+When deployed to a shared network or exposed via a tunnel, GitPet provides optional HTTP Basic Authentication:
+* Configured via `GITPET_AUTH_USER` and `GITPET_AUTH_PASS`.
+* Evaluated using constant-time comparison (`crypto.timingSafeEqual`) to prevent timing side-channel attacks.
+
+---
+
+## 5. AI Governance & NIST AI RMF 1.0 Alignment
+
+GitPet adheres to the NIST AI Risk Management Framework (AI RMF 1.0):
+* **Map**: Detailed threat models and trust boundary mappings ([SECURITY_THREAT_MODEL.md](../SECURITY_THREAT_MODEL.md)).
+* **Measure**: Automated Vitest security suite (`tests/security.test.ts` and `tests/executor.test.ts`) validating 31 test cases.
+* **Manage**: 5-tier Human-in-the-Loop oversight matrix guaranteeing zero autonomous write execution.
+* **Govern**: Request auditing via in-memory FIFO ring buffer (`GET /api/audit-logs`) and operational health telemetry (`GET /api/health`).

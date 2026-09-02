@@ -49,7 +49,7 @@ export const CICDPipelineDrawer: React.FC<CICDPipelineDrawerProps> = ({
     ],
   };
 
-  const getStatusBadge = (status: CICDPipelineState['buildStatus']) => {
+  const getStatusBadge = (status: CICDPipelineState['buildStatus'] | string) => {
     switch (status) {
       case 'success':
       case 'passed':

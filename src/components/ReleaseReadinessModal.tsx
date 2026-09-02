@@ -112,7 +112,10 @@ export const ReleaseReadinessModal: React.FC<ReleaseReadinessModalProps> = ({
         return <GitPullRequest className="w-4 h-4 text-purple-500" />;
       case 'branch_freshness':
         return <GitBranch className="w-4 h-4 text-amber-500" />;
-    const getStatusBadge = (status: 'passed' | 'warning' | 'failed') => {
+    }
+  };
+
+  const getStatusBadge = (status: 'passed' | 'warning' | 'failed') => {
     switch (status) {
       case 'passed':
         return (
