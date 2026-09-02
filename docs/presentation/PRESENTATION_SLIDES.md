@@ -35,7 +35,7 @@
 ```
 +--------------------------------------------------------------------------------------------------+
 │  🐾 GitPet: Ambient DevSecOps Repository Companion                                              │
-│  Team Ribbon Patrol (Team 05) • DevOps for GenAI 2026                                            │
+│  Team Ribbon Patrol (Team 05) • Lucas Whitaker & David Castelli                                  │
 │                                                                                                  │
 │  "Terminal commands hide context. Autonomous AI agents risk destructive chaos."                 │
 │                                                                                                  │
