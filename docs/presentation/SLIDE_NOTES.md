@@ -1,35 +1,35 @@
-# 🎙️ GitPet Formal Presentation Playbook: 2-Presenter Verbatim Speaker Scripts
+# 🎙️ GitPet Comprehensive Presentation Playbook: 2-Presenter Verbatim Speaker Scripts
 
 **Project:** GitPet — Ambient DevSecOps Repository Companion  
 **Team:** Ribbon Patrol (Team 05) — Lucas Whitaker & David Castelli  
 **Event:** DevOps for GenAI Hackathon 2026, Ottawa  
 **Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (12 Slides)  
 **Target Duration:** 10 to 12 Minutes (Target: ~11 minutes 30 seconds)  
-**Presentation Structure:** Formal slide-deck presentation explaining the core problems, architectural innovations, 6 workspace features, 2-layer safety policy, scoring algorithms, and governance model to judges and technical evaluators.  
+**Presentation Format:** Authoritative, high-impact slide-deck presentation explaining the core problem landscape, system architecture, 6 dedicated full-page workspaces, 2-layer safety policy engine, scoring algorithms, and governance model to judges and technical evaluators.  
 **Presenters:**  
-- **Lucas Whitaker** (Lead Presenter — Majority: Problem, Core Loop, AI Engine, 2-Layer Safety, Scoring Engines, Production Architecture, Closing)  
-- **David Castelli** (Workspaces Presenter: Repository DAG & Diff Studio, CI/CD Telemetry & Flaky Quarantine, PR Intelligence & AI Reply Composer, Shared Closing)  
+- **Lucas Whitaker** (Lead Presenter — Majority: Problem Framing, Core Loop, AI Engine, 2-Layer Safety Policy, Release Gate, Risk Health Pool, Production Architecture, Closing)  
+- **David Castelli** (Workspaces Presenter: Repository DAG & Diff Studio, CI/CD Pipeline Telemetry & Flaky Quarantine, PR Intelligence & AI Reply Composer, Shared Closing)  
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
 
 ---
 
-## ⏱️ Master Presentation Schedule & 2-Presenter Distribution
+## ⏱️ Master Presentation Schedule & 2-Presenter Split (Lucas Majority)
 
 | Slide # | Slide Title in Deck 11 | Core Architectural & Feature Topic | Target Time | Cumulative | Presenter Lead |
 | :---: | :--- | :--- | :---: | :---: | :--- |
-| **01** | **GitPet (Title & Hook)** | The 3 Developer Crises (Context, Agency, Telemetry) | 0:55 | 0:55 | **Lucas Whitaker** |
-| **02** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms | 1:05 | 2:00 | **Lucas Whitaker** |
-| **03** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Evidence | 1:10 | 3:10 | **Lucas Whitaker** |
-| **04** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants & Zero Force-Push | 1:05 | 4:15 | **Lucas Whitaker** |
-| **05** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Aware Lints & Untracked Stash Fix | 1:05 | 5:20 | **Lucas Whitaker** |
-| **06** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diffs, Stashes & Rollback | 1:00 | 6:20 | **David Castelli** |
-| **07** | **CI/CD (Failure to Remediation)** | 5-Stage Tracker, Flaky Test Quarantine, CVE Patch | 0:55 | 7:15 | **David Castelli** |
-| **08** | **PULL REQUESTS (Review to Merge)** | PR #214, Turnaround Clock, AI Review Composer | 0:50 | 8:05 | **David Castelli** |
-| **09** | **SCORING (Release Gate & Deployment)** | 5-Pillar Scorecard, AI Executive Verdict, Exports | 0:55 | 9:00 | **Lucas Whitaker** |
-| **10** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Deep-Link Remediate | 0:50 | 9:50 | **Lucas Whitaker** |
-| **11** | **ARCHITECTURE (System & Gateway)** | React 19, Express Gateway, Token Redactor, Gemini | 1:00 | 10:50 | **Lucas Whitaker** |
-| **12** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, 31 Tests, Live Demo & Q&A | 0:45 | 11:35 | **Lucas & David (Shared)** |
+| **01** | **GitPet (Title & Hook)** | The 3 Developer Crises (Context Blindness, AI Agency, Buried Telemetry) | 0:55 | 0:55 | **Lucas Whitaker** |
+| **02** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms Taxonomy | 1:05 | 2:00 | **Lucas Whitaker** |
+| **03** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Grounded Evidence | 1:10 | 3:10 | **Lucas Whitaker** |
+| **04** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants, Zero Force-Push & Pure Argv Execution | 1:05 | 4:15 | **Lucas Whitaker** |
+| **05** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Aware Lints, Untracked Stash Fix (`-u`) & Rollback Anchors | 1:05 | 5:20 | **Lucas Whitaker** |
+| **06** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diff Studio, Checkbox Staging & Stashes | 1:00 | 6:20 | **David Castelli** |
+| **07** | **CI/CD (Failure to Remediation)** | 5-Stage Tracker, Logs, Flaky Test Quarantine & CVE Patching | 0:55 | 7:15 | **David Castelli** |
+| **08** | **PULL REQUESTS (Review to Merge)** | PR #214, Turnaround Clock, Inline Threads & AI Reply Composer | 0:50 | 8:05 | **David Castelli** |
+| **09** | **SCORING (Release Gate & Deployment)** | Automated 5-Pillar Scorecard, AI Executive Verdict & Compliance Exports | 0:55 | 9:00 | **Lucas Whitaker** |
+| **10** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Deep-Link Remediation | 0:50 | 9:50 | **Lucas Whitaker** |
+| **11** | **ARCHITECTURE (System & Gateway)** | React 19, Express Gateway, Secret Redactor, Pure Argv Execution | 1:00 | 10:50 | **Lucas Whitaker** |
+| **12** | **CLOSING (Ambient DevSecOps + Live Launch)** | 5 Core Pillars, 31 Vitest Tests, Live Launch on Port 3004 & Q&A | 0:45 | 11:35 | **Lucas & David (Shared)** |
 
 ---
 
@@ -44,21 +44,21 @@
 >
 > We are Team 05, **Ribbon Patrol**: Lucas Whitaker and David Castelli.
 >
-> Today, we are proud to present **GitPet**—an ambient DevSecOps repository companion built around one fundamental promise:
+> Today, we are proud to introduce **GitPet**—an ambient DevSecOps repository companion built on one foundational promise:
 >
 > *See risk. Understand evidence. Resolve safely.*
 >
-> To understand why we built GitPet, we have to look at the three major points of friction in modern software engineering:
+> To understand why we built GitPet, we have to examine the three major friction points confronting modern software teams:
 >
-> 1. **First, Context Blindness and Cognitive Overload.** Developers lose 20 to 30 percent of their working day context-switching across terminal tabs, CI/CD portals, pull request queues, and security scanners. Upstream branch drift, uncommitted stash debt, detached HEADs, or broken build runs are discovered late—usually when a merge or production release fails.
-> 2. **Second, the 'Excessive Agency' Dilemma in AI Coding Assistants.** Autonomous coding agents given direct shell access can generate syntactically valid commands that carry catastrophic blast radius—such as blind force-pushes, hard resets, or destructive file wipes. Prompt instructions alone are not security boundaries.
-> 3. **Third, Buried Telemetry.** Non-linear branch divergence, merge conflicts, flaky tests, dependency CVEs, and review delays are technically logged, but remain buried inside thousands of lines of raw terminal output.
+> 1. **First, Context Blindness and Cognitive Overload.** Developers spend up to 30 percent of their working hours context-switching between terminal windows, CI/CD portals, pull request queues, and security dashboards. Critical repository conditions—like upstream branch drift, detached HEADs, uncommitted stash debt, or broken test suites—are discovered late, usually when a merge or staging release fails.
+> 2. **Second, the 'Excessive Agency' Dilemma in AI Coding Assistants.** Autonomous coding agents with unrestricted shell access can generate syntactically valid commands that carry catastrophic blast radius—such as blind force-pushes, hard resets, or destructive file wipes. Prompt instructions alone are not security boundaries.
+> 3. **Third, Buried Telemetry.** Non-linear branch divergence, merge conflicts, flaky test regressions, and supply-chain CVEs are technically logged, but remain buried inside thousands of lines of raw terminal output.
 >
-> GitPet solves this by bringing live repository telemetry directly into an ambient virtual companion named **Byte**. Byte reflects repository health through peripheral vision, explains supporting evidence using Google Gemini, and guides developers through bounded, human-verified, and reversible actions.”
+> GitPet solves this by translating live repository telemetry directly into an ambient virtual companion named **Byte**. Byte reflects repository health through continuous peripheral awareness, explains supporting evidence using Google Gemini, and guides developers through bounded, human-verified, and reversible actions.”
 
 ### Slide Delivery Cues:
-- Direct attention to the three problem cards on the slide.
-- Pause momentarily after stating the three problems to let the core dilemma resonate with the judges.
+- Direct the audience's attention to the three colored problem cards on the slide.
+- Pause momentarily after introducing the three problems to let the dilemma resonate with the judges.
 - Emphasize the core thesis: *GitPet augments human judgment through grounded evidence rather than replacing it with unchecked AI execution.*
 
 ### Verbal Transition to Slide 2:
@@ -76,7 +76,7 @@
 > “GitPet organizes the entire developer experience into a continuous 3-stage loop: **Notice, Understand, and Resolve.**
 >
 > **Stage 1 is NOTICE (Ambient Awareness):**  
-> Instead of forcing developers to actively poll status commands in a terminal, Byte translates repository and infrastructure telemetry into peripheral awareness. Byte’s physical posture, glowing aura, accessories, and Web Audio chiptune cues reflect delivery conditions in real time. Our state engine models **18 distinct physical symptoms**—ranging from clean synchronization and upstream drift, to merge conflicts, broken CI builds, flaky test suites, supply-chain CVEs, stale pull requests, and cloud infrastructure alerts. When the repository is healthy, Byte is relaxed with a vibrant green halo; when branch drift occurs, Byte pulls forward on a leash with an amber warning glow; and when severe merge conflicts or build failures happen, Byte enters blocked or hazardous states.
+> Instead of forcing developers to constantly poll status commands in a terminal, Byte translates repository and infrastructure telemetry into peripheral awareness. Byte’s physical posture, glowing aura, accessories, and Web Audio chiptune cues reflect delivery conditions in real time. Our state engine models **18 distinct physical symptoms**—ranging from clean synchronization and upstream drift, to merge conflicts, broken CI builds, flaky test suites, supply-chain CVEs, stale pull requests, and cloud infrastructure alerts. When the repository is healthy, Byte is relaxed with a vibrant green halo; when branch drift occurs, Byte pulls forward on a leash with an amber warning glow; and when severe merge conflicts or build failures happen, Byte enters blocked or hazardous states.
 >
 > **Stage 2 is UNDERSTAND (Grounded Reasoning):**  
 > When an issue arises, our reasoning layer powered by Google Gemini (Gemini 3.6 and 3.7 Flash) explains the situation in plain, developer-friendly language. Crucially, explanations are strictly grounded in verified repository facts: the active branch, ahead and behind commit counts, modified file paths, conflict markers, failed test names, and vulnerability CVE identifiers.
