@@ -42,21 +42,31 @@
 │  Team Ribbon Patrol (Team 05) • Lucas Whitaker & David Castelli                                  │
 │  Track: DevOps for GenAI Hackathon & Innovation Challenge                                        │
 │                                                                                                  │
-│  "How do we bridge Cloud-Native DevOps with Generative AI—safely, ambidently, and at scale?"    │
+│  "See risk. Understand evidence. Resolve safely."                                                │
 │                                                                                                  │
 │  ┌─────────────────────────┐    ┌─────────────────────────┐    ┌─────────────────────────┐       │
-│  │   DevOps Reality        │    │   GenAI Opportunity     │    │   GitPet Innovation     │       │
-│  │   • Fragmented Pipelines│ ──►│   • Multimodal Reasoning│ ──►│   • Ambient Awareness   │       │
-│  │   • CI/CD Bottlenecks   │    │   • Automated Diagnostics│    │   • Deterministic Safety│       │
-│  │   • Security Compliance │    │   • Excessive Agency Risk│   │   • Production Readiness│       │
+│  │  1. HACKATHON THEME     │    │  2. PROPOSED APP: GITPET│    │  3. HACKATHON ALIGNMENT │       │
+│  │  DevOps for GenAI Track │ ──►│  Ambient Repo Companion │ ──►│  Responsible DevSecOps  │       │
+│  │  • Cloud-Native Pipelines│    │  • Virtual Mascot: Byte │    │  • Zero Excessive Agency│       │
+│  │  • GenAI for Operations │    │  • 18 Physical Symptoms │    │  • 2-Layer Safety Policy│       │
+│  │  • Security & Governance│    │  • Tiered Gemini Models │    │  • 31 Vitest Test Suites│       │
+│  │  • Eliminating Dev Toil │    │  • 6 Dedicated Spaces   │    │  • NIST AI RMF Compliant│       │
 │  └─────────────────────────┘    └─────────────────────────┘    └─────────────────────────┘       │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
-* **The Community & Event**: Built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)), celebrating community-driven cloud and DevOps innovation in Canada's national capital region.
-* **The Hackathon Prompt**: Modernizing developer experience by infusing Generative AI into Git workflows and CI/CD pipelines while solving the core security risk of unverified AI execution.
-* **The Team 05 Answer**: Delivering a production-grade, enterprise-ready companion that unifies peripheral UI telemetry, multi-tier Google Gemini intelligence, and deterministic safety containment.
+* **The Hackathon Theme & Community Context**:
+  * Built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)), competing in the **DevOps for GenAI Track**.
+  * Explores the central challenge of modern cloud engineering: *How do we infuse Generative AI into daily DevOps and Git workflows to eliminate developer friction without introducing unverified, destructive AI operations?*
+* **Our Proposed Solution — GitPet**:
+  * An **Ambient DevSecOps Repository Companion** powered by an expressive virtual mascot named **Byte**.
+  * Translates raw repository, CI/CD, PR, and CVE telemetry into continuous peripheral awareness (**18 Physical Symptoms**, 4-tier health auras, procedural Web Audio cues).
+  * Combines multi-tier Google Gemini reasoning (`@google/genai` v2.4.0) with a **2-layer deterministic safety engine** in code (8 static invariants + 7 contextual lints).
+* **Direct Alignment with the Hackathon Objectives**:
+  * **DevOps Modernization**: Accelerates daily developer workflows across Git DAG topology, CI/CD telemetry, flaky test quarantining, and PR review cycles.
+  * **Responsible AI & Security Governance**: Solves the **OWASP LLM08 (Excessive Agency)** vulnerability by enforcing pure argv execution, dry-run diff modals, and mandatory human approval gates.
+  * **Production-Grade Rigor**: Fully verified with 31 automated Vitest tests, STRIDE threat modeling, CycloneDX SBOM, and release readiness compliance manifests.
 
 ---
 

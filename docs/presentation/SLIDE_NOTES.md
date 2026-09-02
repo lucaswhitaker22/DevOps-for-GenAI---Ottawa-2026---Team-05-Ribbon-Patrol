@@ -37,33 +37,36 @@
 ## Slide 1: Title & The Mission — AWS Community Day Ottawa 2026
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 50 seconds  
-**Visual Focus on Slide 1:** Product branding, team credentials, [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) banner, and the Hackathon challenge thesis: *DevOps Reality ➔ GenAI Opportunity ➔ GitPet Innovation*.  
+**Target time:** 55 seconds  
+**Visual Focus on Slide 1:** Product branding, team credentials, [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) banner, and the 3-column architecture diagram: *1. Hackathon Theme*, *2. Proposed App: GitPet*, and *3. Hackathon Alignment*.  
 
 ### Verbatim Spoken Presentation:
-> “Good morning, judges, fellow engineers, and guests!
+> “Good morning, judges, fellow engineers, and community members!
 >
 > We are Team 05, **Ribbon Patrol**: Lucas Whitaker and David Castelli.
 >
-> Today, we are proud to introduce **GitPet**—an ambient DevSecOps repository companion built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)) in the **DevOps for GenAI Hackathon**.
+> Today, we are thrilled to present **GitPet**—an ambient DevSecOps repository companion conceived, architected, and built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)) in the **DevOps for GenAI Hackathon**.
 >
-> AWS Community Day brings together cloud architects, DevOps practitioners, and AI researchers across Canada’s capital region. The hackathon challenged us with a fundamental industry question:
+> **First, let’s look at the Hackathon Theme:**  
+> AWS Community Day brings together cloud architects, DevOps engineers, and AI practitioners across Canada’s capital. The core challenge of the DevOps for GenAI track asks a vital question: *How can we harness modern Generative AI to eliminate developer friction, automate complex Git operations, and secure CI/CD pipelines—without introducing the catastrophic risks of unverified, autonomous AI execution?*
 >
-> *How can Generative AI transform DevOps, Continuous Integration, and Repository Governance from reactive, high-friction toil into intelligent, ambient, and bulletproof delivery workflows?*
+> **Second, our Proposed Solution — GitPet:**  
+> GitPet transforms how developers interact with their repositories by introducing an ambient virtual companion named **Byte**. Powered by multi-tier Google Gemini models (`@google/genai` v2.4.0), Byte turns invisible repository telemetry into continuous peripheral awareness across **18 physical symptoms**, explains complex drift in plain language grounded in verified facts, and guides engineers through safe, bounded remediations across six dedicated workspaces.
 >
-> Our answer is built on one foundational promise:
+> **Third, how GitPet directly aligns with the Hackathon goals:**  
+> 1. **DevOps & DevEx Modernization:** It streamlines daily toil across multi-lane DAG topologies, flaky test quarantining, PR review cycles, and deployment readiness gates.
+> 2. **Responsible DevSecOps & Security Governance:** Rather than giving an LLM direct shell access—which triggers the critical **OWASP LLM08 (Excessive Agency)** vulnerability—GitPet enforces a **2-layer deterministic safety engine** in code (8 static invariants + 7 contextual lints) with pure argv execution and mandatory human approval gates.
+> 3. **Production-Ready Enterprise Rigor:** GitPet ships with 31 automated Vitest test suites, STRIDE threat modeling, a CycloneDX SBOM, and NIST AI RMF governance.
 >
-> *See risk. Understand evidence. Resolve safely.*
->
-> GitPet bridges the gap between cloud-native delivery and multi-modal generative AI by introducing an ambient companion named **Byte**—combining continuous peripheral awareness, Google Gemini reasoning, and deterministic safety guarantees.”
+> Our foundational promise is simple: *See risk. Understand evidence. Resolve safely.*”
 
 ### Slide Delivery Cues:
-- Greet the judges warmly and reference AWS Community Day Ottawa 2026.
-- Direct attention to the challenge thesis on screen: *DevOps Reality ➔ GenAI Opportunity ➔ GitPet Innovation*.
-- Emphasize Team 05’s core mission: building a production-grade, enterprise-ready DevSecOps companion.
+- Greet the judges warmly and direct their gaze to the three thematic columns on the slide.
+- Clearly emphasize the three pillars: *1. The Hackathon Theme*, *2. The Proposed Application (GitPet)*, and *3. Our Direct Hackathon Alignment*.
+- Highlight Team 05’s focus on responsible AI and production engineering.
 
 ### Verbal Transition to Slide 2:
-> “To understand why modern software teams urgently need this companion, let’s examine the three developer crises on Slide 2.”
+> “To see why software engineering teams urgently need this companion, let’s look at the three developer crises on Slide 2.”
 
 ---
 
