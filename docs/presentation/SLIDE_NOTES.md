@@ -7,7 +7,7 @@
 **Target Duration:** 10 to 12 Minutes (Target: ~11 minutes 50 seconds)  
 **Presentation Format:** Authoritative, high-impact slide-deck presentation explaining the core problem landscape, event challenge, system architecture, 6 dedicated full-page workspaces, 2-layer safety policy engine, scoring algorithms, and governance model to judges and technical evaluators.  
 **Presenters:**  
-- **Lucas Whitaker** (Lead Presenter — Majority: Problem Framing, Event Mission, Core Loop, AI Engine, 2-Layer Safety Policy, Release Gate, Risk Health Pool, Production Architecture, Closing)  
+- **Lucas Whitaker** (Lead Presenter — Majority: Title & Event Mission, Problem Crises, Core Loop, AI Engine, 2-Layer Safety Policy, Release Gate, Risk Health Pool, Production Architecture, Closing)  
 - **David Castelli** (Workspaces Presenter: Repository DAG & Diff Studio, CI/CD Pipeline Telemetry & Flaky Quarantine, PR Intelligence & AI Reply Composer, Shared Closing)  
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
@@ -18,8 +18,8 @@
 
 | Slide # | Slide Title in Deck 11 | Core Architectural & Feature Topic | Target Time | Cumulative | Presenter Lead |
 | :---: | :--- | :--- | :---: | :---: | :--- |
-| **01** | **GitPet (Title & Hook)** | The 3 Developer Crises (Context Blindness, AI Agency, Buried Telemetry) | 0:50 | 0:50 | **Lucas Whitaker** |
-| **02** | **EVENT & MISSION (AWS Community Day)** | AWS Community Day Ottawa 2026 & The DevOps for GenAI Challenge | 0:50 | 1:40 | **Lucas Whitaker** |
+| **01** | **GitPet (Title & AWS Community Day)** | Welcome, Team Credentials & The DevOps for GenAI Challenge | 0:50 | 0:50 | **Lucas Whitaker** |
+| **02** | **THE PROBLEM (3 Developer Crises)** | Context Blindness, Excessive AI Agency, & Buried Telemetry | 0:50 | 1:40 | **Lucas Whitaker** |
 | **03** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms Taxonomy | 1:00 | 2:40 | **Lucas Whitaker** |
 | **04** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Grounded Evidence | 1:05 | 3:45 | **Lucas Whitaker** |
 | **05** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants, Zero Force-Push & Pure Argv Execution | 1:00 | 4:45 | **Lucas Whitaker** |
@@ -34,64 +34,61 @@
 
 ---
 
-## Slide 1: GitPet (Title & Problem Hook)
+## Slide 1: Title & The Mission — AWS Community Day Ottawa 2026
 
 **Presenter:** **Lucas Whitaker**  
 **Target time:** 50 seconds  
-**Visual Focus on Slide 1:** Product branding, team credentials, and the three developer problem cards: *Context Blindness*, *Unchecked AI Agency*, and *Buried Telemetry*.  
+**Visual Focus on Slide 1:** Product branding, team credentials, [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) banner, and the Hackathon challenge thesis: *DevOps Reality ➔ GenAI Opportunity ➔ GitPet Innovation*.  
 
 ### Verbatim Spoken Presentation:
 > “Good morning, judges, fellow engineers, and guests!
 >
 > We are Team 05, **Ribbon Patrol**: Lucas Whitaker and David Castelli.
 >
-> Today, we are proud to introduce **GitPet**—an ambient DevSecOps repository companion built on one foundational promise:
->
-> *See risk. Understand evidence. Resolve safely.*
->
-> Modern software delivery suffers from three critical points of friction:
->
-> 1. **First, Context Blindness and Cognitive Overload.** Developers spend up to 30 percent of their working day switching between terminal windows, CI/CD portals, pull request queues, and security dashboards. Critical repository conditions—like upstream branch drift, detached HEADs, uncommitted stash debt, or broken test suites—are discovered late, usually when a merge or staging release fails.
-> 2. **Second, the 'Excessive Agency' Dilemma in AI Coding Assistants.** Autonomous coding agents with direct shell access can generate syntactically valid commands that carry catastrophic blast radius—such as blind force-pushes, hard resets, or destructive file wipes. Prompt instructions alone are not security boundaries.
-> 3. **Third, Buried Telemetry.** Non-linear branch divergence, merge conflicts, flaky test regressions, and supply-chain CVEs are technically logged, but remain buried inside thousands of lines of raw terminal output.
->
-> GitPet solves this by translating live repository telemetry directly into an ambient virtual companion named **Byte**. Byte reflects repository health through continuous peripheral awareness, explains supporting evidence using Google Gemini, and guides developers through bounded, human-verified, and reversible actions.”
-
-### Slide Delivery Cues:
-- Direct the audience's attention to the three colored problem cards on the slide.
-- Pause momentarily after introducing the three problems to let the dilemma resonate with the judges.
-- Emphasize the core thesis: *GitPet augments human judgment through grounded evidence rather than replacing it with unchecked AI execution.*
-
-### Verbal Transition to Slide 2:
-> “To understand why we designed GitPet this way, let’s look at the mission behind this project at AWS Community Day Ottawa 2026 on Slide 2.”
-
----
-
-## Slide 2: The Event & The Mission — AWS Community Day Ottawa 2026
-
-**Presenter:** **Lucas Whitaker**  
-**Target time:** 50 seconds  
-**Visual Focus on Slide 2:** [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) banner, the DevOps for GenAI Hackathon challenge statement, and the three-stage evolution: DevOps Reality → GenAI Opportunity → GitPet Innovation.  
-
-### Verbatim Spoken Presentation:
-> “GitPet was conceived, architected, and built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)), competing in the **DevOps for GenAI Hackathon**.
+> Today, we are proud to introduce **GitPet**—an ambient DevSecOps repository companion built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)) in the **DevOps for GenAI Hackathon**.
 >
 > AWS Community Day brings together cloud architects, DevOps practitioners, and AI researchers across Canada’s capital region. The hackathon challenged us with a fundamental industry question:
 >
 > *How can Generative AI transform DevOps, Continuous Integration, and Repository Governance from reactive, high-friction toil into intelligent, ambient, and bulletproof delivery workflows?*
 >
-> In evaluating modern cloud delivery, we recognized a crucial disconnect:
+> Our answer is built on one foundational promise:
 >
-> Modern cloud platforms give us unprecedented pipeline power, but the developer interface remains fragmented and reactive. Meanwhile, generative AI gives us remarkable reasoning power over complex diffs and logs, but unregulated AI agency creates severe data-loss and compliance risks.
+> *See risk. Understand evidence. Resolve safely.*
 >
-> Team 05 set out to build the definitive answer for AWS Community Day 2026: a platform that combines the peripheral awareness of an ambient companion, the reasoning depth of Google Gemini, and the deterministic safety guarantees demanded by enterprise cloud pipelines.”
+> GitPet bridges the gap between cloud-native delivery and multi-modal generative AI by introducing an ambient companion named **Byte**—combining continuous peripheral awareness, Google Gemini reasoning, and deterministic safety guarantees.”
 
 ### Slide Delivery Cues:
-- Acknowledge AWS Community Day Ottawa 2026 and highlight the Hackathon's mission to bridge Cloud-Native DevOps with Generative AI.
-- Emphasize that GitPet is built as a complete, production-grade application for this competition.
+- Greet the judges warmly and reference AWS Community Day Ottawa 2026.
+- Direct attention to the challenge thesis on screen: *DevOps Reality ➔ GenAI Opportunity ➔ GitPet Innovation*.
+- Emphasize Team 05’s core mission: building a production-grade, enterprise-ready DevSecOps companion.
+
+### Verbal Transition to Slide 2:
+> “To understand why modern software teams urgently need this companion, let’s examine the three developer crises on Slide 2.”
+
+---
+
+## Slide 2: The Problem — The 3 Developer Crises
+
+**Presenter:** **Lucas Whitaker**  
+**Target time:** 50 seconds  
+**Visual Focus on Slide 2:** The three developer problem cards: *1. Context Blindness*, *2. Unchecked AI Agency*, and *3. Buried Telemetry*.  
+
+### Verbatim Spoken Presentation:
+> “Modern software delivery suffers from three critical friction points:
+>
+> 1. **First, Context Blindness and Cognitive Overload.** Developers spend up to 30 percent of their working day context-switching between terminal windows, CI/CD portals, pull request queues, and security dashboards. Critical repository conditions—like upstream branch drift, detached HEADs, uncommitted stash debt, or broken test suites—are discovered late, usually when a merge or staging release fails.
+> 2. **Second, the 'Excessive Agency' Dilemma in AI Coding Assistants.** Autonomous coding agents with unrestricted shell access can generate syntactically valid commands that carry catastrophic blast radius—such as blind force-pushes, hard resets, or destructive file wipes. Prompt instructions alone are not security boundaries.
+> 3. **Third, Buried Telemetry.** Non-linear branch divergence, merge conflicts, flaky test regressions, and supply-chain CVEs are technically logged, but remain buried inside thousands of lines of raw terminal output.
+>
+> GitPet solves this by translating live repository telemetry directly into Byte. Byte reflects repository health through continuous peripheral vision, explains supporting evidence, and guides developers through bounded, human-verified, and reversible actions.”
+
+### Slide Delivery Cues:
+- Point out the three colored problem cards.
+- Pause momentarily after stating the three problems to let the dilemma resonate with the judges.
+- Emphasize the core takeaway: *Prompt instructions are guidance; code-level safety boundaries are guarantees.*
 
 ### Verbal Transition to Slide 3:
-> “Now let’s look at how GitPet operationalizes this vision into a continuous developer loop on Slide 3.”
+> “Let’s look at how GitPet converts this fragmented telemetry into an intuitive, continuous developer workflow on Slide 3.”
 
 ---
 

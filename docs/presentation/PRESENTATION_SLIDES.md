@@ -16,8 +16,8 @@
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                GITPET PRESENTATION ROADMAP                                       │
 │                                                                                                  │
-│  01. THE PROBLEM        02. THE EVENT MISSION   03. THE SOLUTION        04. AI ASSISTANCE        │
-│  Terminal Blindness     AWS Community Day 2026  Notice·Understand·Fix   4 Roles & Fast Models    │
+│  01. THE EVENT MISSION  02. THE PROBLEM         03. THE SOLUTION        04. AI ASSISTANCE        │
+│  AWS Community Day 2026 Terminal Blindness      Notice·Understand·Fix   4 Roles & Fast Models    │
 │                                                                                                  │
 │  05. STATIC SAFETY      06. CONTEXT SAFETY      07. REPO & DAG          08. CI/CD & FLAKY        │
 │  Zero Force-Push Rules  Working-Tree Lints      Multi-Lane Topology     Logs & 1-Click Fix       │
@@ -32,35 +32,14 @@
 
 ---
 
-## Slide 1: Title & The Developer Crisis
+## Slide 1: Title & The Mission — AWS Community Day Ottawa 2026
 
 ### Visual Layout
 ```
 +--------------------------------------------------------------------------------------------------+
 │  🐾 GitPet: Ambient DevSecOps Repository Companion                                              │
-│  Team Ribbon Patrol (Team 05) • Lucas Whitaker & David Castelli                                  │
-│                                                                                                  │
-│  "Terminal commands hide context. Autonomous AI agents risk destructive chaos."                 │
-│                                                                                                  │
-│  [ 1. Context Blindness ]       [ 2. Unchecked AI Agency ]      [ 3. Buried Telemetry ]          │
-│  Drift & stashes discovered     AI runs blind force-pushes      DAG topology & CVEs hidden       │
-│  only when a pull explodes      without blast radius checks     in thousands of log lines        │
-+--------------------------------------------------------------------------------------------------+
-```
-
-### Punchy Bullet Points:
-* **The Context Blindness Trap**: Developers lose 20–30% of their day context-switching across terminals, CI/CD portals, and PR queues—discovering merge drift only when a release breaks.
-* **The "Excessive Agency" Dilemma**: Autonomous AI coding assistants with shell access can wipe code (`git push --force`, `git reset --hard`) with zero human verification.
-* **The GitPet Vision**: An ambient, expressive virtual companion (**Byte**) that turns live repository telemetry into at-a-glance peripheral awareness and verified, safe remediation.
-
----
-
-## Slide 2: The Event & The Mission — AWS Community Day Ottawa 2026
-
-### Visual Layout
-```
-+--------------------------------------------------------------------------------------------------+
 │  🇨🇦 AWS COMMUNITY DAY OTTAWA 2026 (https://awscommunityday.ca/)                                  │
+│  Team Ribbon Patrol (Team 05) • Lucas Whitaker & David Castelli                                  │
 │  Track: DevOps for GenAI Hackathon & Innovation Challenge                                        │
 │                                                                                                  │
 │  "How do we bridge Cloud-Native DevOps with Generative AI—safely, ambidently, and at scale?"    │
@@ -78,6 +57,31 @@
 * **The Community & Event**: Built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)), celebrating community-driven cloud and DevOps innovation in Canada's national capital region.
 * **The Hackathon Prompt**: Modernizing developer experience by infusing Generative AI into Git workflows and CI/CD pipelines while solving the core security risk of unverified AI execution.
 * **The Team 05 Answer**: Delivering a production-grade, enterprise-ready companion that unifies peripheral UI telemetry, multi-tier Google Gemini intelligence, and deterministic safety containment.
+
+---
+
+## Slide 2: The Problem — The 3 Developer Crises
+
+### Visual Layout
+```
++--------------------------------------------------------------------------------------------------+
+│  THE THREE DEVELOPER CRISES IN MODERN DEVSECOPS                                                  │
+│                                                                                                  │
+│  "Terminal commands hide context. Autonomous AI agents risk destructive chaos."                 │
+│                                                                                                  │
+│  [ 1. Context Blindness ]       [ 2. Unchecked AI Agency ]      [ 3. Buried Telemetry ]          │
+│  Developers lose 20–30% of day  Autonomous AI tools run blind   DAG topology, flaky tests, & CVEs│
+│  switching across terminal tabs force-pushes with zero safety   are buried in thousands of       │
+│  and fragmented CI/CD portals   or blast-radius validation      lines of linear console logs     │
+│                                                                                                  │
+│  The Missing Link: Ambient peripheral awareness + bounded, human-authorized execution.           │
++--------------------------------------------------------------------------------------------------+
+```
+
+### Punchy Bullet Points:
+* **The Context Blindness Trap**: Developers lose 20–30% of their day context-switching across terminals, CI/CD portals, and PR queues—discovering merge drift only when a release breaks.
+* **The "Excessive Agency" Dilemma**: Autonomous AI coding assistants with direct shell access can wipe code (`git push --force`, `git reset --hard`) with zero human verification.
+* **The GitPet Vision**: An ambient, expressive virtual companion (**Byte**) that turns live repository telemetry into at-a-glance peripheral awareness and verified, safe remediation.
 
 ---
 
