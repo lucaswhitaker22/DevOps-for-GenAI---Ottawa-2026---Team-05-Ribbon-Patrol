@@ -136,7 +136,7 @@ David will now show the repository tools and scenario-based delivery workspaces.
 
 ---
 
-# David - Slides 7-9 (3:50)
+# David - Slides 7-10 (3:50)
 
 ## Slide 7: Repository workspace and DAG (1:30)
 
@@ -170,10 +170,6 @@ This lets us demonstrate the user experience we'd want around review bottlenecks
 
 The next section moves from feature workspaces to readiness and repository-risk views. Lucas will take over.
 
----
-
-# Lucas - Slides 10-11: Scoring (3:20)
-
 ## Slide 10: Release readiness report (1:50)
 
 Thank you, David.
@@ -190,6 +186,8 @@ When the Gemini key is configured, the release-readiness endpoint can request an
 
 **[Point to each of the five weights, then the current score/status and the export controls. Say "advisory report," not "deployment authorization."]**
 
+
+# Faris:
 ## Slide 11: Risk score and health pool (1:30)
 
 The Risk workspace answers a different question from Release Readiness. It starts at 100 health points, subtracts penalties across seven factors, and clamps the result at zero. Read its own displayed score; it is not the previous slide's 78-percent metric.
@@ -210,13 +208,6 @@ The labels are Healthy, Attention, Blocked, and Unsafe. Destructive risk can be 
 
 These two scores answer different questions: Release Readiness summarizes five delivery dimensions, while the Health Pool applies seven risk deductions to the current state. Neither is an external release approval.
 
-Faris will now take us through the architecture and close the presentation.
-
-**[Handoff to Faris.]**
-
----
-
-# Faris - Slides 12-13 (2:40)
 
 ## Slide 12: Architecture and boundaries (1:40)
 
