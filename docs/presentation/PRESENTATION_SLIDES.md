@@ -49,24 +49,24 @@
 │  │  DevOps for GenAI Track │ ──►│  Ambient Repo Companion │ ──►│  Responsible DevSecOps  │       │
 │  │  • Cloud-Native Pipelines│    │  • Virtual Mascot: Byte │    │  • Zero Excessive Agency│       │
 │  │  • GenAI for Operations │    │  • 18 Physical Symptoms │    │  • 2-Layer Safety Policy│       │
-│  │  • Security & Governance│    │  • Tiered Gemini Models │    │  • 31 Vitest Test Suites│       │
-│  │  • Eliminating Dev Toil │    │  • 6 Dedicated Spaces   │    │  • NIST AI RMF Compliant│       │
+│  │  • Security & Governance│    │  • Tiered Gemini Models │    │  • 31 Vitest Tests      │       │
+│  │  • Eliminating Dev Toil │    │  • 6 Dedicated Spaces   │    │  • NIST AI RMF Governance│      │
 │  └─────────────────────────┘    └─────────────────────────┘    └─────────────────────────┘       │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
 * **The Hackathon Theme & Community Context**:
-  * Built specifically for **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)), competing in the **DevOps for GenAI Track**.
+  * Built for the **AWS Community Day Ottawa 2026** ([awscommunityday.ca](https://awscommunityday.ca/)) DevOps for GenAI track.
   * Explores the central challenge of modern cloud engineering: *How do we infuse Generative AI into daily DevOps and Git workflows to eliminate developer friction without introducing unverified, destructive AI operations?*
 * **Our Proposed Solution — GitPet**:
   * An **Ambient DevSecOps Repository Companion** powered by an expressive virtual mascot named **Byte**.
-  * Translates raw repository, CI/CD, PR, and CVE telemetry into continuous peripheral awareness (**18 Physical Symptoms**, 4-tier health auras, procedural Web Audio cues).
-  * Combines multi-tier Google Gemini reasoning (`@google/genai` v2.4.0) with a **2-layer deterministic safety engine** in code (8 static invariants + 7 contextual lints).
+  * Maps the selected repository state or an explicit local-repository scan into ambient signals (**18 physical symptoms**, health auras, procedural Web Audio cues). CI/CD and PR content is currently demonstrated with deterministic scenarios.
+  * Combines optional tiered Google Gemini reasoning (`@google/genai` v2.4.0) with a **2-layer deterministic safety engine** (8 hard-block rules + 7 contextual lints; additional parser/allowlist checks also reject unsafe input).
 * **Direct Alignment with the Hackathon Objectives**:
-  * **DevOps Modernization**: Accelerates daily developer workflows across Git DAG topology, CI/CD telemetry, flaky test quarantining, and PR review cycles.
-  * **Responsible AI & Security Governance**: Solves the **OWASP LLM08 (Excessive Agency)** vulnerability by enforcing pure argv execution, dry-run diff modals, and mandatory human approval gates.
-  * **Production-Grade Rigor**: Fully verified with 31 automated Vitest tests, STRIDE threat modeling, CycloneDX SBOM, and release readiness compliance manifests.
+  * **DevOps Modernization**: Demonstrates workflows for Git DAG topology, CI/CD status, flaky-test triage, and PR review scenarios.
+  * **Responsible AI & Security Governance**: Mitigates excessive agency for supported Git commands with argv execution, policy checks, preview, and explicit write opt-in.
+  * **Engineering Rigor**: Includes 31 automated Vitest tests, STRIDE threat modeling, a CycloneDX SBOM, and release-readiness reporting; these do not establish production certification.
 
 ---
 
@@ -89,9 +89,9 @@
 ```
 
 ### Punchy Bullet Points:
-* **The Context Blindness Trap**: Developers lose 20–30% of their day context-switching across terminals, CI/CD portals, and PR queues—discovering merge drift only when a release breaks.
-* **The "Excessive Agency" Dilemma**: Autonomous AI coding assistants with direct shell access can wipe code (`git push --force`, `git reset --hard`) with zero human verification.
-* **The GitPet Vision**: An ambient, expressive virtual companion (**Byte**) that turns live repository telemetry into at-a-glance peripheral awareness and verified, safe remediation.
+* **The Context Blindness Trap**: Developers must correlate information across terminals, CI/CD portals, and PR queues; GitPet's demo makes those signals visible together.
+* **The "Excessive Agency" Dilemma**: AI-proposed commands can be destructive (`git push --force`, `git reset --hard`) without deterministic checks and human review.
+* **The GitPet Vision**: An ambient companion (**Byte**) that visualizes selected scenario state or a scanned local Git repository and guides users through bounded actions.
 
 ---
 
@@ -116,8 +116,8 @@
 
 ### Punchy Bullet Points:
 * **1. Notice (Peripheral Vision)**: Byte’s posture, glowing aura, and Web Audio chiptunes signal repository health instantly without terminal polling.
-* **2. Understand (Grounded AI)**: Google Gemini (3.6/3.7 Flash) explains drift in plain English with cited commit hashes, line numbers, and confidence ratings.
-* **3. Resolve (Bounded Safety)**: Zero blind execution—every proposed action includes a pre-flight diff modal, blast radius estimate, and verified rollback plan (`git stash pop`, `git rebase --abort`).
+* **2. Understand (Grounded AI)**: When Gemini is configured, repository context is included in chat requests; deterministic analysis is also available as a fallback. Do not promise citations or confidence fields on every response.
+* **3. Resolve (Bounded Safety)**: Git actions pass through preview and policy checks before execution. Preview is not a verified rollback plan: `headBefore`/`headAfter` are anchors, not a universal undo mechanism.
 
 ---
 
@@ -132,18 +132,18 @@
 │  Friendly, concise hygiene Topological DAG rebases   Zero data loss & compliance Mental models   │
 │                                                                                                  │
 │  ⚡ Tiered Gemini Routing (@google/genai v2.4.0):                                                 │
-│  • Fast Tier (gemini-3.1-flash-lite)  ──► Sub-second status checks & commit messages             │
+│  • Fast Tier (gemini-3.1-flash-lite)  ──► Short status requests & commit messages                │
 │  • General Tier (gemini-3.6-flash)    ──► Conversational guidance, diff reviews & tutoring       │
 │  • Deep Tier (gemini-3.7-flash)       ──► Complex merge DAG resolution & release readiness       │
 │                                                                                                  │
-│  Structured Response: Evidence Signals Box • Confidence Rating (%) • Pre-Computed Rollback       │
+│  Chat Guidance + Repository Context • Safety Findings • Suggested Safer Commands                │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
 * **4 Specialized Personas**: Adapts tone and depth—from junior developer mental models (Git Tutor) to topological rebase analysis (Senior Architect).
-* **Tiered Speed Routing**: Matches task complexity to the ideal Google GenAI model (`gemini-3.1-flash-lite` for speed, `gemini-3.7-flash` for deep reasoning).
-* **Grounded & Verifiable**: Every AI response cites repository telemetry facts and provides an atomic undo command. Offline deterministic fallback active if API is unreachable.
+* **Tiered Model Routing**: Routes fast, general, and deep tasks through their configured model chains.
+* **Grounded & Verifiable**: Chat receives repository context when available; fallback rule-based analysis supplies deterministic guidance. Response formatting and reversals are not guaranteed for every answer.
 
 ---
 
@@ -154,13 +154,13 @@
 +--------------------------------------------------------------------------------------------------+
 │  LAYER 1: DETERMINISTIC STATIC INVARIANTS                                                        │
 │                                                                                                  │
-│  Blocked Dangerous Command                      Safe Alternative Auto-Suggested                  │
+│  Policy-Blocked Command                         Policy Outcome / Safer Guidance                   │
 │  ---------------------------------------------  -----------------------------------------------  │
 │  ❌ git push --force / -f                        ──► ✅ git push --force-with-lease               │
 │  ❌ git reset --hard                             ──► ✅ git reset --keep / git stash              │
 │  ❌ git clean -fdx / git branch -D               ──► ✅ Blocked: Permanent work destruction       │
 │  ❌ git filter-branch / --filter-repo            ──► ✅ Blocked: History rewrite hazard           │
-│  ❌ Shell metacharacters (; | & ` $() >)        ──► ✅ Blocked: Zero command injection           │
+│  ❌ Shell controls (; | ` $() >)               ──► ✅ Rejected; execute Git via argv             │
 │                                                                                                  │
 │  Enforcement: child_process.execFile with pure argv arrays • Strict binary whitelist ('git' only)│
 +--------------------------------------------------------------------------------------------------+
@@ -168,8 +168,8 @@
 
 ### Punchy Bullet Points:
 * **Deterministic Guardrails**: Safety is implemented as strict code policies in `safety.ts`—never relying on LLM prompt compliance.
-* **Zero Force-Push Policy**: Hard-rejects destructive overwrites; automatically suggests lease-checked pushes.
-* **Pure Argv Execution**: Commands are tokenized into argument arrays and executed directly without shell interpolation, eliminating injection vulnerabilities.
+* **Zero Force-Push Policy**: Hard-rejects unconditional force pushes and reports `--force-with-lease` as a safer alternative.
+* **Pure Argv Execution**: Commands are tokenized and executed without shell interpolation, reducing shell-injection risk.
 
 ---
 
@@ -182,9 +182,9 @@
 │                                                                                                  │
 │  Scenario: Uncommitted untracked files present in directory                                      │
 │                                                                                                  │
-│  Model Suggests: git stash push -m "wip"       (Valid syntax, but drops untracked files!)        │
-│  GitPet Detects: stash-misses-untracked lint   ──► Auto-injects '-u' to prevent silent loss     │
-│  Safe Execution: git stash push -u -m "wip"    (All work safely preserved in snapshot)          │
+│  Model Suggests: git stash push -m "wip"       (Valid syntax; untracked files remain unstashed) │
+│  GitPet Warns: stash-misses-untracked lint    ──► Suggests adding '-u'                         │
+│  User Reviews: git stash push -u -m "wip"      (Preview, then approve if writes are enabled)   │
 │                                                                                                  │
 │  🛡️ Other Context Checks: diverged branch pulls • dirty tree checkout • paused rebase guards     │
 │  🔒 Write Opt-In: GITPET_ALLOW_WRITES=true required • headBefore / headAfter rollback anchors    │
@@ -192,9 +192,9 @@
 ```
 
 ### Punchy Bullet Points:
-* **Context-Aware Protection**: Detects dangerous conditions in syntactically valid Git commands based on live working tree, staging index, and operation-in-progress state.
-* **Untracked File Preservation**: Automatically detects untracked files during stashing and upgrades commands to include `-u`, preventing silent data loss.
-* **Opt-In Write Mode**: Mutating commands are disabled by default (`GITPET_ALLOW_WRITES=true`) and record commit hashes before and after for instant rollback.
+* **Context-Aware Protection**: Evaluates commands against supplied or scanned working-tree, branch, stash, and operation state.
+* **Untracked File Warning**: Detects when a stash would omit untracked files and reports a `-u` suggestion; the user must choose and preview that suggestion.
+* **Opt-In Write Mode**: Live Git writes are disabled by default (`GITPET_ALLOW_WRITES=true` is required to enable execution). HEAD hashes are recorded as recovery references, not guaranteed one-click rollback.
 
 ---
 
@@ -239,9 +239,9 @@
 ```
 
 ### Punchy Bullet Points:
-* **5-Stage Pipeline Progression**: Tracks Linting, Tests, Security CVEs, Artifact Build, and Deployment with inline terminal execution logs.
-* **Flaky Test Suite Quarantine**: Flags intermittent test suites (e.g. 70% pass rate) and provides 1-click test spec quarantine to unblock deployment gates.
-* **Supply Chain CVE Patching**: Scans dependencies for high/critical vulnerabilities and drafts upgrade pull requests with one click.
+* **5-Stage Pipeline Demonstration**: Shows scenario-provided Linting, Tests, Security, Build, and Deployment states with example logs; it is not connected to a CI provider.
+* **Flaky Test Triage**: Displays scenario pass-rate data and a demo action that changes the selected scenario; it does not edit or quarantine a real test file.
+* **CVE Scenario**: Presents seeded vulnerability data and a demo remediation affordance; it does not scan a dependency tree or open a Dependabot PR.
 
 ---
 
@@ -267,8 +267,8 @@
 
 ### Punchy Bullet Points:
 * **Review Telemetry**: Surfaces approval ratios, review turnaround durations (measuring team review latency), and merge conflict status.
-* **AI Resolution Reply Composer**: Gemini reads reviewer feedback and code context to draft polite, technically accurate resolution responses for developer review.
-* **Clean Branch Lifecycle**: Armed Squash & Merge prunes feature branches and generates changelogs automatically.
+* **Reply Composer**: The current reply action fills an editable example response locally; it does not call Gemini or post to a PR.
+* **PR Demo Actions**: PR status/comments are scenario data, and merge/changelog controls demonstrate UI state only; they do not modify GitHub.
 
 ---
 
@@ -281,17 +281,17 @@
 │                                                                                                  │
 │  Tests Passing (25%)  •  Code Coverage (20%)  •  CVE Security (25%)  •  PRs (15%)  •  Fresh (15%)│
 │                                                                                                  │
-│  Overall Readiness: 78% (CAUTION / REVIEW)                                                       │
-│  AI Verdict: "High CVE in jsonwebtoken and 1 missing approval prevent green sign-off."           │
+│  Overall Readiness: Scenario-derived advisory score (CAUTION / REVIEW)                          │
+│  Summary: Review the scenario CVE and approval inputs; this is not a live deployment gate.       │
 │                                                                                                  │
-│  [ 📋 Copy Markdown Summary ]     [ 💾 Download JSON Compliance ]     [ 🛡️ Authorize Ship ]     │
+│  [ 📋 Copy Summary ]              [ 💾 Download JSON Report ]        [ Review Sign-off UI ]       │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
-* **Data-Driven Release Gate**: Evaluates 5 weighted pillars in `releaseReadiness.ts` before authorizing production deployment.
-* **AI Executive Synthesis (`POST /api/ai/release-readiness`)**: Produces structured release headlines, risk summaries, and blocker inventories.
-* **Compliance Artifact Export**: 1-click download of JSON audit manifests and Markdown release notes for deployment auditing.
+* **Data-Driven Readiness Score**: `releaseReadiness.ts` calculates five weighted dimensions from the current app state. It is an advisory score, not a deployment authorization.
+* **Optional AI Synthesis**: `POST /api/ai/release-readiness` can request Gemini synthesis when configured; the score itself is calculated locally.
+* **Report Export**: Download JSON or copy a Markdown summary for review; these are local reports, not signed compliance attestations.
 
 ---
 
@@ -302,21 +302,19 @@
 +--------------------------------------------------------------------------------------------------+
 │  7-FACTOR REPOSITORY HEALTH POOL (#risk)                                                         │
 │                                                                                                  │
-│  Health Pool: 68 / 100 HP [=======================-----------------] Moderate Risk               │
+│  Health Pool: Computed from current scenario/repository state • 0–100 HP                         │
 │                                                                                                  │
-│  • 1. Branch Divergence (-15 pts) [Warning]       • 5. Code Smells & Debt (-6 pts) [Warning]     │
-│  • 2. Failed Tests (0 pts) [Healthy]              • 6. Unreviewed PR Lag (0 pts) [Healthy]       │
-│  • 3. Secrets Detected (0 pts) [Healthy]          • 7. Large PR Scope (0 pts) [Healthy]          │
-│  • 4. Open CVE Vulnerabilities (-12 pts) [Hazard]                                                │
+│  • Seven deductions computed from current state; values vary by scenario                         │
+│  • Sandbox state is illustrative; local Git scan does not provide CI or PR telemetry             │
 │                                                                                                  │
 │  Action: [ 🛠️ Remediate with Byte ──► Instant Deep Link to Companion Chat ]                      │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
-* **Mathematical Health Pool**: Dynamic 0–100 HP score calculated from 7 real-time DevSecOps telemetry deduction factors.
+* **Scenario/Repository Health Pool**: A 0–100 score is computed from the current app state across seven factors; only repository data obtained in the selected mode is live.
 * **Interactive Category Filtering**: Filter factors by All, Hazards (Critical), Warnings, and Healthy.
-* **1-Click Remediation**: Every risk factor includes a deep link that pre-populates Byte with diagnostic context and remediation steps.
+* **Remediation Guidance**: Risk items can open Byte with diagnostic context; this provides guidance rather than automatically remediating the finding.
 
 ---
 
@@ -338,9 +336,9 @@
 ```
 
 ### Punchy Bullet Points:
-* **Gateway Security Barrier**: Express server mediates all AI requests, redacts secret tokens, and enforces safety policies before anything reaches the shell.
-* **Dual Workspace Awareness**: Local on-disk Git workspace scanner (`/api/git/live-status`) + Public GitHub test fixture (`/api/repo/live`).
-* **Multi-Modal Gemini APIs**: Live Audio WebSocket (`/live`), Pet Image Studio (`30m preview registry`), and TTS speech synthesis.
+* **Gateway Security Boundary**: Express mediates API and permitted Git operations; the Git command executor uses argv and rechecks policy. This does not make all UI actions live integrations.
+* **Repository Data Modes**: Local on-disk Git scanner (`/api/git/live-status`) and a configured public GitHub fixture (`/api/repo/live`); CI/CD and PR workspaces remain scenario-driven.
+* **Gemini Features**: Optional chat/model fallback, Live Audio WebSocket (`/live`), Pet Image Studio preview registry, and TTS endpoint; these require network/API availability where applicable.
 
 ---
 
@@ -353,7 +351,7 @@
 │  "See risk. Understand evidence. Resolve safely."                                                │
 │                                                                                                  │
 │  ✓ 31 Automated Vitest Tests (100% Pass)        ✓ NIST AI RMF 1.0 & STRIDE Threat Model          │
-│  ✓ Zero Unverified Shell Execution              ✓ Dual Mode: Local Git & GitHub Fixture          │
+│  ✓ Policy-Checked Git Execution                  ✓ Sandbox + Optional Live Git Data               │
 │                                                                                                  │
 │  🚀 Run It Live: npm run dev  ──►  http://localhost:3004                                         │
 │  📦 Repository: https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05... │
@@ -364,6 +362,6 @@
 ```
 
 ### Punchy Bullet Points:
-* **The Bottom Line**: GitPet makes repository health ambient, explainable, and 100% safely actionable.
+* **The Bottom Line**: GitPet demonstrates ambient repository awareness, explainable guidance, and policy-checked Git actions while keeping the user in control.
 * **Enterprise Rigor**: 31 automated Vitest tests, complete CycloneDX SBOM (`npm run sbom`), SRE runbook, and NIST AI RMF governance.
-* **Live Demo Command**: Run `npm run dev` and explore all 6 workspaces at `http://localhost:3004`.
+* **Demo Command**: Run `npm run dev` and explore six workspaces at `http://localhost:3004`; CI/CD and PR content is scenario-driven.
