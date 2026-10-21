@@ -8,9 +8,9 @@
 **Presentation Format:** Authoritative, high-impact slide-deck presentation explaining the core problem landscape, event challenge, system architecture, 6 dedicated full-page workspaces, 2-layer safety policy engine, scoring algorithms, and governance model to judges and technical evaluators.  
 **Presenters:**  
 - **Aliasgar** — Slides 1–3: mission, problem, and solution.
-- **Lucas Whitaker** — Slides 4–6: AI assistance and the safety policy.
+- **Lucas Whitaker** — Slides 4–6 and 10–11: AI assistance, safety policy, and scoring.
 - **David Castelli** — Slides 7–9: repository, CI/CD scenarios, and PR scenarios.
-- **Faris** — Slides 10–13: readiness, risk, architecture, and closing.
+- **Faris** — Slides 12–13: architecture and closing.
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
 
@@ -20,28 +20,28 @@
 
 | Slide # | Slide Title in Deck 11 | Core Architectural & Feature Topic | Target Time | Cumulative | Presenter Lead |
 | :---: | :--- | :--- | :---: | :---: | :--- |
-| **01** | **GitPet (Title & AWS Community Day)** | Welcome, Team Credentials & The DevOps for GenAI Challenge | 1:15 | 1:15 | **Aliasgar** |
-| **02** | **THE PROBLEM (3 Developer Crises)** | Context Blindness, Excessive AI Agency, & Buried Telemetry | 1:15 | 2:30 | **Aliasgar** |
-| **03** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms Taxonomy | 1:40 | 4:10 | **Aliasgar** |
-| **04** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Grounded Evidence | 1:35 | 5:45 | **Lucas Whitaker** |
-| **05** | **SAFETY (Layer 1: Static Rules)** | Universal Danger Invariants, Zero Force-Push & Pure Argv Execution | 1:30 | 7:15 | **Lucas Whitaker** |
-| **06** | **SAFETY (Layer 2: Contextual Lints)** | Working-Tree Lints, Untracked Stash Suggestion (`-u`) & Execution Anchors | 1:35 | 8:50 | **Lucas Whitaker** |
-| **07** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diff Studio, Checkbox Staging & Stashes | 1:40 | 10:30 | **David Castelli** |
-| **08** | **CI/CD (Scenario Walkthrough)** | 5-Stage Demo, Example Logs, Flaky-Test Triage & Seeded CVE | 1:30 | 12:00 | **David Castelli** |
-| **09** | **PULL REQUESTS (Review Scenario)** | Sample PR, Status Display, Example Threads & Editable Reply | 1:25 | 13:25 | **David Castelli** |
-| **10** | **SCORING (Readiness Report)** | Advisory 5-Pillar Scorecard, Optional AI Summary & Report Exports | 1:35 | 15:00 | **Faris** |
-| **11** | **SCORING (Dynamic Risk Analysis)** | 7-Factor HP Pool (0–100 HP) & Remediation Guidance | 1:35 | 16:35 | **Faris** |
-| **12** | **ARCHITECTURE (System & Gateway)** | React 19, Express Server, Safety Policy & Git Execution | 1:45 | 18:20 | **Faris** |
-| **13** | **CLOSING (Ambient DevSecOps + Live Launch)** | Five Core Ideas, 31 Vitest Tests, Demo Launch & Q&A | 1:00 | 19:20 | **Faris** |
+| **01** | **GitPet (Title & AWS Community Day)** | Welcome, Team Credentials & The DevOps for GenAI Challenge | 1:25 | 1:25 | **Aliasgar** |
+| **02** | **THE PROBLEM (3 Developer Crises)** | Context Blindness, Excessive AI Agency, & Buried Telemetry | 1:15 | 2:40 | **Aliasgar** |
+| **03** | **SOLUTION (Notice · Understand · Resolve)** | 3-Stage DevSecOps Loop & 18 Physical Symptoms Taxonomy | 2:20 | 5:00 | **Aliasgar** |
+| **04** | **AI ASSISTANCE (Talk to Byte)** | 4 Personas, Tiered Gemini Flash Models, Grounded Evidence | 1:50 | 6:50 | **Lucas Whitaker** |
+| **05** | **SAFETY (Layer 1: Static Rules)** | Eight Hard Blocks, Static Warning, Parser/Allowlist & Argv Execution | 1:35 | 8:25 | **Lucas Whitaker** |
+| **06** | **SAFETY (Layer 2: Contextual Lints)** | Seven Contextual Checks, Stash Suggestion (`-u`) & Execution Anchors | 1:50 | 10:15 | **Lucas Whitaker** |
+| **07** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diff Studio, Checkbox Staging & Stashes | 1:30 | 11:45 | **David Castelli** |
+| **08** | **CI/CD (Scenario Walkthrough)** | 5-Stage Demo, Example Logs, Flaky-Test Triage & Seeded CVE | 1:10 | 12:55 | **David Castelli** |
+| **09** | **PULL REQUESTS (Review Scenario)** | Sample PR, Status Display, Example Threads & Editable Reply | 1:10 | 14:05 | **David Castelli** |
+| **10** | **SCORING (Readiness Report)** | Weighted Advisory Score, Status Thresholds & Local Reports | 1:55 | 16:00 | **Lucas Whitaker** |
+| **11** | **SCORING (Dynamic Risk Analysis)** | Seven Risk Deductions, Health Labels & Remediation Guidance | 1:20 | 17:20 | **Lucas Whitaker** |
+| **12** | **ARCHITECTURE (System & Gateway)** | React 19, Express Server, Safety Policy & Git Execution | 1:40 | 19:00 | **Faris** |
+| **13** | **CLOSING (Ambient DevSecOps + Live Launch)** | Five Core Ideas, 31 Vitest Tests, Demo Launch & Q&A | 1:00 | 20:00 | **Faris** |
 
-Allow approximately 0:40 for transitions and app navigation to reach a 20-minute total.
+Allow approximately 0:40 for transitions and app navigation; the full run is about 20:40.
 
 ---
 
 ## Slide 1: Title & The Mission — AWS Community Day Ottawa 2026
 
 **Presenter:** **Aliasgar**
-**Target time:** 1 minute 15 seconds
+**Target time:** 1 minute 25 seconds
 **Visual Focus on Slide 1:** Product branding, team credentials, [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) banner, and the 3-column architecture diagram: *1. Hackathon Theme*, *2. Proposed App: GitPet*, and *3. Hackathon Alignment*.  
 
 ### Verbatim Spoken Presentation:
@@ -102,7 +102,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 3: SOLUTION (Notice · Understand · Resolve)
 
 **Presenter:** **Aliasgar**
-**Target time:** 1 minute 40 seconds
+**Target time:** 2 minutes 20 seconds
 **Visual Focus on Slide 3:** The 3-stage DevSecOps loop diagram, the 18 physical symptoms taxonomy, and the bottom principle: *“Human judgment remains the approval gate.”*  
 
 ### Verbatim Spoken Presentation:
@@ -131,7 +131,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 4: AI ASSISTANCE (Talk to Byte)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 35 seconds
+**Target time:** 1 minute 50 seconds
 **Visual Focus on Slide 4:** The 4 specialized personas matrix, the 3 model speed tiers (`@google/genai` v2.4.0), and the structured anatomy of an AI response.  
 
 ### Verbatim Spoken Presentation:
@@ -143,14 +143,11 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 > 3. **Safety Auditor:** Strictly focuses on zero data loss, stash verification, policy compliance, blast radius, and reversal readiness.
 > 4. **Git Tutor:** Teaches internal Git mental models—explaining blobs, trees, commit objects, references, HEAD, and the staging index.
 >
-> GitPet routes requests across **three model tiers** using the Google GenAI SDK (`@google/genai` v2.4.0):
-> - **Fast Tier (`gemini-3.1-flash-lite`):** For short status requests and commit message drafting.
-> - **General Tier (`gemini-3.6-flash`):** For standard conversational chat and tutoring.
-> - **Deep Tier (`gemini-3.7-flash`):** For complex merge conflicts, DAG analysis, and release sign-offs.
+> These are prompt personas, not separate agents with separate permissions. The user can select a model tier through the chat UI. The configured fast model chain is `gemini-3.1-flash-lite`, then `gemini-3.6-flash`, then `gemini-flash-latest`; general is `gemini-3.6-flash`, then `gemini-3.5-flash`, then `gemini-flash-latest`; deep is `gemini-3.7-flash`, then `gemini-3.6-flash`, then `gemini-flash-latest`.
 >
-> The chat UI can show repository context and recommended-action details. Do not present model responses as guaranteed evidence citations, calibrated confidence scores, or atomic undo plans.
+> Chat prompts can include repository and branch names, upstream, ahead/behind counts, detached/stale flags, working-tree paths/status, and remote commits behind. CI/CD, PR, and CVE scenario data is not made live by this prompt context. Do not present model responses as guaranteed evidence citations, calibrated confidence scores, or atomic undo plans.
 >
-> If Gemini is unavailable, some chat/analyze flows can fall back to deterministic rule-based guidance. This fallback does not cover every feature or guarantee an AI-equivalent response.”
+> For availability or quota errors, the backend can try the next model within the selected chain. Some chat/analyze flows can fall back to deterministic rule-based guidance, but that is not a cross-feature offline mode or an AI-equivalent response.”
 
 ### Slide Delivery Cues:
 - Explain that repository context is supplied to supported chat requests, while model output can still be wrong and should be checked.
@@ -163,7 +160,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 5: SAFETY (Layer 1: Static Rules)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 30 seconds
+**Target time:** 1 minute 35 seconds
 **Visual Focus on Slide 5:** The blocked-command examples, safer suggestions, and argv-based Git execution.
 
 ### Verbatim Spoken Presentation:
@@ -171,16 +168,21 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 >
 > GitPet implements safety as deterministic application code through a **2-Layer Safety Policy Engine** in `safety.ts`.
 >
-> **Layer 1 enforces Universal Static Invariants** regardless of repository state:
-> - **Zero Un-Leased Force-Pushes:** Commands like `git push --force` or `-f` are hard-rejected; the policy can suggest the safer `--force-with-lease` alternative.
-> - **Zero Destructive Resets:** Commands like `git reset --hard` are blocked; GitPet recommends preserving work first with `git reset --keep` or stashing.
-> - **Zero Permanent Deletions:** Destructive cleanups like `git clean -fdx`, unmerged branch deletion (`git branch -D`), and `git stash drop` are forbidden.
-> - **Zero History Rewrites:** Operations like `filter-branch` and `--filter-repo` are blocked.
-> - **Zero Shell Injection:** Metacharacters like semicolons, pipes, backticks, and `$()` are rejected.
+> **Layer 1 has eight hard-block rules** regardless of repository state:
+> - Blocks unconditional `git push --force`/`-f` and can suggest `--force-with-lease`.
+> - Blocks `git push --delete`/`-d`, which deletes a remote ref.
+> - Blocks `git reset --hard` and can suggest `--keep`.
+> - Blocks `git clean`, which deletes untracked files.
+> - Blocks `git branch -D` and can suggest the safer merged-only `-d`.
+> - Blocks `git stash drop` and `git stash clear`.
+> - Blocks history-rewriting `filter-branch` and `--filter-repo`.
+> - Blocks `git checkout <path>` forms that can overwrite edits.
 >
-> Crucially, approved commands are tokenized into argument arrays and executed via `child_process.execFile`—completely bypassing the system shell and neutralizing command injection attacks.
+> There is also a warning, not a hard block, for `git rebase --onto`. The parser rejects non-Git commands, disallowed subcommands, and shell control characters; `&&` is handled as an explicit chain of Git commands.
 >
-> We also enforce a strict binary whitelist: only the `git` executable is permitted. Commands like `sudo`, `rm`, `curl`, or `sh` are dropped at the gateway before reaching the OS.
+> The executor invokes Git through `child_process.execFile` with an argv array, not a shell command string. This reduces shell-injection risk; it is not a claim that all application behavior is invulnerable.
+>
+> Execution is rechecked server-side. Writes are disabled unless `GITPET_ALLOW_WRITES=true`; the safety tests cover selected policy and parsing cases, not every possible Git risk.
 >
 > The model can suggest an action; the safety engine decides what is permitted.”
 
@@ -196,7 +198,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 6: SAFETY (Layer 2: Contextual Lints)
 
 **Presenter:** **Lucas Whitaker**  
-**Target time:** 1 minute 35 seconds
+**Target time:** 1 minute 50 seconds
 **Visual Focus on Slide 6:** The untracked-file stash scenario, the `stash-misses-untracked` warning and `-u` suggestion, and execution policy.
 
 ### Verbatim Spoken Presentation:
@@ -220,9 +222,9 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 >
 > The added `-u` ensures all untracked files are safely preserved in the snapshot.
 >
-> Layer 2 also detects diverged branch pulls, dirty-tree pulls without `--autostash`, unresolved conflict markers, empty stash pops, and paused rebases—where commands are strictly restricted to `--continue`, `--skip`, or `--abort`.
+> Alongside that stash warning, six contextual lint codes check: `stash-pop-empty` (warning on an empty stash); `pull-dirty-tree` (warn on pull/merge with dirty files unless stash/autostash protects them); `unresolved-conflicts` (block pull, merge, switch, or checkout while conflicts remain); `operation-in-progress` (block unrelated mutations during a paused operation, while allowing continuation/abort/skip, staging fixes, and read-only inspection); `ff-only-on-diverged` (block an impossible fast-forward-only pull and suggest rebase); and `push-while-behind` (warn when a push will be rejected).
 >
-> Live Git writes are disabled by default and require explicit opt-in via `GITPET_ALLOW_WRITES=true`. Execution records `headBefore` and `headAfter` hashes, but those anchors do not guarantee that every operation can be rolled back with one click.”
+> Some findings warn, others block. The lints are targeted checks, not a complete formal proof that a Git operation is safe. Live writes require `GITPET_ALLOW_WRITES=true`. The executor records `headBefore` and `headAfter` hashes; those hashes don't restore uncommitted file content or guarantee one-click rollback.”
 
 ### Slide Delivery Cues:
 - Point directly to the missing `-u` in the model suggestion versus the corrected command.
@@ -236,7 +238,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 7: REPOSITORY (DAG & Working Tree)
 
 **Presenter:** **David Castelli**  
-**Target time:** 1 minute 40 seconds
+**Target time:** 1 minute 30 seconds
 **Visual Focus on Slide 7:** The Multi-Lane SVG Topological DAG Graph layout, commit role badges, the Working Tree Diff Studio, and stash restoration.  
 
 ### Verbatim Spoken Presentation:
@@ -264,7 +266,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 8: CI/CD (Failure to Remediation)
 
 **Presenter:** **David Castelli**  
-**Target time:** 1 minute 30 seconds
+**Target time:** 1 minute 10 seconds
 **Visual Focus on Slide 8:** The 5-stage pipeline progression tracker, expandable terminal execution logs, flaky test suite diagnostics, and supply chain CVE scan.  
 
 ### Verbatim Spoken Presentation:
@@ -298,7 +300,7 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 ## Slide 9: PULL REQUESTS (Review to Merge)
 
 **Presenter:** **David Castelli**  
-**Target time:** 1 minute 25 seconds
+**Target time:** 1 minute 10 seconds
 **Visual Focus on Slide 9:** Scenario PR #214 metadata, approval/change-request counts, example wait value, inline comments, and editable sample reply.
 
 ### Verbatim Spoken Presentation:
@@ -321,14 +323,14 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 - Point out that PR values are scenario data and the reply is an editable UI example.
 
 ### Presenter Handoff to Slide 10:
-- **David:** *“The app has brought Git and delivery scenarios together. Faris will now explain its advisory readiness and risk views.”*
+- **David:** *“The app has brought Git and delivery scenarios together. Lucas will now explain the advisory readiness and risk views.”*
 
 ---
 
 ## Slide 10: SCORING (Release Gate & Deployment)
 
-**Presenter:** **Faris**
-**Target time:** 1 minute 35 seconds
+**Presenter:** **Lucas Whitaker**
+**Target time:** 1 minute 55 seconds
 **Visual Focus on Slide 10:** The 5-pillar deployment scorecard gauge (78% score, Caution/Review status), the active blocker inventory, and compliance artifact exports.  
 
 ### Verbatim Spoken Presentation:
@@ -341,7 +343,9 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 > 4. **PR Approvals (15% Weight):** Scores scenario/state approval information; it does not enforce a remote branch rule.
 > 5. **Branch Freshness (15% Weight):** Measures divergence from upstream main.
 >
-> In the scenario shown on screen, the calculated score is **78% (Caution / Review)**.
+> In the demo scenario, the score shown is **78% (Caution / Review)**. Read the displayed value during the live presentation if you switch scenarios.
+>
+> The weighted sum is rounded to an overall score. The UI labels a state Blocked when there are blockers or the score is below 70; Caution/Review when there are warnings or the score is below 85; otherwise Ready to Ship. Its separate `canShip` flag requires no blockers and at least 80, so the flag can disagree with the label in the 80-84 range. This is an advisory prototype report, not a deployment rule.
 >
 > The optional `POST /api/ai/release-readiness` endpoint can request Gemini synthesis when configured. Vulnerabilities and approvals in this demo are scenario inputs, not live scans or branch-protection checks.
 >
@@ -359,39 +363,39 @@ Allow approximately 0:40 for transitions and app navigation to reach a 20-minute
 
 ## Slide 11: SCORING (Dynamic Risk Analysis)
 
-**Presenter:** **Faris**
-**Target time:** 1 minute 35 seconds
+**Presenter:** **Lucas Whitaker**
+**Target time:** 1 minute 20 seconds
 **Visual Focus on Slide 11:** The 7-factor risk deduction breakdown table, the current-state 0–100 HP health pool gauge, and category filtering.
 
 ### Verbatim Spoken Presentation:
 > “On Slide 11, we examine the **Risk Scorecard & Health Pool Workspace (`#risk`)**. The score is deterministic for the current state, which may be a sandbox scenario rather than live telemetry.
 >
-> GitPet begins with a base score of 100 Health Points (HP) and applies deductions across **7 weighted DevSecOps dimensions**:
-> 1. **Branch Divergence (0 to -35 pts):** Ahead/behind drift, detached HEAD, work-loss hazards.
-> 2. **Failed & Flaky Tests (0 to -28 pts):** Build failures, flaky suites, rollout crashes.
-> 3. **Secrets & Security Policies (0 to -30 pts):** Exposed API keys, public storage buckets.
-> 4. **Open CVE Vulnerabilities (0 to -22 pts):** High/Critical dependency CVEs.
-> 5. **Code Smells & Debt (0 to -15 pts):** Dirty file sprawl (>8 files), lint debt.
-> 6. **Unreviewed PR Lag (0 to -15 pts):** Stale reviews (>3 days), changes requested.
-> 7. **Large PR Scope (0 to -8 pts):** Changesets exceeding 400 lines or 15 files.
+> GitPet starts at 100 HP and subtracts deductions across **seven factors**; this is a sum of deductions, not a weighted average:
+> 1. **Branch Divergence (up to -35):** Destructive-risk state, conflicts, detached HEAD, ahead/behind drift, or a stale branch.
+> 2. **Failed & Flaky Tests (up to -28):** Failed build, flaky tests, or failed deployment.
+> 3. **Secrets & Security Policies (up to -30):** Seeded policy breach or detected credentials.
+> 4. **Open Vulnerabilities (-12 or -22):** Lower-severity or high/critical vulnerability data.
+> 5. **Code Smells & Debt (up to -15):** Smell count or a large dirty working tree.
+> 6. **Unreviewed Commits & PR Lag (up to -15):** Requested changes, a long review wait, or unreviewed commits.
+> 7. **Large PR Scope (-8):** The current condition uses scenario PR/comment and diff-size values.
 >
-> In this example, those deductions total **67 HP**: -15 for branch divergence, -12 for vulnerabilities, and -6 for working-tree/code-smell state. Use the actual displayed score if the selected scenario differs.
+> The score is `max(0, 100 - total deductions)`. Severe conditions also affect the health label: destructive hazards are Unsafe; conflicts, severe test/security failures, or a very low score can be Blocked; lower scores may be Attention. The labels are not only fixed numeric bands.
 >
-> Developers can filter factors by *All*, *Hazards*, *Warnings*, and *Healthy*. A remediation action opens Byte with diagnostic context; it provides guidance rather than automatically fixing the factor.”
+> Developers can filter factors by *All*, *Critical Hazards*, *Warnings*, and *Healthy*. A remediation action opens Byte with diagnostic context; it provides guidance rather than automatically fixing the factor. Read the displayed deductions because values vary by scenario.”
 
 ### Slide Delivery Cues:
-- Emphasize the mathematical formula: $\text{Health Score} = \max(0, 100 - \sum \text{Deductions})$.
-- Highlight how clicking *Remediate with Byte* turns diagnostic assessment directly into action.
+- Emphasize the formula: `Health Score = max(0, 100 - sum(deductions))`.
+- Show one factor and its condition; explain Remediate with Byte opens guidance rather than performing a repair.
 
 ### Verbal Transition to Slide 12:
-> “Now let’s look under the hood at the system boundaries and production architecture that make these capabilities possible on Slide 12.”
+> “Faris will now take us through the system boundaries and architecture, then close the presentation.”
 
 ---
 
 ## Slide 12: ARCHITECTURE (System & Gateway)
 
 **Presenter:** **Faris**
-**Target time:** 1 minute 45 seconds
+**Target time:** 1 minute 40 seconds
 **Visual Focus on Slide 12:** The C4 container architecture diagram, trust boundaries, Express gateway on port 3004, secret redactor, and execution pipeline.  
 
 ### Verbatim Spoken Presentation:
