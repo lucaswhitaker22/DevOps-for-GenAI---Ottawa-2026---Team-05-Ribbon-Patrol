@@ -38,7 +38,7 @@ Aim for a measured 125-135 spoken words per minute. The slide timings total abou
 
 Hello everyone, and thank you for joining us.
 
-We are presenting GitPet, an ambient DevSecOps repository companion, for the DevOps for GenAI track at AWS Community Day Ottawa 2026. The project team credited on the deck is Ribbon Patrol: Lucas Whitaker and David Castelli. I am Aliasgar, and I will open the presentation; Lucas, David, and Faris will take the next sections.
+We are presenting GitPet, an ambient DevSecOps repository companion, for the DevOps for GenAI track at AWS Community Day Ottawa 2026. Our team name is Ribbon Patrol. I am Aliasgar, and I will open the presentation; Lucas, David, and Faris will take the next sections.
 
 The question behind GitPet is practical: can Generative AI help developers understand repository and delivery risks without giving a model unrestricted authority to change code or infrastructure?
 
