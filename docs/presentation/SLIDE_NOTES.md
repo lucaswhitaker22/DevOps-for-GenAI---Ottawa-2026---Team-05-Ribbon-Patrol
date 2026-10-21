@@ -29,12 +29,12 @@
 | **07** | **REPOSITORY (DAG & Working Tree)** | Multi-Lane SVG Graph, Diff Studio, Checkbox Staging & Stashes | 1:30 | 11:45 | **David Castelli** |
 | **08** | **CI/CD (Scenario Walkthrough)** | 5-Stage Demo, Example Logs, Flaky-Test Triage & Seeded CVE | 1:10 | 12:55 | **David Castelli** |
 | **09** | **PULL REQUESTS (Review Scenario)** | Sample PR, Status Display, Example Threads & Editable Reply | 1:10 | 14:05 | **David Castelli** |
-| **10** | **SCORING (Readiness Report)** | Weighted Advisory Score, Status Thresholds & Local Reports | 1:55 | 16:00 | **Lucas Whitaker** |
-| **11** | **SCORING (Dynamic Risk Analysis)** | Seven Risk Deductions, Health Labels & Remediation Guidance | 1:20 | 17:20 | **Lucas Whitaker** |
-| **12** | **ARCHITECTURE (System & Gateway)** | React 19, Express Server, Safety Policy & Git Execution | 1:40 | 19:00 | **Faris** |
-| **13** | **CLOSING (Ambient DevSecOps + Live Launch)** | Five Core Ideas, 31 Vitest Tests, Demo Launch & Q&A | 1:00 | 20:00 | **Faris** |
+| **10** | **SCORING (Readiness Report)** | Weighted Advisory Score, Status Thresholds & Local Reports | 1:50 | 15:55 | **Lucas Whitaker** |
+| **11** | **SCORING (Dynamic Risk Analysis)** | Seven Risk Deductions, Health Labels & Remediation Guidance | 1:30 | 17:25 | **Lucas Whitaker** |
+| **12** | **ARCHITECTURE (System & Gateway)** | React 19, Express Server, Safety Policy & Git Execution | 1:40 | 19:05 | **Faris** |
+| **13** | **CLOSING (Ambient DevSecOps + Live Launch)** | Five Core Ideas, 31 Vitest Tests, Demo Launch & Q&A | 1:00 | 20:05 | **Faris** |
 
-Allow approximately 0:40 for transitions and app navigation; the full run is about 20:40.
+Allow approximately 0:35 for transitions and app navigation; the full run is about 20:40.
 
 ---
 
@@ -143,14 +143,16 @@ Allow approximately 0:40 for transitions and app navigation; the full run is abo
 > 3. **Safety Auditor:** Strictly focuses on zero data loss, stash verification, policy compliance, blast radius, and reversal readiness.
 > 4. **Git Tutor:** Teaches internal Git mental models—explaining blobs, trees, commit objects, references, HEAD, and the staging index.
 >
-> These are prompt personas, not separate agents with separate permissions. The user can select a model tier through the chat UI. The configured fast model chain is `gemini-3.1-flash-lite`, then `gemini-3.6-flash`, then `gemini-flash-latest`; general is `gemini-3.6-flash`, then `gemini-3.5-flash`, then `gemini-flash-latest`; deep is `gemini-3.7-flash`, then `gemini-3.6-flash`, then `gemini-flash-latest`.
+> These are prompt personas, not separate agents with separate permissions. The user can select a model tier through the chat UI. The configured fast model chain is `gemini-3.1-flash-lite`, then `gemini-3.6-flash`, then `gemini-flash-latest`; general is `gemini-3.6-flash`, then `gemini-3.5-flash`, then `gemini-flash-latest`; deep is `gemini-3.7-flash`, then `gemini-3.6-flash`, then `gemini-flash-latest`. Retries happen within the selected chain; do not imply every failure triggers a cascade through every tier.
 >
 > Chat prompts can include repository and branch names, upstream, ahead/behind counts, detached/stale flags, working-tree paths/status, and remote commits behind. CI/CD, PR, and CVE scenario data is not made live by this prompt context. Do not present model responses as guaranteed evidence citations, calibrated confidence scores, or atomic undo plans.
 >
 > For availability or quota errors, the backend can try the next model within the selected chain. Some chat/analyze flows can fall back to deterministic rule-based guidance, but that is not a cross-feature offline mode or an AI-equivalent response.”
 
 ### Slide Delivery Cues:
+- Bridge from Slide 3: the model contributes to *Understand*; it does not control *Resolve*.
 - Explain that repository context is supplied to supported chat requests, while model output can still be wrong and should be checked.
+- If showing the UI, point out that personas shape prompts and do not grant different execution permissions.
 
 ### Verbal Transition to Slide 5:
 > “Reasoning quality is essential, but reasoning alone is not a security boundary. On Slide 5, let’s look at how GitPet enforces safety at the code level.”
@@ -188,7 +190,8 @@ Allow approximately 0:40 for transitions and app navigation; the full run is abo
 
 ### Slide Delivery Cues:
 - Point out the clear contrast between blocked red commands and green safe alternatives.
-- Highlight that Layer 1 is backed by 19 automated executor tests in Vitest.
+- Group the blocks by remote refs, local data, stashes, history, and path overwrites. Mention `rebase --onto` is a warning, not a hard block.
+- If mentioning tests, note that the executor suite has 19 tests for selected cases; do not imply exhaustive coverage.
 
 ### Verbal Transition to Slide 6:
 > “Static syntax checks catch universally dangerous commands. But what happens when a command is syntactically valid yet dangerous in the current working directory? That brings us to Slide 6.”
@@ -228,7 +231,8 @@ Allow approximately 0:40 for transitions and app navigation; the full run is abo
 
 ### Slide Delivery Cues:
 - Point directly to the missing `-u` in the model suggestion versus the corrected command.
-- Emphasize the core takeaway: *“Valid syntax, unsafe context.”*
+- Emphasize the core takeaway: *“Valid syntax, unsafe context.”* Explain that `-u` is a suggestion for the user to select, not an automatic rewrite.
+- Use the six other lint names as supporting detail if the room asks what else is checked.
 
 ### Presenter Handoff to Slide 7:
 - **Lucas:** *“With our safety foundation established, David will now demonstrate the repository workspace and scenario-driven delivery views.”*
@@ -330,7 +334,7 @@ Allow approximately 0:40 for transitions and app navigation; the full run is abo
 ## Slide 10: SCORING (Release Gate & Deployment)
 
 **Presenter:** **Lucas Whitaker**
-**Target time:** 1 minute 55 seconds
+**Target time:** 1 minute 50 seconds
 **Visual Focus on Slide 10:** The 5-pillar deployment scorecard gauge (78% score, Caution/Review status), the active blocker inventory, and compliance artifact exports.  
 
 ### Verbatim Spoken Presentation:
@@ -364,7 +368,7 @@ Allow approximately 0:40 for transitions and app navigation; the full run is abo
 ## Slide 11: SCORING (Dynamic Risk Analysis)
 
 **Presenter:** **Lucas Whitaker**
-**Target time:** 1 minute 20 seconds
+**Target time:** 1 minute 30 seconds
 **Visual Focus on Slide 11:** The 7-factor risk deduction breakdown table, the current-state 0–100 HP health pool gauge, and category filtering.
 
 ### Verbatim Spoken Presentation:

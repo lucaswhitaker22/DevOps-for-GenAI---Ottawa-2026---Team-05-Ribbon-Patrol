@@ -8,16 +8,16 @@
 
 ## Rehearsal plan
 
-Aim for a measured 125-135 spoken words per minute. The timings below total about 20 minutes of spoken material; allow about 40 seconds across handoffs, slide changes, and app navigation for a total near 20:40. Keep the short bold cues as stage directions, not spoken text. If running long, shorten the examples, not the implementation caveats.
+Aim for a measured 125-135 spoken words per minute. The slide timings total about 20 minutes of spoken material; allow roughly 35 seconds for handoffs, slide changes, and app navigation for a total near 20:40. Keep the short bold cues as stage directions, not spoken text. If running long, shorten examples, not implementation caveats.
 
 | Slides | Presenter | Target |
 |---|---|---:|
 | 1-3 | Aliasgar | 5:00 |
-| 4-6, 10-11 | Lucas | 8:30 |
+| 4-6, 10-11 | Lucas | 8:35 |
 | 7-9 | David | 3:50 |
 | 12-13 | Faris | 2:40 |
-| Transitions / app navigation | All | 0:40 |
-| **Total** |  | **20:00** |
+| Transitions / app navigation | All | 0:35 |
+| **Total** |  | **20:40** |
 
 ## Demo truth to preserve throughout
 
@@ -82,7 +82,7 @@ Lucas will now explain how the AI options and command safety layers work.
 
 ---
 
-# Lucas - Slides 4-6 (5:00)
+# Lucas - Slides 4-6 (5:15)
 
 ## Slide 4: AI assistance, personas, and model tiers (1:50)
 
@@ -98,29 +98,35 @@ For chat, the server can add repository and branch names, upstream, ahead/behind
 
 **[Demo cue: select one persona and compare the response tone, then show the tier control. If credentials/network aren't ready, explain the configured model chains rather than claiming a live response.]**
 
+The model helps explain and propose; the next two slides show the code that decides which Git commands are refused or need contextual review.
+
 ## Slide 5: Static safety rules (1:35)
 
-The first safety layer rejects dangerous commands independent of repository context. A "static" rule means the check does not need to know whether the current branch is ahead or whether files are modified. There are eight hard-block rules in the static rule set: unconditional force push, deleting a remote ref, hard reset, `git clean`, force-deleting a branch with `-D`, dropping or clearing stashes, history rewriting, and checkout of paths that can overwrite edits.
+Layer 1 is a set of checks that do not depend on branch or working-tree state. It hard-blocks eight cases: unconditional force push; deleting a remote ref; `reset --hard`; `git clean`; `branch -D`; stash drop/clear; history rewriting; and checkout of paths that can overwrite edits.
 
-There is also a static warning for `rebase --onto` because it rewrites commit identities and may disrupt shared work. That warning is not an additional hard block. Parser and allowlist checks add separate protections: the command must begin with Git, use an allowed Git subcommand, and avoid rejected shell control characters. An explicit `&&` chain is parsed as multiple Git commands rather than handed to a shell.
+`rebase --onto` gets a warning, not a hard block, because it rewrites commit identities. Separate parser and allowlist checks reject non-Git commands, disallowed subcommands, and shell control characters; `&&` is parsed as an explicit chain of Git commands.
 
-Some blocked rules return a safer suggestion: an unconditional force push can suggest `--force-with-lease`, `reset --hard` can suggest `reset --keep`, and `branch -D` can suggest `branch -d`. Suggestions are not applied automatically, and `--force-with-lease` still needs the user to understand the remote branch state.
+For example, `git checkout main -- app.ts` restores that path from another tree and can overwrite local edits. That's why the policy treats path checkout differently from simply switching branches.
 
-For execution, the server tokenizes arguments and invokes Git through `child_process.execFile`, not a shell command string. "Argv" simply means the executable receives the program name and its arguments as separate values, rather than asking a shell to parse one command string. The client preview is not the security boundary: the server evaluates the command again at execution time. Writes require `GITPET_ALLOW_WRITES=true`, which is off by default.
+Where possible, a rule suggests an alternative: `--force-with-lease`, `reset --keep`, or merged-only `branch -d`. Suggestions are not applied automatically, and a lease-checked push still requires judgment about the remote state.
 
-That is a meaningful control for the supported Git executor, not a claim that the entire application is immune to injection, model mistakes, or every possible Git risk. The executor tests exercise selected static rules, parsing cases, and execution behavior; tests do not prove the policy exhaustive.
+For execution, the server passes Git and its arguments separately through `child_process.execFile` rather than asking a shell to parse a command string. The server checks policy again at execution time. Writes require `GITPET_ALLOW_WRITES=true`, off by default.
+
+These controls constrain the supported Git executor; they do not make the whole app immune to every failure. The executor suite has 19 tests for selected rules, parsing, and execution cases, not exhaustive threat coverage.
 
 **[Show the blocked examples. Mention the safer suggestion where the policy provides one, but don't imply the blocked command was rewritten.]**
 
 ## Slide 6: Contextual safety lints (1:50)
 
-Static checks are not enough because a command can be valid but unsafe for the current repository. A contextual lint is a check against repository state: the working tree, stash list, branch ahead/behind state, or an operation already in progress. The app evaluates supplied scenario context in guidance flows; live preview/execution paths also build context by scanning the configured local Git workspace.
+Layer 1 cannot catch a command that is valid in general but unsafe for this repository. A contextual lint checks working-tree, stash, branch ahead/behind, or in-progress-operation state. Guidance flows can use supplied scenario state; live preview/execution paths also scan the configured local Git workspace.
 
-Take the stash example. `git stash push -m "wip"` saves tracked changes but does not include untracked files by default. If untracked files are present, GitPet's `stash-misses-untracked` lint reports a warning and suggests adding `-u`, which tells Git to include untracked files. The system does not silently alter the command or run the suggestion. The user has to choose it, review the preview, and, for a live write, have server writes enabled.
+For example, `git stash push -m "wip"` saves tracked changes but omits untracked files. If those files exist, `stash-misses-untracked` warns and suggests `-u`, which includes them. GitPet does not rewrite or run the command: the user chooses the suggestion, reviews it, and must have writes enabled for live execution.
 
-The other six contextual checks are `stash-pop-empty` for an empty stash; `pull-dirty-tree` when a pull or merge has no stash or autostash protection; `unresolved-conflicts` for pull, merge, switch, or checkout while conflicted files remain; `operation-in-progress` for unrelated mutations during a paused rebase or merge; `ff-only-on-diverged` when a fast-forward-only pull cannot work; and `push-while-behind` when upstream has commits not integrated locally. The stash, dirty-tree, and push-behind checks warn; unresolved conflicts, unrelated operations, and the impossible fast-forward case block. During an operation-in-progress, safe continuation, abort/skip, staging fixes, and read-only inspection remain allowed. Findings can include a suggestion, but the user decides what to do.
+In other words, a stash is a temporary snapshot, not a commit; `-u` adds untracked files to that snapshot.
 
-Execution is a separate step. Dry-run preview reports what would run; it is not a universal file-level diff. When execution occurs, the executor captures `headBefore` and `headAfter`, and the app can keep an in-memory audit history. Those references can help with recovery, but cannot restore every uncommitted edit or reverse every Git action.
+The other six checks are: `stash-pop-empty` warns on an empty stash; `pull-dirty-tree` warns when pull/merge has no stash or autostash protection; `unresolved-conflicts` blocks pull, merge, switch, or checkout while conflicts remain; `operation-in-progress` blocks unrelated mutations during a paused rebase/merge but allows continue, abort, skip, staging fixes, and read-only inspection; `ff-only-on-diverged` blocks an impossible fast-forward-only pull and suggests rebase; `push-while-behind` warns that a push will be rejected. Findings are targeted checks, not a formal safety proof.
+
+Preview is a dry run: it reports the command steps but is not a universal file-level diff. Execution records `headBefore` and `headAfter`; they can aid investigation but cannot restore every uncommitted edit or reverse every operation.
 
 That is the boundary to remember: contextual policy can catch specific hazards, but the person remains responsible for reviewing the suggestion and the repository state.
 
@@ -166,27 +172,27 @@ The next section moves from feature workspaces to readiness and repository-risk 
 
 ---
 
-# Lucas - Slides 10-11: Scoring (3:15)
+# Lucas - Slides 10-11: Scoring (3:20)
 
-## Slide 10: Release readiness report (1:55)
+## Slide 10: Release readiness report (1:50)
 
 Thank you, David.
 
-The last three workspaces showed repository tools and example CI and PR states. The Release Gate now combines the selected app state's delivery signals into one advisory report. It is important to understand both what the score includes and where the inputs come from.
+The previous workspaces showed repository tools and example CI/PR states. Release Readiness combines the selected app state's delivery signals into an advisory report.
 
-The local `releaseReadiness.ts` function scores five dimensions: tests passing is 25 percent of the total; code coverage is 20 percent, with 80 percent as the stated target; vulnerabilities are 25 percent, with zero high or critical findings as the target; PR approvals are 15 percent; and branch freshness is 15 percent. Each pillar gets a score and status. The overall score is the rounded weighted sum: each pillar score multiplied by its weight, then added together.
+The local `releaseReadiness.ts` function scores five dimensions: tests passing (25%), code coverage (20%, 80% target), vulnerabilities (25%, zero high/critical target), PR approvals (15%), and branch freshness (15%). It scores each pillar, multiplies by the weight, then rounds the weighted sum.
 
-The current page shows a 78-percent caution example. The number is calculated locally from the current app state. Here, CI, coverage, vulnerability, and PR values can be scenario inputs, not results fetched from a CI runner, coverage service, package scanner, or branch-protection API.
+The 78-percent Caution example is calculated locally from app state. CI, coverage, vulnerability, and PR values may be scenario inputs, not results from a CI runner, coverage service, package scanner, or branch-protection API. In plain terms, this score summarizes the currently loaded inputs; it does not certify that a real release is safe.
 
-The displayed status is Blocked if blockers exist or the score is below 70. It is Caution/Review if there are warnings or the score is below 85. Otherwise it is Ready to Ship. There is also a separate `canShip` boolean that requires no blockers and a score of at least 80. Because these conditions are not identical, the boolean can differ from the displayed label in the 80-to-84 range. Treat this as a prototype inconsistency, not as a production release policy.
+The status is Blocked with blockers or a score below 70, Caution/Review with warnings or a score below 85, and Ready to Ship otherwise. A separate `canShip` flag requires no blockers and at least 80 points, so it can disagree with the label between 80 and 84. Treat this as prototype behavior, not a production release policy.
 
 When the Gemini key is configured, the release-readiness endpoint can request an AI summary. The score remains a local calculation. Users can copy a Markdown summary or download JSON, but those are generated reports, not signed attestations. The sign-off button changes UI state only.
 
 **[Point to each of the five weights, then the current score/status and the export controls. Say "advisory report," not "deployment authorization."]**
 
-## Slide 11: Risk score and health pool (1:20)
+## Slide 11: Risk score and health pool (1:30)
 
-The Risk workspace answers a different question from Release Readiness. Instead of weighted delivery pillars, it starts at 100 health points and subtracts penalties from seven risk factors. The score is capped at zero. Read the value shown for the selected scenario; don't carry the previous slide's 78 percent over as though it were the same metric.
+The Risk workspace answers a different question from Release Readiness. It starts at 100 health points, subtracts penalties across seven factors, and clamps the result at zero. Read its own displayed score; it is not the previous slide's 78-percent metric.
 
 1. Branch divergence and related work-loss hazards: up to 35 points.
 2. Failed/flaky tests and deployment failures: up to 28.
@@ -196,11 +202,9 @@ The Risk workspace answers a different question from Release Readiness. Instead 
 6. Unreviewed commits and PR review lag: up to 15.
 7. Large PR scope: 8.
 
-The factor triggers use the current app state. Branch risk can rise with conflicts, detached HEAD, ahead/behind drift, stale branches, or destructive-risk state. The test factor reacts to a failed build, flaky suite, or failed deployment. The security factor reacts to exposed-secret counts or the seeded policy-breach scenario. Vulnerability deductions depend on severity. Code-smell risk uses the smell count or a large dirty working tree; review risk uses requested changes, review wait, or unreviewed commits; and large-PR risk uses PR/comment and diff-size fields.
+The triggers use state such as branch conflict/drift, failed or flaky pipelines, credential findings, review status, and diff size. Those values may be seeded scenarios, not live CI, PR, or scanner feeds. Health labels also consider severity: a conflict can be Blocked even if its numeric score alone suggests otherwise.
 
-The score is `max(0, 100 - total deductions)`. Some severe conditions, such as active conflicts or destructive-risk state, affect the health label as well as the numeric deductions. The labels are not just fixed score bands: a conflict or failed build can be Blocked even when the numeric score alone would not imply it.
-
-The filters let users focus on all factors, critical hazards, warnings, or healthy items. A Remediate with Byte action sends context back to Companion for guidance; it does not fix the factor automatically. The intended calculation is `max(0, 100 - sum of deductions)`. This is an explainable demo score, not a live feed of CI, PR, or scanner data.
+The labels are Healthy, Attention, Blocked, and Unsafe. Destructive risk can be Unsafe; conflicts or severe test/security conditions can be Blocked. They are state-aware labels, not simply fixed score ranges. The filters show all factors, critical hazards, warnings, or healthy items. Remediate with Byte passes context to Companion for guidance; it does not perform the fix.
 
 **[Show the score, one factor, then filters and a remediation link. Do not claim real-time CI/PR telemetry.]**
 
