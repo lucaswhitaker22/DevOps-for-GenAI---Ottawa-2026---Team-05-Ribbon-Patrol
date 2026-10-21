@@ -4,7 +4,7 @@
 **Team:** Ribbon Patrol (Team 05) — Lucas Whitaker & David Castelli  
 **Event:** [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) — DevOps for GenAI Hackathon  
 **Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (13 Slides)  
-**Target Duration:** 10–12 Minutes (Target: ~11 minutes 50 seconds)  
+**Target Duration:** About 20 Minutes (including handoffs and app-navigation cues)
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
 
@@ -19,11 +19,11 @@
 │  01. THE EVENT MISSION  02. THE PROBLEM         03. THE SOLUTION        04. AI ASSISTANCE        │
 │  AWS Community Day 2026 Terminal Blindness      Notice·Understand·Fix   4 Roles & Fast Models    │
 │                                                                                                  │
-│  05. STATIC SAFETY      06. CONTEXT SAFETY      07. REPO & DAG          08. CI/CD & FLAKY        │
-│  Zero Force-Push Rules  Working-Tree Lints      Multi-Lane Topology     Logs & 1-Click Fix       │
+│  05. STATIC SAFETY      06. CONTEXT SAFETY      07. REPO & DAG          08. CI/CD SCENARIOS      │
+│  Zero Force-Push Rules  Working-Tree Lints      Multi-Lane Topology     Seeded logs & triage UI   │
 │                                                                                                  │
 │  09. PULL REQUESTS      10. RELEASE GATE        11. RISK HEALTH POOL    12. ARCHITECTURE         │
-│  AI Review Composer     5-Pillar Scorecard      0-100 HP Scoring        React 19 + Gateway       │
+│  Example reply UI       Advisory Scorecard      0-100 HP Scoring        React 19 + Gateway       │
 │                                                                                                  │
 │  13. LIVE LAUNCH                                                                                 │
 │  31 Tests & Q&A                                                                                  │
@@ -216,7 +216,7 @@
 ### Punchy Bullet Points:
 * **Multi-Lane Topological DAG**: Turns linear commit history into an interactive topological graph, identifying merge bases, branch divergence, and detached HEAD hazards.
 * **Working Tree Diff Studio**: Provides individual file checkbox staging, syntax-highlighted diffs, and addition/deletion counters.
-* **AI Conventional Commit**: Gemini analyzes staged diffs to generate semantic, standards-compliant commit messages in seconds.
+* **AI Conventional Commit**: When Gemini is configured, staged diff data can be sent to the model to draft a conventional commit message for review.
 
 ---
 
@@ -232,9 +232,9 @@
 │  Expandable Log:       ▼                                                                         │
 │  auth.spec.ts:48 ──► "Token refresh timeout after 5000ms"                                        │
 │                                                                                                  │
-│  [ 🧪 Flaky Test Diagnostics ]                   [ 📦 Supply Chain Security ]                    │
-│  auth.spec.ts: 70% pass rate (3 failures)        CVE-2026-8819 in jsonwebtoken@8.5.1 (High)      │
-│  Action: [ 🛡️ Quarantine Test Spec ]              Action: [ 🛠️ Draft Dependabot Patch ]           │
+│  [ 🧪 Scenario Flaky-Test Example ]                [ 📦 Seeded CVE Example ]                       │
+│  auth.spec.ts: sample pass rate                  CVE-2026-8819 in jsonwebtoken@8.5.1 (sample)    │
+│  Demo controls only; no CI run, file edit, scan, or PR creation                                  │
 +--------------------------------------------------------------------------------------------------+
 ```
 
@@ -252,21 +252,21 @@
 +--------------------------------------------------------------------------------------------------+
 │  PULL REQUEST INTELLIGENCE WORKSPACE (#pr)                                                       │
 │                                                                                                  │
-│  PR #214: Add Currency Rate Lookup • Branch: feature/currency • Author: farisnour                │
-│  Approvals: 1 of 2 required [=====-----]  •  Turnaround Clock: 3 days in review (Stale Bottleneck)│
+│  PR #214: Multi-Currency Checkout • Branch: feature/cart • Author: lucaswhitaker22                │
+│  1 approval, 1 change request       •  Scenario wait time: 3 days                                 │
 │                                                                                                  │
 │  Inline Review Thread (src/services/currency.ts:42):                                             │
 │  Reviewer: "Please wrap this external rate lookup in a timeout to avoid hangs."                  │
 │                                                                                                  │
-│  [ 🤖 Draft AI Resolution Response ]                                                             │
-│  "Added 5000ms AbortController timeout and unit test in currency.spec.ts. Ready for re-review!" │
+│  [ ✎ Fill Example Reply ]                                                                        │
+│  Editable local example; not generated from the thread or posted to GitHub                      │
 │                                                                                                  │
-│  Action: [ 🔀 Armed Squash & Merge + Prune Feature Branch ]                                      │
+│  Demo action: [ 🔀 Squash & Merge UI state ]                                                     │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
-* **Review Telemetry**: Surfaces approval ratios, review turnaround durations (measuring team review latency), and merge conflict status.
+* **Review Scenario Display**: Shows sample approval/change-request counts, a scenario wait value, and mergeability state.
 * **Reply Composer**: The current reply action fills an editable example response locally; it does not call Gemini or post to a PR.
 * **PR Demo Actions**: PR status/comments are scenario data, and merge/changelog controls demonstrate UI state only; they do not modify GitHub.
 

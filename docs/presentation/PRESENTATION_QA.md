@@ -89,18 +89,18 @@ When a judge asks a rapid question, deliver these concise, high-impact responses
 > **Key Points:** `@google/genai` SDK v2.4.0 • 3 speed tiers • Fallback cascade
 * **Deep Tier (`gemini-3.7-flash`):** Used for complex Git DAG topological reasoning, multi-file rebase conflict resolution, and release gate compliance auditing.
 * **General Tier (`gemini-3.6-flash`):** Used for conversational guidance, diff reviews, persona roleplay, and Git tutoring.
-* **Fast Tier (`gemini-3.1-flash-lite`):** Sub-second status reports, quick summaries, and AI conventional commit message generation.
+* **Fast Tier (`gemini-3.1-flash-lite`):** Short status reports, quick summaries, and AI conventional commit message generation.
 * **Model Fallback:** `generateWithFallback()` tries models in the selected tier's chain for availability/quota errors. Deterministic fallback exists in some chat/analyze paths; it is not a universal offline mode.
 
 ---
 
 ### Q2.2: How does the Gemini Live Audio WebSocket streaming work in real-time?
 > **Speaker:** Lucas Whitaker  
-> **Key Points:** Bidirectional 16kHz PCM audio • `gemini-3.1-flash-live-preview` • `WebSocket /live`
-* **Architecture:** The client microphone captures 16kHz linear PCM audio, streaming raw chunks over `ws://localhost:3004/live`.
-* **Server-Side Session:** Express connects directly to Google GenAI's live session API (`gemini-3.1-flash-live-preview`), handling audio chunks and text transcript tokens concurrently.
-* **Barge-In / Interruption Support:** When the user speaks while Byte is talking, the WebSocket detects an `interrupted` frame and immediately cuts audio playback.
-* **Fallback:** Verify the current browser voice fallback behavior before presenting it as a guarantee; Gemini Live Audio requires a reachable server and configured API credentials.
+> **Key Points:** 16kHz PCM input • `gemini-3.1-flash-live-preview` • `WebSocket /live`
+* **Architecture:** With the live session available, the client captures mono audio and sends PCM chunks over the same-origin `/live` WebSocket.
+* **Server-Side Session:** Express connects to Google GenAI Live and forwards audio/text input and generated audio/text chunks.
+* **Barge-In / Interruption Support:** When Gemini signals an interruption, the client stops queued playback.
+* **Availability caveat:** If Live API setup fails, the server sends a fallback status message, but the current client does not implement the claimed browser SpeechRecognition fallback. Live voice requires reachable service/API credentials.
 
 ---
 
@@ -170,11 +170,11 @@ graph TD
 * **Layer 1 (Static Rules):** Evaluates command strings purely against danger invariants:
   - Blocks `git push --force` (auto-suggests `--force-with-lease`).
   - Blocks `git reset --hard`, `git clean -fdx`, `git branch -D`, and `git filter-branch`.
-  - Rejects shell metacharacters (`;&|>$`).
+  - Rejects shell control characters such as semicolons, pipes, backticks, `$`, and redirection symbols; `&&` is parsed as an explicit command chain.
 * **Layer 2 (Contextual Lints):** Evaluates commands against *live repository telemetry*:
   - **Untracked Stash Lint (`stash-misses-untracked`):** If untracked files exist, the policy reports a warning and suggests `git stash -u`; the original command is not automatically rewritten.
-  - **Operation-in-Progress Guard:** If the repository is paused mid-rebase, it blocks non-rebase commands and forces `--continue`, `--skip`, or `--abort`.
-  - **Diverged Pull Guard:** If local and remote branches have diverged, it prevents dirty merges and enforces safe rebasing with stash protection.
+  - **Operation-in-Progress Guard:** During a paused operation, it blocks unrelated mutating commands while allowing continuation/abort/skip, staging fixes, and read-only inspection.
+  - **Divergence/Dirty-Tree Checks:** It blocks an impossible fast-forward-only pull on a diverged branch and warns about pulls/merges on dirty trees unless work is preserved.
 
 ---
 
@@ -236,7 +236,7 @@ graph TD
 > **Speaker:** David Castelli  
 > **Key Points:** `PRIntelligencePage.tsx` • Scenario turnaround field • Approval display
 * **Turnaround Display:** Renders the scenario's `waitingDays` value (e.g. *3 days waiting*); it does not calculate elapsed time from a live PR.
-* **Approval Display:** Shows scenario-provided approval counts; it does not query branch protection rules.
+* **Approval Display:** Shows scenario-provided approval and requested-change counts; it does not query branch protection rules.
 * **Nudge/PR Controls:** The current PR page is scenario-driven; controls do not invoke GitHub CLI or post reviewer comments.
 
 ---
@@ -313,7 +313,7 @@ graph TD
 > **Key Points:** 31 Vitest tests • 3 specialized test suites • 100% pass rate
 * `tests/security.test.ts` (9 tests): Prompt sanitization, credential redaction (Google API keys, GitHub PATs, Bearer tokens), jailbreak rejection, and human approval gates.
 * `tests/executor.test.ts` (19 tests): 8 static safety rules, 7 contextual working-tree lints, dry-run diff simulation, and parameter error handling.
-* `tests/markdown.test.ts` (3 tests): Markdown parsing, GFM rendering, syntax highlighting, and XSS sanitization.
+* `tests/markdown.test.ts` (3 tests): Markdown rendering, code blocks, and GFM tables. The suite does not contain a dedicated XSS test.
 
 ---
 
