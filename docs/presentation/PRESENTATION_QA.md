@@ -56,7 +56,7 @@ When a judge asks a rapid question, deliver these concise, high-impact responses
 
 ### Q1.1: Why create an ambient virtual companion (Byte) instead of just another CLI tool or IDE extension?
 > **Speaker:** Lucas Whitaker  
-> **Key Points:** Peripheral vision vs. cognitive friction • Eliminating terminal polling • Emotional connection & psychological safety
+> **Key Points:** Peripheral vision vs. cognitive friction • On-demand state, not background polling • Emotional connection & psychological safety
 * **The Problem with CLIs:** Developers must remember to run `git status`, `git diff`, and check CI dashboards repeatedly. Terminal commands hide upstream drift and merge-base divergence until a release or pull breaks.
 * **The Ambient Advantage:** Byte's posture and procedural Web Audio cues visualize the current scenario or explicitly scanned repository state.
 * **Psychological Safety:** Byte can explain Git states in plain language. Do not promise calibrated confidence scores or guaranteed undo commands on every response.
@@ -66,9 +66,9 @@ When a judge asks a rapid question, deliver these concise, high-impact responses
 ### Q1.2: Who is the primary target persona for GitPet in an enterprise development team?
 > **Speaker:** David Castelli  
 > **Key Points:** Full-stack developers • Platform/DevOps engineers • Release managers • Junior contributors
-* **Full-Stack Developers:** Eliminates merge surprises, auto-formats conventional commit messages, and provides 1-click PR review reply drafting.
+* **Full-Stack Developers:** Eliminates merge surprises, drafts conventional commit messages from a local template (not Gemini), and provides an editable example PR reply (hardcoded local text, not AI-drafted or posted to GitHub).
 * **DevOps & Platform Teams:** Demonstrates Git safety checks and scenario-based CI/CD and flaky-test triage. The current app is not connected to a CI provider and does not modify tests to quarantine them.
-* **Release Managers & Security Leads:** Automated 5-Pillar Release Readiness Scorecard evaluates test pass rates, coverage, CVEs, and PR approvals before authorizing deployment.
+* **Release Managers & Security Leads:** Advisory 5-Pillar Release Readiness Scorecard summarizes test pass rates, coverage, CVEs, and PR approvals; it does not authorize deployment and is not wired to the AI synthesis endpoint.
 * **Junior Engineers & Open-Source Contributors:** Interactive Git Tutor persona and visual DAG graph explain Git internals (blobs, trees, commit pointers) interactively.
 
 ---
@@ -117,7 +117,7 @@ When a judge asks a rapid question, deliver these concise, high-impact responses
 
 ### Q2.4: How do you prevent hallucinated Git commands and ensure AI responses are grounded?
 > **Speaker:** Lucas Whitaker  
-> **Key Points:** Grounded prompt injection • Evidence citations • 2-layer safety code barrier
+> **Key Points:** Repository context injection • Model output not guaranteed • 2-layer safety code barrier
 * **Telemetry Context Injection:** Every AI prompt includes structured repository state (active branch, upstream, ahead/behind counts, dirty file lists with line deltas, remote commit SHAs).
 * **Response Grounding:** Repository state is supplied as prompt context in supported chat flows. Model output can still be inaccurate; evidence and confidence language are not guaranteed structured fields.
 * **Code Policy as Truth:** Even if the model hallucinates a dangerous command, the backend passes it through the **2-layer safety engine (`safety.ts`)** before it ever reaches the user.
@@ -180,7 +180,7 @@ graph TD
 
 ### Q3.3: How does the Rollback / Undo mechanism work?
 > **Speaker:** Lucas Whitaker  
-> **Key Points:** Pre-computed reversal commands • Immutable audit trail • `headBefore` / `headAfter` anchors
+> **Key Points:** Operation-specific reversal guidance • In-memory audit buffer • `headBefore` / `headAfter` anchors
 * Some actions expose operation-specific reversal guidance; there is no universal mathematical inverse:
   - `git stash push` ──► `git stash pop`
   - `git pull --rebase` ──► `git rebase --abort` (in flight) or `git reset --keep ORIG_HEAD` (completed)
@@ -207,8 +207,8 @@ graph TD
 > **Key Points:** `DiffViewer.tsx` • `diffParser.ts` • Checkbox staging • Syntax-highlighted diffs
 * **Granular Checkbox Controls:** Developers can select specific files to stage rather than being forced to run `git add .`.
 * **Unified & Split Diffs:** Parses standard unified diffs into additions (green), deletions (red), and hunk headers.
-* **Search Filter:** Instant real-time search filtering across large working trees with hundreds of modified files.
-* **AI Conventional Commit Integration:** Staged file diffs can be passed directly to the AI Commit Generator to synthesize semantic commit messages (`feat`, `fix`, `refactor`).
+* **Search Filter:** Instant search filtering across large working trees with hundreds of modified files.
+* **Commit Drafter (Local Template):** Staged file context can be opened in the "AI Commit Generator" modal, but that control regenerates template text locally from the selected type and scope; it does not call Gemini to synthesize a message. Its Apply action routes a chat prompt rather than committing.
 
 ---
 
@@ -254,7 +254,7 @@ graph TD
 
 ### Q7.1: How does the 5-Pillar Release Gate calculate readiness scores?
 > **Speaker:** Lucas Whitaker  
-> **Key Points:** `releaseReadiness.ts` • 5 weighted pillars • AI executive verdict • JSON & Markdown export
+> **Key Points:** `releaseReadiness.ts` • 5 weighted pillars • Local calculation • JSON & Markdown export
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -273,7 +273,8 @@ graph TD
 └────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-* **Optional AI Synthesis:** `POST /api/ai/release-readiness` can request a Gemini-generated summary when configured; the readiness score is calculated locally from app state.
+* **Optional AI Synthesis (Unwired):** A separate `POST /api/ai/release-readiness` endpoint can request a Gemini-generated summary when configured, but the standard `ReleaseReadinessPage` is not wired to call it. The readiness score is calculated locally by `calculateReleaseReadiness` from current app state.
+* **Status Thresholds vs. `canShip`:** The label is Blocked if blockers exist or score < 70, Caution/Review if warnings or score < 85, else Ready to Ship. A separate `canShip` flag requires no blockers and at least 80, so it can disagree with the label between 80 and 84. This is prototype behavior, not a production release policy.
 * **Report Export:** JSON and Markdown exports summarize the current report; they are not signed compliance attestations or deployment pipeline gates.
 
 ---
@@ -341,7 +342,7 @@ Use this distinction whenever describing a feature:
 | Git command execution | Supported Git commands pass through policy checks and argv execution. Preview is dry-run; actual writes require `GITPET_ALLOW_WRITES=true`. |
 | CI/CD | Pipeline stages, logs, flaky tests, and CVEs are scenario-provided UI data; there is no CI provider connection or dependency scanner. |
 | Pull requests | PRs and comments are scenario data; reply, merge, nudge, and changelog controls do not post or mutate GitHub. |
-| Release readiness | Weighted score/report is computed locally from current state. Optional Gemini synthesis requires configured credentials. Sign-off is UI-only; there is no deployment integration. |
+| Release readiness | Weighted score/report is computed locally from current state by `calculateReleaseReadiness`. A separate `/api/ai/release-readiness` endpoint exists but the standard page is not wired to call it. Sign-off is UI-only; there is no deployment integration. |
 | Gemini/voice/images | Gemini and related APIs require network/API availability. Deterministic fallback exists only in selected flows, not as an offline mode for every feature. |
 
 Do not call the prototype production-ready solely because it has tests, threat-model documentation, or governance artifacts.
@@ -377,7 +378,7 @@ Do not call the prototype production-ready solely because it has tests, threat-m
 - [ ] Working microphone ready for **Live Voice Modal** demonstration
 - [ ] Slide deck `GitPet_Professional_Deck 11.pptx` ready on primary display
 - [ ] Terminal window open with passing test output (`npm test` — 31 tests passed)
-- [ ] Both presenters (Lucas Whitaker & David Castelli) aligned on slide handoffs and Q&A leads
+- [ ] All four speakers (Aliasgar, Lucas Whitaker, David Castelli, Faris) aligned on slide handoffs and Q&A leads
 
 ---
 

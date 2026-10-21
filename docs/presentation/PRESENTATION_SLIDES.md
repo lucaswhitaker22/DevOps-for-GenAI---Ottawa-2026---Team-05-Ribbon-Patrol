@@ -5,8 +5,11 @@
 **Event:** [AWS Community Day Ottawa 2026](https://awscommunityday.ca/) — DevOps for GenAI Hackathon  
 **Presentation Deck File:** `GitPet_Professional_Deck 11.pptx` (13 Slides)  
 **Target Duration:** About 20 Minutes (including handoffs and app-navigation cues)
+**Presenters:** Aliasgar (1–3), Lucas Whitaker (4–6), David Castelli (7–10), Faris (11–13)
 **Live Application Target:** `http://localhost:3004` (`npm run dev`)  
 **Repository:** [lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol](https://github.com/lucaswhitaker22/DevOps-for-GenAI---Ottawa-2026---Team-05-Ribbon-Patrol)  
+
+Per-slide timing: 1:25, 1:15, 2:20, 1:50, 1:35, 1:50, 1:30, 1:10, 1:10, 1:50, 1:30, 1:40, 1:00 (20:05) plus ~0:35 transitions ≈ 20:40.
 
 ---
 
@@ -107,7 +110,7 @@
 │  │   Ambient Awareness     │    │   Multimodal Reasoning  │    │   Bounded Execution     │       │
 │  │   • 18 Physical Symptoms│    │   • Gemini 3.6/3.7 Flash│    │   • 2-Layer Safety Gate │       │
 │  │   • 0-100 HP Health Aura│    │   • Grounded Evidence   │    │   • Mandatory Diff Modal│       │
-│  │   • Web Audio Cues      │    │   • Pre-Computed Undo   │    │   • 1-Click Rollback    │       │
+│  │   • Web Audio Cues      │    │   • Verify, Don't Trust │    │   • HEAD Anchors (Not   │       │
 │  └─────────────────────────┘    └─────────────────────────┘    └─────────────────────────┘       │
 │                                                                                                  │
 │  Core Architectural Principle: "Human judgment remains the mandatory approval gate."             │
@@ -208,15 +211,15 @@
 │  [ Interactive Multi-Lane SVG DAG Graph ]        [ Working Tree & Diff Studio ]                  │
 │  • Topological sorting & cubic bezier splines    • Search filter & checkbox staging              │
 │  • 11 Roles: HEAD, upstream, merge_base, hazard  • Syntax-highlighted unified diffs              │
-│  • Drawer: author, commit hash, parents, message • AI Conventional Commit generator              │
-│  • Merge base highlight with double-ring node    • Stash stack manager & audit rollback          │
+│  • Drawer: author, commit hash, parents, message • Template commit drafter (local)            │
+│  • Merge base highlight with double-ring node    • Stash stack manager & HEAD anchors            │
 +--------------------------------------------------------------------------------------------------+
 ```
 
 ### Punchy Bullet Points:
 * **Multi-Lane Topological DAG**: Turns linear commit history into an interactive topological graph, identifying merge bases, branch divergence, and detached HEAD hazards.
 * **Working Tree Diff Studio**: Provides individual file checkbox staging, syntax-highlighted diffs, and addition/deletion counters.
-* **AI Conventional Commit**: When Gemini is configured, staged diff data can be sent to the model to draft a conventional commit message for review.
+* **Commit Drafter (Local Template)**: The "AI Conventional Commit" control is labeled AI, but it regenerates template text locally from the selected type and scope; it does not call Gemini. Its Apply action routes a chat prompt rather than committing.
 
 ---
 
@@ -272,7 +275,7 @@
 
 ---
 
-## Slide 10: Release Gate — Automated 5-Pillar Scorecard
+## Slide 10: Release Gate — Advisory 5-Pillar Scorecard
 
 ### Visual Layout
 ```
@@ -290,8 +293,9 @@
 
 ### Punchy Bullet Points:
 * **Data-Driven Readiness Score**: `releaseReadiness.ts` calculates five weighted dimensions from the current app state. It is an advisory score, not a deployment authorization.
-* **Optional AI Synthesis**: `POST /api/ai/release-readiness` can request Gemini synthesis when configured; the score itself is calculated locally.
+* **Optional AI Synthesis (Unwired)**: A separate `POST /api/ai/release-readiness` endpoint can request Gemini synthesis when configured, but the standard `ReleaseReadinessPage` is not wired to call it; the score is calculated locally by `calculateReleaseReadiness`.
 * **Report Export**: Download JSON or copy a Markdown summary for review; these are local reports, not signed compliance attestations.
+* **Status Thresholds**: The label is Blocked if blockers exist or score < 70, Caution/Review if warnings or score < 85, else Ready to Ship. A separate `canShip` flag requires no blockers and at least 80, so it can disagree with the label between 80 and 84. This is prototype behavior, not a production release policy.
 
 ---
 
@@ -338,7 +342,7 @@
 ### Punchy Bullet Points:
 * **Gateway Security Boundary**: Express mediates API and permitted Git operations; the Git command executor uses argv and rechecks policy. This does not make all UI actions live integrations.
 * **Repository Data Modes**: Local on-disk Git scanner (`/api/git/live-status`) and a configured public GitHub fixture (`/api/repo/live`); CI/CD and PR workspaces remain scenario-driven.
-* **Gemini Features**: Optional chat/model fallback, Live Audio WebSocket (`/live`), Pet Image Studio preview registry, and TTS endpoint; these require network/API availability where applicable.
+* **Gemini Features**: Optional chat/model fallback, Live Audio WebSocket (`/live`), Pet Image Studio preview registry, and TTS endpoint; these require network/API availability. If Live API setup fails, the server sends a fallback status message, but the current client does not implement a browser SpeechRecognition fallback.
 
 ---
 

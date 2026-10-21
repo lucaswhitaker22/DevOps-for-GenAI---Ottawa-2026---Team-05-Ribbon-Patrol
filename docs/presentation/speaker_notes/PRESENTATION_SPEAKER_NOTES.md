@@ -1,9 +1,9 @@
 # GitPet Presentation Speaker Notes
 
-**Deck:** `GitPet_Professional_Deck 11.pptx` (13 slides)  
-**Target duration:** About 20 minutes, including slide changes and short app walkthrough cues  
-**Speaking order:** Aliasgar (slides 1-3), Lucas Whitaker (slides 4-6), David Castelli (slides 7-9), Lucas Whitaker (slides 10-11), Faris (slides 12-13)
-**Build team credited on the deck:** Lucas Whitaker and David Castelli, Ribbon Patrol (Team 05)  
+**Deck:** `GitPet_Professional_Deck 11.pptx` (13 slides)
+**Target duration:** About 20 minutes, including slide changes and short app walkthrough cues
+**Speaking order:** Aliasgar (slides 1-3), Lucas Whitaker (slides 4-6), David Castelli (slides 7-10), Faris (slides 11-13)
+**Build team credited on the deck:** Lucas Whitaker and David Castelli, Ribbon Patrol (Team 05)
 **Demo:** `npm run dev` at `http://localhost:3004`
 
 ## Rehearsal plan
@@ -13,26 +13,60 @@ Aim for a measured 125-135 spoken words per minute. The slide timings total abou
 | Slides | Presenter | Target |
 |---|---|---:|
 | 1-3 | Aliasgar | 5:00 |
-| 4-6, 10-11 | Lucas | 8:35 |
-| 7-9 | David | 3:50 |
-| 12-13 | Faris | 2:40 |
+| 4-6 | Lucas | 5:15 |
+| 7-10 | David | 5:40 |
+| 11-13 | Faris | 4:10 |
 | Transitions / app navigation | All | 0:35 |
 | **Total** |  | **20:40** |
+
+Per-slide timing: 1:25, 1:15, 2:20, 1:50, 1:35, 1:50, 1:30, 1:10, 1:10, 1:50, 1:30, 1:40, 1:00.
+
+## Message map used on every feature slide
+
+For each deck feature, state in this order so an engineering audience can connect it to their own work:
+
+1. **Problem** — the developer/operations pain the feature addresses.
+2. **Value** — why it matters to delivery, reliability, or safe change.
+3. **What the app demonstrates** — the actual prototype behavior.
+4. **AI role** — what Gemini contributes, or explicitly that there is no AI.
+5. **Data source** — live, local, or scenario-driven; and the caveat.
+6. **Demo cue / transition** — what to show and how to hand off.
 
 ## Demo truth to preserve throughout
 
 - The six workspaces are Companion, Repository, CI/CD, Pull Requests, Release Gate, and Risk.
-- The app starts with deterministic scenario data. A user can explicitly switch to a local Git scan; a configured public GitHub fixture can also provide repository history. The app is not a background repository monitor.
+- The app starts with deterministic scenario data. A user can explicitly switch to a local Git scan; a configured public GitHub fixture (`farisnour/gitpet-acme-corp-ecommerce-store`) can also provide repository history. The app is not a background repository monitor.
 - CI/CD logs, flaky-test examples, CVEs, PR details, review comments, and PR action controls are scenario/UI demonstrations, not live CI or GitHub integrations.
 - Gemini calls require a reachable service and configured credentials. Model output is assistance, not a verified fact source. Fallback is available in selected chat/analyze paths, not every feature.
 - Git writes are disabled unless `GITPET_ALLOW_WRITES=true`. The safety layer warns/suggests; for example, it does not silently rewrite `git stash` to include `-u`. Preview and HEAD hashes are not a universal diff or rollback guarantee.
 - The release score and exported report are advisory. The sign-off control does not deploy.
+- UI labels such as "AI Commit Generator," "AI Resolution Reply," "CI/CD Telemetry," and "Release Gate" describe intended workflows; the underlying controls are local UI or scenario behavior unless explicitly stated otherwise.
+
+## Engineering term glossary (use as needed in setup lines)
+
+- **Ahead / behind:** ahead = commits that exist locally but not on the tracking branch; behind = tracking-branch commits not yet local. Divergence is when both are non-zero.
+- **DAG / merge base:** the commit graph is a directed acyclic graph; the merge base is the lowest common ancestor of two refs, used to compute divergence and rebase ranges.
+- **Stash / untracked:** `git stash` snapshots tracked changes; `-u` adds untracked files to that snapshot. Without `-u`, untracked files stay in the working tree and can be lost on a subsequent checkout or rebase.
+- **Argv execution:** Git is invoked through `child_process.execFile` with an argument array rather than a shell string, so shell control characters are not interpreted.
+- **Weighted score vs. deductions:** Release Readiness sums five weighted pillars (additive, 0-100). The Health Pool starts at 100 and subtracts seven deductions (subtractive, floored at 0). They answer different questions and use different math.
 
 ---
 
 # Aliasgar - Slides 1-3 (5:00)
 
 ## Slide 1: Title and mission (1:25)
+
+**Problem:** Developers and release managers lose time correlating signals across Git, CI, reviews, and security dashboards, and AI coding assistants can propose destructive commands.
+
+**Value:** A single companion surface that makes repository and delivery state legible without granting an LLM unrestricted authority.
+
+**What the app demonstrates:** GitPet is an ambient DevSecOps repository companion with a virtual mascot, Byte, that reflects the selected scenario or an explicitly scanned local Git workspace across six workspaces.
+
+**AI role:** Optional tiered Gemini chat explains supplied context; it does not execute commands.
+
+**Data source:** Sandbox scenario by default; local Git scan or a configured public GitHub fixture when explicitly selected. Not a background monitor.
+
+**Demo cue:** Start on the title slide; pause; point to the three columns.
 
 **[Start on title slide. Pause, greet the room, then point to the three columns.]**
 
@@ -52,6 +86,18 @@ Our short promise is: see risk, understand evidence, resolve safely. We will sho
 
 ## Slide 2: Three developer crises (1:15)
 
+**Problem:** Three recurring delivery friction points: context blindness, excessive AI agency, and buried telemetry.
+
+**Value:** Naming them lets us show where each GitPet workspace responds.
+
+**What the app demonstrates:** Six workspaces bring Git, CI, PR, readiness, and risk signals into one interface; CI/CD and PR panels use scenarios rather than live service connections.
+
+**AI role:** AI is positioned as assistance, not as an autonomous actor.
+
+**Data source:** Scenario-driven for CI/CD and PR; live only for explicitly selected Git sources.
+
+**Demo cue:** Point to the three problem cards; pause.
+
 We grouped the problem into three related challenges.
 
 First is context blindness. Repository state is often inspected in one place, test failures in another, and pull-request feedback somewhere else. Developers must correlate those signals themselves. GitPet's six workspaces demonstrate how the information might be brought into one interface; the CI/CD and PR panels in this prototype use scenarios rather than live service connections.
@@ -65,6 +111,18 @@ We are not claiming that every developer loses a specific percentage of time or 
 **[Advance.]**
 
 ## Slide 3: Notice, Understand, Resolve (2:20)
+
+**Problem:** The three crises need a repeatable workflow, not a bag of features.
+
+**Value:** A three-stage loop gives the audience a mental model for every following slide.
+
+**What the app demonstrates:** Notice (18 physical symptoms + Byte visuals/audio), Understand (Gemini chat over supplied context), Resolve (policy-checked Git preview/execution).
+
+**AI role:** Understand uses Gemini when configured; Notice and Resolve are deterministic.
+
+**Data source:** Notice state is scenario or scanned; Resolve live execution requires `GITPET_ALLOW_WRITES=true`.
+
+**Demo cue:** Trace the loop; hand to Lucas.
 
 The product story follows three steps: Notice, Understand, Resolve.
 
@@ -86,6 +144,18 @@ Lucas will now explain how the AI options and command safety layers work.
 
 ## Slide 4: AI assistance, personas, and model tiers (1:50)
 
+**Problem:** A single chat tone does not fit a junior learning Git, an architect diagnosing a rebase, and a release engineer checking compliance.
+
+**Value:** Personas and tiers let the developer shape the answer without changing safety policy.
+
+**What the app demonstrates:** Four prompt personas (Byte Mascot, Senior Architect, Safety Auditor, Git Tutor) and fast/general/deep Gemini model chains.
+
+**AI role:** Gemini reasoning; personas are prompt roles, not separately privileged agents.
+
+**Data source:** Repository context (branch, ahead/behind, working-tree paths) supplied to supported chat; CI/PR remain scenario data.
+
+**Demo cue:** Compare persona tones; show tier control.
+
 Thanks, Aliasgar.
 
 We have seen Byte reflect a repository state. Now the question is: when a developer asks why the state matters, how does the app shape the answer? Companion offers four prompt personas: Byte Mascot for everyday guidance, Senior Architect for Git topology and rebases, Safety Auditor for risk and preservation, and Git Tutor for concepts such as commits, HEAD, and the index. They shape response style; they are not agents with different system permissions.
@@ -102,6 +172,18 @@ The model helps explain and propose; the next two slides show the code that deci
 
 ## Slide 5: Static safety rules (1:35)
 
+**Problem:** A hallucinated or injected command can be syntactically valid and still destructive.
+
+**Value:** Deterministic static rules catch universally dangerous Git commands regardless of repository state.
+
+**What the app demonstrates:** Layer 1 hard-blocks eight command classes, warns on `rebase --onto`, and rejects non-Git/shell-control input; execution uses argv.
+
+**AI role:** No AI. The model can suggest; the safety engine decides what is permitted.
+
+**Data source:** Static policy in `safety.ts`; server rechecks at execution; writes require `GITPET_ALLOW_WRITES=true`.
+
+**Demo cue:** Show blocked examples and safer suggestions; do not imply the blocked command was rewritten.
+
 Layer 1 is a set of checks that do not depend on branch or working-tree state. It hard-blocks eight cases: unconditional force push; deleting a remote ref; `reset --hard`; `git clean`; `branch -D`; stash drop/clear; history rewriting; and checkout of paths that can overwrite edits.
 
 `rebase --onto` gets a warning, not a hard block, because it rewrites commit identities. Separate parser and allowlist checks reject non-Git commands, disallowed subcommands, and shell control characters; `&&` is parsed as an explicit chain of Git commands.
@@ -117,6 +199,18 @@ These controls constrain the supported Git executor; they do not make the whole 
 **[Show the blocked examples. Mention the safer suggestion where the policy provides one, but don't imply the blocked command was rewritten.]**
 
 ## Slide 6: Contextual safety lints (1:50)
+
+**Problem:** A command valid in general can be unsafe for this repository right now.
+
+**Value:** Layer 2 checks working-tree, stash, branch, and in-progress-operation state to catch context-specific hazards.
+
+**What the app demonstrates:** Seven contextual lints; the signature example is `stash-misses-untracked` warning and suggesting `-u`.
+
+**AI role:** No AI. Deterministic lints; guidance flows can use supplied scenario state, live preview/execution uses scanned state.
+
+**Data source:** Working-tree, stash, branch ahead/behind, in-progress-operation state.
+
+**Demo cue:** Point to missing `-u` vs corrected command; emphasize user chooses the suggestion.
 
 Layer 1 cannot catch a command that is valid in general but unsafe for this repository. A contextual lint checks working-tree, stash, branch ahead/behind, or in-progress-operation state. Guidance flows can use supplied scenario state; live preview/execution paths also scan the configured local Git workspace.
 
@@ -136,9 +230,21 @@ David will now show the repository tools and scenario-based delivery workspaces.
 
 ---
 
-# David - Slides 7-10 (3:50)
+# David - Slides 7-10 (5:40)
 
 ## Slide 7: Repository workspace and DAG (1:30)
+
+**Problem:** A linear `git log` hides branch divergence, merge bases, and detached-HEAD hazards.
+
+**Value:** A topological DAG and a working-tree diff studio make repository state legible and let developers stage selectively.
+
+**What the app demonstrates:** DAG normalizer renders commit/parent data as multi-lane SVG; Diff Studio shows modified files, search, checkbox staging, and unified diffs; stash inspection/restoration.
+
+**AI role:** The "AI Conventional Commit" control is labeled AI, but it regenerates template text locally; it does not call Gemini. Its Apply action sends a chat prompt rather than committing.
+
+**Data source:** Deterministic DAG normalization and diff parsing; local UI state for staging/stash controls.
+
+**Demo cue:** Show graph + commit drawer; move to working-tree file selection/diff.
 
 Thanks, Lucas.
 
@@ -152,6 +258,18 @@ If Gemini is configured, the AI Conventional Commit tool can use staged diff dat
 
 ## Slide 8: CI/CD scenario walkthrough (1:10)
 
+**Problem:** When a build goes red, the developer jumps between CI dashboards, logs, and scanner outputs to find the cause.
+
+**Value:** A single triage view from failure signal to proposed next step demonstrates the intended workflow.
+
+**What the app demonstrates:** Five illustrative stages (lint, tests, security, build, deploy) with example log lines, a flaky-test card, and a seeded CVE card.
+
+**AI role:** No AI on this page. A user may separately ask Byte about the selected scenario.
+
+**Data source:** Scenario-driven. Not connected to Jenkins, GitHub Actions, CodeBuild, or another CI provider; no dependency scanner.
+
+**Demo cue:** Open one stage log; label flaky-test/CVE cards as scenario content.
+
 The CI/CD workspace shows five illustrative stages: lint, tests, security scan, artifact build, and staging/deployment. Expanding a stage displays example log lines supplied by the selected scenario. These are not fetched from Jenkins, GitHub Actions, CodeBuild, or another CI provider.
 
 The flaky-test card displays scenario-provided test and pass-rate values. Its control simulates changing the app state; it does not mark a test skipped, edit a test file, or unblock a real pipeline. Similarly, the CVE card presents seeded vulnerability data. There is no live package scanner here, and the demo action does not create a Dependabot pull request.
@@ -162,17 +280,39 @@ This still makes the workflow useful as a prototype: it illustrates how a develo
 
 ## Slide 9: Pull Request scenario (1:10)
 
+**Problem:** Review bottlenecks and stale PRs slow delivery, and reply/merge controls in tools can be opaque.
+
+**Value:** A PR view that surfaces wait time, approvals, and comments demonstrates the intended review loop.
+
+**What the app demonstrates:** Sample PR, status, comments, scenario wait value; an editable example reply; a Squash & Merge control.
+
+**AI role:** No AI. The reply composer fills hardcoded local text; it does not send the thread to Gemini or post to GitHub.
+
+**Data source:** Scenario-driven. Squash & Merge changes local UI state; it does not merge a GitHub PR or prune a branch.
+
+**Demo cue:** Point out PR values are scenario data and the reply is an editable UI example.
+
 The PR workspace presents a sample PR, status, comments, and a scenario wait value. For the displayed example, the component's scenario fields include one approval and one requested change; these counts are not fetched from GitHub branch protection. The comment paths and text are also scenario data.
 
 The reply control fills an editable example response locally. It does not send the review thread to Gemini and does not post a comment to a remote PR. The Squash and Merge control changes local UI state; it does not merge a GitHub PR or prune a branch. Other PR controls should be presented with the same caution: they are prototype interactions, not live provider operations.
 
 This lets us demonstrate the user experience we'd want around review bottlenecks while being honest about the missing integration. A production version would need authenticated GitHub API access, permission checks, provider-side state refresh, and confirmation before posting or merging.
 
-The next section moves from feature workspaces to readiness and repository-risk views. Lucas will take over.
+The next section moves from feature workspaces to the advisory readiness view.
 
 ## Slide 10: Release readiness report (1:50)
 
-Thank you, David.
+**Problem:** Release managers need a fast, consistent summary of whether the current state is shippable.
+
+**Value:** An advisory five-pillar scorecard makes the decision legible without pretending to be a deployment gate.
+
+**What the app demonstrates:** `releaseReadiness.ts` computes five weighted pillars locally; the page renders the score, status, blockers, and export/sign-off controls.
+
+**AI role:** A separate `/api/ai/release-readiness` endpoint can request Gemini synthesis when configured, but the current page does not call it; the score is purely local.
+
+**Data source:** Current app state, which may include scenario inputs for CI, coverage, vulnerability, and PR values.
+
+**Demo cue:** Point to each weight, the score/status, and export controls; say "advisory report," not "deployment authorization."
 
 The previous workspaces showed repository tools and example CI/PR states. Release Readiness combines the selected app state's delivery signals into an advisory report.
 
@@ -182,13 +322,29 @@ The 78-percent Caution example is calculated locally from app state. CI, coverag
 
 The status is Blocked with blockers or a score below 70, Caution/Review with warnings or a score below 85, and Ready to Ship otherwise. A separate `canShip` flag requires no blockers and at least 80 points, so it can disagree with the label between 80 and 84. Treat this as prototype behavior, not a production release policy.
 
-When the Gemini key is configured, the release-readiness endpoint can request an AI summary. The score remains a local calculation. Users can copy a Markdown summary or download JSON, but those are generated reports, not signed attestations. The sign-off button changes UI state only.
+When the Gemini key is configured, the release-readiness endpoint can request an AI summary. The score remains a local calculation, and the standard page is not wired to call that endpoint. Users can copy a Markdown summary or download JSON, but those are generated reports, not signed attestations. The sign-off button changes UI state only.
 
 **[Point to each of the five weights, then the current score/status and the export controls. Say "advisory report," not "deployment authorization."]**
 
+---
 
-# Faris:
+# Faris - Slides 11-13 (4:10)
+
 ## Slide 11: Risk score and health pool (1:30)
+
+**Problem:** A release-readiness score summarizes shippability, but it does not show what is actively eroding repository health.
+
+**Value:** A separate seven-factor deduction model surfaces the current hazards so a developer can prioritize remediation.
+
+**What the app demonstrates:** Risk workspace starts at 100 HP, subtracts seven deductions, clamps at zero, and labels state-aware health.
+
+**AI role:** No AI in scoring. Remediate with Byte passes context to Companion for guidance; it does not perform the fix.
+
+**Data source:** Current app state, which may be scenario data; not live CI/PR/scanner feeds.
+
+**Demo cue:** Show the score, one factor, filters, and a remediation link; do not claim real-time telemetry.
+
+Thanks, David.
 
 The Risk workspace answers a different question from Release Readiness. It starts at 100 health points, subtracts penalties across seven factors, and clamps the result at zero. Read its own displayed score; it is not the previous slide's 78-percent metric.
 
@@ -208,8 +364,19 @@ The labels are Healthy, Attention, Blocked, and Unsafe. Destructive risk can be 
 
 These two scores answer different questions: Release Readiness summarizes five delivery dimensions, while the Health Pool applies seven risk deductions to the current state. Neither is an external release approval.
 
-
 ## Slide 12: Architecture and boundaries (1:40)
+
+**Problem:** Judges and architects need to see where trust boundaries sit and which component owns enforcement.
+
+**Value:** A clear separation prevents the model from directly launching a process in the local repository.
+
+**What the app demonstrates:** React frontend, Express server on port 3004, safety/executor pipeline for supported Git, two repository data options, and Gemini as an external service.
+
+**AI role:** Gemini reasons over supplied context; the Git executor is a separate server-side component that accepts only policy-permitted commands.
+
+**Data source:** Local scanner or configured public GitHub fixture for repository data; CI/CD and PR remain scenario-driven.
+
+**Demo cue:** Trace browser -> Express -> safety/executor -> Git; show Gemini as a separate external service.
 
 The frontend is a React application, with six workspaces selected in the UI. The browser communicates with the Node/Express server on port 3004. The server provides REST routes and a `/live` WebSocket; Gemini calls require configured credentials and network access.
 
@@ -222,6 +389,18 @@ The key separation is: Gemini can reason over supplied context, but the model do
 **[Trace browser -> Express -> safety/executor -> Git. Show Gemini as a separate external service. Mention optional authentication and write configuration only if asked.]**
 
 ## Slide 13: Conclusion and Q&A (1:00)
+
+**Problem:** Recap the engineering story and state the demo boundary honestly.
+
+**Value:** Five ideas summarize what the prototype demonstrates and what it does not claim.
+
+**What the app demonstrates:** Ambient awareness, contextual AI, integrated views, bounded Git actions, engineering evidence.
+
+**AI role:** Gemini for explanation/drafting; deterministic policy and human approval govern supported Git execution.
+
+**Data source:** Sandbox by default; live Git only when explicitly selected; CI/CD and PR are scenarios.
+
+**Demo cue:** Open Q&A; if demoing, start from sandbox and label seeded data.
 
 To close, GitPet demonstrates five ideas.
 
@@ -237,7 +416,6 @@ To run the demo, use `npm run dev` and open `http://localhost:3004`. Thanks for 
 
 - Aliasgar introduces the build team as Lucas Whitaker and David Castelli, then hands to Lucas after slide 3.
 - Lucas hands to David after slide 6; emphasize the `-u` item is a suggested command, not an automatic rewrite.
-- David labels CI/CD and PR panels as scenarios, then hands to Lucas for both scoring slides.
-- Lucas explains the advisory Release Readiness and Risk scores, then hands to Faris.
-- Faris covers architecture, closes, and takes Q&A.
+- David labels CI/CD and PR panels as scenarios, presents the advisory Release Readiness report, then hands to Faris.
+- Faris covers the Risk/Health Pool, architecture, closes, and takes Q&A.
 - Keep a local sandbox selected for predictable demos. Use live local Git scan only if the configured workspace and repository state have been checked before presenting.
